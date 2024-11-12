@@ -23,7 +23,7 @@ public class DualMotorControlWithBumpers extends OpMode {
 
     @Override
     public void loop() {
-        double power = 0.5; // Adjust power level as needed
+        double power = 0.5; // Adjust power level as needed, i
 
         // Control motor power based on bumper input
         if (gamepad1.left_bumper) {
