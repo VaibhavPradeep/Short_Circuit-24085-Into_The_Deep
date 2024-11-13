@@ -13,7 +13,7 @@ public class ZeroServos extends OpMode {
     @Override
     public void init() {
 
-        Servo1 = hardwareMap.get(Servo.class, "armServo");
+        Servo1 = hardwareMap.get(Servo.class, "servo");
 
         Servo1.setPosition(0);
 
