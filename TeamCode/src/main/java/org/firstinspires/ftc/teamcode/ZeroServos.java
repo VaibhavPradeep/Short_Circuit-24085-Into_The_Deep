@@ -6,9 +6,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "armservo")
+@TeleOp(name = "servotest")
 public class ZeroServos extends OpMode {
     Servo Servo1;
+    boolean aAlreadyPressed;
+    boolean aServoOn;
+
+    boolean bAlreadyPressed;
+    boolean bServoOn;
+
+    boolean xAlreadyPressed;
+    boolean xServoOn;
 
     @Override
     public void init() {
@@ -21,9 +29,32 @@ public class ZeroServos extends OpMode {
 
     @Override
     public void loop() {
-        if(gamepad1.a) {
-            Servo1.setPosition(0);
 
+        // intake
+        if(gamepad1.a && !aAlreadyPressed){
+            aServoOn = !aServoOn;
+            if (aServoOn) {
+                Servo1.setPosition(0);
+            }
         }
+
+        // to get over the submersible wall
+        if(gamepad1.b && !bAlreadyPressed){
+            bServoOn = !bServoOn;
+            if (bServoOn) {
+                Servo1.setPosition(0.15);
+            }
+        }
+
+        // deposit
+        if(gamepad1.x && !xAlreadyPressed){
+            xServoOn = !xServoOn;
+            if (xServoOn) {
+                Servo1.setPosition(0.67);
+            }
+        }
+
+
+
     }
 }
