@@ -159,11 +159,11 @@ public class IntakeLiftCamera {
         double rightservoPosition = rightArmServo.getPosition();
 
         if (leftbump2 && !rightbump2) {
-            leftservoPosition = Math.min(1.0, leftservoPosition + 0.05);
-            rightservoPosition = Math.min(1.0, rightservoPosition + 0.05);
+            leftservoPosition = Math.min(1.0, leftservoPosition + 0.1);
+            rightservoPosition = Math.min(1.0, rightservoPosition + 0.1);
         } else if (rightbump2 && !leftbump2) {
-            leftservoPosition = Math.max(0.0, leftservoPosition - 0.05);
-            rightservoPosition = Math.max(0.0, rightservoPosition - 0.05);
+            leftservoPosition = Math.max(0.0, leftservoPosition - 0.1);
+            rightservoPosition = Math.max(0.0, rightservoPosition - 0.1);
         }
 
         leftArmServo.setPosition(leftservoPosition);
