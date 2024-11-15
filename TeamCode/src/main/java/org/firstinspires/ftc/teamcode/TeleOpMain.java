@@ -21,20 +21,17 @@ public class TeleOpMain extends OpMode {
         // mecanum drive
         MD.driveMecanum();
 
-        // moive dr4b motors, gampad 2, dpad up is up, down is down
-        ILC.moveDR4BMotors(gamepad2.dpad_up, gamepad2.dpad_down);
+        // moive dr4b motors, left and right triggers (up and down repectively), amount pressed is speed
+        ILC.moveDR4BMotors(gamepad2.left_trigger, gamepad2.right_trigger);
 
-        // move intake servo, x is stop, a is intake, b is outake
+        // move intake servo, b is stop, x is intake, a is outake
         ILC.moveIntakeServo(gamepad1.a, gamepad1.x, gamepad1.b);
 
-        // move wrist servo, left bumper moves left, right bumper moves it right
-        ILC.moveWristServo(gamepad2.left_bumper, gamepad2.right_bumper);
-
         // specimen servo, left bumper opens it, right closes it
-        ILC.moveSpecimenServo(gamepad1.left_bumper, gamepad1.right_bumper);
+        ILC.moveSpecimenServo(gamepad2.left_bumper, gamepad2.right_bumper);
 
-        // moves arm servo, left is intake position, right is depositing into basket
-        ILC.moveArmServo(gamepad2.dpad_left, gamepad2.dpad_right);
+        // moves arm servos, y is up, a is down
+        ILC.moveArmServos(gamepad2.y, gamepad2.a);
 
         // updates telemetry
         ILC.addTelemetry(telemetry);

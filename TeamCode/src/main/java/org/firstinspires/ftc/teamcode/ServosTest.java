@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "servotest")
-public class ZeroServos extends OpMode {
+public class ServosTest extends OpMode {
     Servo Servo1;
     Servo Servo2;
     boolean aAlreadyPressed;
@@ -30,29 +30,19 @@ public class ZeroServos extends OpMode {
         double leftservoPosition = Servo1.getPosition();
         double rightservoPosition = Servo2.getPosition();
 
-        if(leftbump2 && !leftAlreadyPressed){
-            leftServoOn = !leftServoOn;
-            if (leftServoOn) {
-                leftservoPosition = Math.min(1.0, leftservoPosition + 0.05);
-                rightservoPosition = Math.min(1.0, rightservoPosition + 0.05);
-                Servo1.setPosition(leftservoPosition);
-                Servo2.setPosition(rightservoPosition);
-                telemetry.addData("left servo pos", Servo1.getPosition());
-                telemetry.addData("right servo pos", Servo2.getPosition());
-            }
+        if (leftbump2 && !rightbump2) {
+            leftservoPosition = Math.min(1.0, leftservoPosition + 0.05);
+            rightservoPosition = Math.min(1.0, rightservoPosition + 0.05);
+        } else if (rightbump2 && !leftbump2) {
+            leftservoPosition = Math.max(0.0, leftservoPosition - 0.05);
+            rightservoPosition = Math.max(0.0, rightservoPosition - 0.05);
         }
 
-        if(rightbump2 && !rightAlreadyPressed){
-            rightServoOn = !rightServoOn;
-            if (rightServoOn) {
-                leftservoPosition = Math.max(0.0, leftservoPosition - 0.05);
-                rightservoPosition = Math.max(0.0, rightservoPosition - 0.05);
-                Servo1.setPosition(leftservoPosition);
-                Servo2.setPosition(rightservoPosition);
-                telemetry.addData("left servo pos", Servo1.getPosition());
-                telemetry.addData("right servo pos", Servo2.getPosition());
-            }
-        }
+        Servo1.setPosition(leftservoPosition);
+        Servo2.setPosition(rightservoPosition);
+        telemetry.addData("left servo pos", Servo1.getPosition());
+        telemetry.addData("right servo pos", Servo2.getPosition());
+
     }
 
     @Override

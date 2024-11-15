@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,8 +18,8 @@ public class IntakeLiftCamera {
 
     // intake
     CRServo intakeServo;
-    Servo wristServo;
-    Servo armServo;
+    Servo leftArmServo;
+    Servo rightArmServo;
 
     //Specimen
     Servo specimenServo;
@@ -48,28 +49,37 @@ public class IntakeLiftCamera {
         rightDR4BMotor = hwMap.get(DcMotor.class, "rightDR4BMotor");
         leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        
+        leftDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeServo = hwMap.get(CRServo.class, "intakeServo");
 
         specimenServo = hwMap.get(Servo.class,"specimenServo");
 
         distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
-        wristServo = hwMap.get(Servo.class, "wristServo");
-        armServo = hwMap.get(Servo.class, "armServo");
+
+        leftArmServo = hwMap.get(Servo.class, "leftArmServo");
+        rightArmServo = hwMap.get(Servo.class, "rightArmServo");
+
+        rightArmServo.setDirection(Servo.Direction.REVERSE);
+
+        leftArmServo.setPosition(0);
+        rightArmServo.setPosition(0);
     }
 
     public void moveIntakeServo (boolean a1,boolean x1, boolean b1) {
         if (a1) {
-            intakeServo.setPower(INTAKE_COLLECT);
+            intakeServo.setPower(INTAKE_DEPOSIT);
         }
         else if (x1) {
-            intakeServo.setPower(INTAKE_OFF);
+            intakeServo.setPower(INTAKE_COLLECT);
         }
         else if (b1) {
-            intakeServo.setPower(INTAKE_DEPOSIT);
+            intakeServo.setPower(INTAKE_OFF);
         }
     }
 
+    /* for dpad movement way
     public void moveDR4BMotors (boolean dpadup2, boolean dpaddown2) {
         int leftDR4BMotorPos = leftDR4BMotor.getCurrentPosition();
         int rightDR4BMotorPos = rightDR4BMotor.getCurrentPosition();
@@ -96,6 +106,43 @@ public class IntakeLiftCamera {
         }
 
     }
+     */
+
+    public void moveDR4BMotors (double lefttrigger2, double righttrigger2) {
+        int leftDR4BMotorPos = leftDR4BMotor.getCurrentPosition();
+        int rightDR4BMotorPos = rightDR4BMotor.getCurrentPosition();
+
+        double DR4BSpeed = 0;
+
+        if(lefttrigger2 > 0.1) {
+            leftDR4BMotorPos += 50;
+            rightDR4BMotorPos += 50;
+            DR4BSpeed = lefttrigger2;
+        }
+        else if(righttrigger2 > 0.1) {
+            leftDR4BMotorPos -= 50;
+            rightDR4BMotorPos -= 50;
+            DR4BSpeed = righttrigger2;
+        }
+
+        if (DR4BSpeed > 0.65) {
+            DR4BSpeed = 0.65;
+        }
+
+        leftDR4BMotor.setTargetPosition(leftDR4BMotorPos);
+        rightDR4BMotor.setTargetPosition(rightDR4BMotorPos);
+        leftDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftDR4BMotor.setPower(DR4BSpeed);
+        rightDR4BMotor.setPower(DR4BSpeed);
+
+        if (leftDR4BMotor.getCurrentPosition() == leftDR4BMotorPos && rightDR4BMotor.getCurrentPosition() == rightDR4BMotorPos) {
+            leftDR4BMotor.setPower(0);
+            rightDR4BMotor.setPower(0);
+        }
+
+        DR4BSpeed = 0;
+    }
 
     public void moveSpecimenServo(boolean leftbump1, boolean rightbump1) {
         if (leftbump1) {
@@ -107,24 +154,20 @@ public class IntakeLiftCamera {
 
     }
 
-    public void moveWristServo(boolean leftbump2, boolean rightbump2) {
-        double servoPosition = wristServo.getPosition();
-        if (leftbump2) {
-            servoPosition = Math.min(1.0, servoPosition + 0.05);
-            wristServo.setPosition(servoPosition);
-        } else if (rightbump2) {
-            servoPosition = Math.max(0.0, servoPosition - 0.05);
-            wristServo.setPosition(servoPosition);
-        }
-    }
+    public void moveArmServos(boolean leftbump2, boolean rightbump2) {
+        double leftservoPosition = leftArmServo.getPosition();
+        double rightservoPosition = rightArmServo.getPosition();
 
-    public void moveArmServo(boolean a, boolean b) {
-        if (a) {
-            armServo.setPosition(ARM_COLLECT);
+        if (leftbump2 && !rightbump2) {
+            leftservoPosition = Math.min(1.0, leftservoPosition + 0.05);
+            rightservoPosition = Math.min(1.0, rightservoPosition + 0.05);
+        } else if (rightbump2 && !leftbump2) {
+            leftservoPosition = Math.max(0.0, leftservoPosition - 0.05);
+            rightservoPosition = Math.max(0.0, rightservoPosition - 0.05);
         }
-        else if (b) {
-            armServo.setPosition(ARM_DEPOSIT);
-        }
+
+        leftArmServo.setPosition(leftservoPosition);
+        rightArmServo.setPosition(rightservoPosition);
 
     }
 
@@ -134,6 +177,9 @@ public class IntakeLiftCamera {
     public void addTelemetry(Telemetry telemetry) {
         telemetry.addData("left DR4B motor position", leftDR4BMotor.getCurrentPosition());
         telemetry.addData("right DR4B motor position", rightDR4BMotor.getCurrentPosition());
+
+        telemetry.addData("left servo pos", leftArmServo.getPosition());
+        telemetry.addData("right servo pos", rightArmServo.getPosition());
 
         telemetry.addData("specimen servo position", specimenServo.getPosition());
 
