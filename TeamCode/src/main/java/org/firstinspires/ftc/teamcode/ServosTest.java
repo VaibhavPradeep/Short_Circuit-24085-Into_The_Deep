@@ -24,6 +24,7 @@ public class ServosTest extends OpMode {
 
     boolean rightAlreadyPressed;
     boolean rightServoOn;
+    //oo
 
 
     public void moveServo(boolean leftbump2, boolean rightbump2) {
