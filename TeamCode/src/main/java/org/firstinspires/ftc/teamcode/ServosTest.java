@@ -30,18 +30,33 @@ public class ServosTest extends OpMode {
         double leftservoPosition = Servo1.getPosition();
         double rightservoPosition = Servo2.getPosition();
 
-        if (leftbump2 && !rightbump2) {
-            leftservoPosition = Math.min(1.0, leftservoPosition + 0.05);
-            rightservoPosition = Math.min(1.0, rightservoPosition + 0.05);
-        } else if (rightbump2 && !leftbump2) {
-            leftservoPosition = Math.max(0.0, leftservoPosition - 0.05);
-            rightservoPosition = Math.max(0.0, rightservoPosition - 0.05);
+        if (leftbump2) {
+            leftservoPosition += 0.05;
+            rightservoPosition += 0.05;
+            if (leftservoPosition > 1) {
+                leftservoPosition = 1;
+            }
+            if (rightservoPosition > 1) {
+                rightservoPosition = 1;
+            }
+        } else if (rightbump2) {
+            leftservoPosition -= 0.05;
+            rightservoPosition -= 0.05;
+            if (leftservoPosition < 0) {
+                leftservoPosition = 0;
+            }
+            if (rightservoPosition < 0) {
+                rightservoPosition = 0;
+            }
         }
 
         Servo1.setPosition(leftservoPosition);
         Servo2.setPosition(rightservoPosition);
         telemetry.addData("left servo pos", Servo1.getPosition());
         telemetry.addData("right servo pos", Servo2.getPosition());
+
+        leftservoPosition = Servo1.getPosition();
+        rightservoPosition = Servo2.getPosition();
 
     }
 
