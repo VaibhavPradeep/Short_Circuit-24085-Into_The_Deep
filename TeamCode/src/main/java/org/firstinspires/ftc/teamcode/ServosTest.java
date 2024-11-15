@@ -31,8 +31,8 @@ public class ServosTest extends OpMode {
         double rightservoPosition = Servo2.getPosition();
 
         if (leftbump2) {
-            leftservoPosition += 0.05;
-            rightservoPosition += 0.05;
+            leftservoPosition += 0.01;
+            rightservoPosition += 0.01;
             if (leftservoPosition > 1) {
                 leftservoPosition = 1;
             }
@@ -40,8 +40,8 @@ public class ServosTest extends OpMode {
                 rightservoPosition = 1;
             }
         } else if (rightbump2) {
-            leftservoPosition -= 0.05;
-            rightservoPosition -= 0.05;
+            leftservoPosition -= 0.01;
+            rightservoPosition -= 0.01;
             if (leftservoPosition < 0) {
                 leftservoPosition = 0;
             }
