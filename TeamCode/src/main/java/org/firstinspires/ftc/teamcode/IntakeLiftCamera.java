@@ -158,8 +158,8 @@ public class IntakeLiftCamera {
 
         // Calculate new positions
         if (leftbump2) {
-            leftservoPosition += 0.05;
-            rightservoPosition += 0.05;
+            leftservoPosition += 0.5;
+            rightservoPosition += 0.5;
             if (leftservoPosition > 1) {
                 leftservoPosition = 1;
             }
@@ -167,8 +167,8 @@ public class IntakeLiftCamera {
                 rightservoPosition = 1;
             }
         } else if (rightbump2) {
-            leftservoPosition -= 0.05;
-            rightservoPosition -= 0.05;
+            leftservoPosition -= 0.5;
+            rightservoPosition -= 0.5;
             if (leftservoPosition < 0) {
                 leftservoPosition = 0;
             }
