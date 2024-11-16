@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class HumanPlayerYawAuto extends OpMode {
 
     DriveTrainYawMethods auto = new DriveTrainYawMethods();
-    IntakeLiftCameraAuto ILCA = new IntakeLiftCameraAuto();
+    // IntakeLiftCameraAuto ILCA = new IntakeLiftCameraAuto();
 
     final double speed = 0.6;
 
@@ -17,7 +17,7 @@ public class HumanPlayerYawAuto extends OpMode {
     @Override
     public void init() {
         auto.initDrivetrainYaw(hardwareMap);
-        ILCA.initILCA(hardwareMap);
+        // ILCA.initILCA(hardwareMap);
     }
 
     @Override
