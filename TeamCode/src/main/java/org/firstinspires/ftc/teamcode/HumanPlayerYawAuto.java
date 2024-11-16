@@ -27,7 +27,7 @@ public class HumanPlayerYawAuto extends OpMode {
         auto.drive(speed, driveToRack);
 
         // turn around
-        auto.strafe("right", 0.3, 23);
+        auto.strafe("right", 0.3, 50);
 
         //go up a bit
 

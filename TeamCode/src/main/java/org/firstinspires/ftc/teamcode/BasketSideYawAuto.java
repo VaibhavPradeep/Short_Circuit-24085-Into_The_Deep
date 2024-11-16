@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+@Autonomous(name = "basket")
 public class BasketSideYawAuto extends OpMode {
 
     DriveTrainYawMethods auto = new DriveTrainYawMethods();
@@ -23,10 +25,10 @@ public class BasketSideYawAuto extends OpMode {
     public void loop() {
 
         // move forward to basket
-        auto.drive(speed, driveToRack);
+        auto.strafe("left", 0.3, 37);
 
         // turn around
-        auto.turn(speed, turnAroundForSpecimen, "left");
+        auto.drive(0.3,30);
 
         //go up a bit
 

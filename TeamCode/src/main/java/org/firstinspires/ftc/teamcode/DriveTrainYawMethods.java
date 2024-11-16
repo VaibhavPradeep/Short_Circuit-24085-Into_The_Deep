@@ -69,10 +69,10 @@ public class DriveTrainYawMethods {
         int newFrontRightTargetDrive;
         int newBackRightTargetDrive;
 
-        newFrontLeftTargetDrive = frontLeft.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newBackLeftTargetDrive = backLeft.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newFrontRightTargetDrive = frontRight.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newBackRightTargetDrive = backRight.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newFrontLeftTargetDrive = frontLeft.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newBackLeftTargetDrive = backLeft.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newFrontRightTargetDrive = frontRight.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newBackRightTargetDrive = backRight.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
 
         frontLeft.setTargetPosition(newFrontLeftTargetDrive);
         backLeft.setTargetPosition(newBackLeftTargetDrive);
@@ -107,16 +107,16 @@ public class DriveTrainYawMethods {
         direction = direction.toLowerCase();
 
         if(direction.equals("right")) {
-            newFrontLeftTargetStrafe = frontLeft.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
-            newBackLeftTargetStrafe = backLeft.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
-            newFrontRightTargetSrafe = frontRight.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
-            newBackRightTargetStrafe = backRight.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
-        }
-        else if(direction.equals("left")) {
             newFrontLeftTargetStrafe = frontLeft.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
             newBackLeftTargetStrafe = backLeft.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
             newFrontRightTargetSrafe = frontRight.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
             newBackRightTargetStrafe = backRight.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
+        }
+        else if(direction.equals("left")) {
+            newFrontLeftTargetStrafe = frontLeft.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
+            newBackLeftTargetStrafe = backLeft.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
+            newFrontRightTargetSrafe = frontRight.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
+            newBackRightTargetStrafe = backRight.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
         }
         else {
             newFrontLeftTargetStrafe = frontLeft.getCurrentPosition();
