@@ -21,7 +21,7 @@ public class HumanPlayerYawAuto extends OpMode {
     }
 
     @Override
-    public void loop() {
+    public void start() {
 
         // move forward to basket
         auto.drive(speed, driveToRack);
@@ -30,6 +30,11 @@ public class HumanPlayerYawAuto extends OpMode {
         auto.strafe("right", 0.3, 23);
 
         //go up a bit
+
+    }
+
+    @Override
+    public void loop() {
 
     }
 }
