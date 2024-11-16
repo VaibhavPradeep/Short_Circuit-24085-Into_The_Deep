@@ -156,14 +156,14 @@ public class IntakeLiftCamera {
             leftArmServo.setPosition(0);
             rightArmServo.setPosition(0);
         } else if (x) {
-            leftArmServo.setPosition(0.166);
-            rightArmServo.setPosition(0.166);
+            leftArmServo.setPosition(0.07);
+            rightArmServo.setPosition(0.07);
         } else if (a) {
-            leftArmServo.setPosition(0.37);
-            rightArmServo.setPosition(0.37);
+            leftArmServo.setPosition(0.345);
+            rightArmServo.setPosition(0.345);
         } else if (b) {
-        leftArmServo.setPosition(0.465);
-        rightArmServo.setPosition(0.465);
+        leftArmServo.setPosition(0.49);
+        rightArmServo.setPosition(0.49);
     }
     }
 
