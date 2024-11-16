@@ -159,8 +159,8 @@ public class IntakeLiftCamera {
         double rightservoPosition = rightArmServo.getPosition();
 
         if (leftbump2) {
-            leftservoPosition += 0.01;
-            rightservoPosition += 0.01;
+            leftservoPosition += 0.003;
+            rightservoPosition += 0.003;
             if (leftservoPosition > 1) {
                 leftservoPosition = 1;
             }
@@ -168,8 +168,8 @@ public class IntakeLiftCamera {
                 rightservoPosition = 1;
             }
         } else if (rightbump2) {
-            leftservoPosition -= 0.01;
-            rightservoPosition -= 0.01;
+            leftservoPosition -= 0.003;
+            rightservoPosition -= 0.003;
             if (leftservoPosition < 0) {
                 leftservoPosition = 0;
             }
@@ -184,6 +184,16 @@ public class IntakeLiftCamera {
         leftservoPosition = leftArmServo.getPosition();
         rightservoPosition = rightArmServo.getPosition();
 
+    }
+
+    public void setArmZero(boolean x2) {
+        leftArmServo.setPosition(0);
+        rightArmServo.setPosition(0);
+    }
+
+    public void setArmAbove(boolean b2) {
+        leftArmServo.setPosition(0.08);
+        rightArmServo.setPosition(0.08);
     }
 
     public double getDistance(DistanceUnit du){
