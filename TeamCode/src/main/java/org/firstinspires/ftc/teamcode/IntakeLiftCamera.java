@@ -129,10 +129,6 @@ public class IntakeLiftCamera {
             DR4BSpeed = righttrigger2;
         }
 
-        if (DR4BSpeed > 0.65) {
-            DR4BSpeed = 0.65;
-        }
-
         leftDR4BMotor.setTargetPosition(leftDR4BMotorPos);
         rightDR4BMotor.setTargetPosition(rightDR4BMotorPos);
         leftDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
