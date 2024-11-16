@@ -35,7 +35,6 @@ public class TeleOpMain extends OpMode {
 
         // helps with arm positions
         ILC.setArmZero(gamepad1.x);
-        ILC.setArmAbove(gamepad1.b);
 
         // updates telemetry
         ILC.addTelemetry(telemetry);

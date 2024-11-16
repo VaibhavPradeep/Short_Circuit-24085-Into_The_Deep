@@ -180,11 +180,6 @@ public class IntakeLiftCamera {
         rightArmServo.setPosition(0);
     }
 
-    public void setArmAbove(boolean b2) {
-        leftArmServo.setPosition(0.2);
-        rightArmServo.setPosition(0.2);
-    }
-
     // public double getDistance(DistanceUnit du){
     //    return distanceSensor.getDistance(du);
     //}
