@@ -50,7 +50,7 @@ public class IntakeLiftCamera {
         leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         
-        leftDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeServo = hwMap.get(CRServo.class, "intakeServo");
 
