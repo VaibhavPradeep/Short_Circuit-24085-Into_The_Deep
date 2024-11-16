@@ -62,7 +62,7 @@ public class IntakeLiftCamera {
         leftArmServo = hwMap.get(Servo.class, "leftArmServo");
         rightArmServo = hwMap.get(Servo.class, "rightArmServo");
 
-        rightArmServo.setDirection(Servo.Direction.REVERSE);
+        leftArmServo.setDirection(Servo.Direction.REVERSE);
 
         // leftArmServo.setPosition(0);
         // rightArmServo.setPosition(0);
