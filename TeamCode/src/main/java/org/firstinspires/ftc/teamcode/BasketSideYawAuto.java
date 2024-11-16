@@ -14,6 +14,8 @@ public class BasketSideYawAuto extends OpMode {
     final int driveToRack = 23;
 
     final double turnAroundForSpecimen = 180;
+
+
     // 0iiok
 
     @Override
@@ -26,10 +28,27 @@ public class BasketSideYawAuto extends OpMode {
     public void loop() {
 
         // move forward to basket
-        auto.strafe("left", 0.3, 37);
 
         // turn around
-        auto.drive(0.3,30);
+        auto.drive(-0.3,38);
+
+        ILCA.DR4BAndIntakeForBasket(10000, 4000);
+
+        ILCA.intakeOff();
+
+        ILCA.justDR4B(1000);
+
+        ILCA.justDR4B(1000);
+
+        ILCA.justDR4B(1000);
+
+        ILCA.justDR4B(1000);
+
+        ILCA.justDR4B(1000);
+
+        ILCA.justDR4B(1000);
+
+
 
         //go up a bit
 

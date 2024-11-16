@@ -17,7 +17,9 @@ public class IntakeLiftCameraAuto {
     // intake
     CRServo intakeServo;
     Servo wristServo;
-    Servo armServo;
+    Servo leftArmServo;
+    Servo rightArmServo;
+
 
     //Specimen
     Servo specimenServo;
@@ -63,91 +65,37 @@ public class IntakeLiftCameraAuto {
         specimenServo = hwMap.get(Servo.class,"specimenServo");
 
         //distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
-        wristServo = hwMap.get(Servo.class, "wristServo");
-        armServo = hwMap.get(Servo.class, "armServo");
+        leftArmServo = hwMap.get(Servo.class, "leftArmServo");
+        rightArmServo = hwMap.get(Servo.class, "rightArmServo");
+
     }
 
-    public void setDR4BForIntake() {
-        leftDR4BMotor.setTargetPosition(DR4B_INTAKE[0]);
-        rightDR4BMotor.setTargetPosition(DR4B_INTAKE[1]);
-        leftDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftDR4BMotor.setPower(DR4B_SPEED);
-        rightDR4BMotor.setPower(DR4B_SPEED);
-
-        if (leftDR4BMotor.getCurrentPosition() == DR4B_INTAKE[0] && rightDR4BMotor.getCurrentPosition() == DR4B_INTAKE[1]) {
-            leftDR4BMotor.setPower(0);
-            rightDR4BMotor.setPower(0);
-        }
-    }
-
-    public void setDR4BForDeposit() {
-        leftDR4BMotor.setTargetPosition(DR4B_DEPOSIT[0]);
-        rightDR4BMotor.setTargetPosition(DR4B_DEPOSIT[1]);
-        leftDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftDR4BMotor.setPower(DR4B_SPEED);
-        rightDR4BMotor.setPower(DR4B_SPEED);
-
-        if (leftDR4BMotor.getCurrentPosition() == DR4B_DEPOSIT[0] && rightDR4BMotor.getCurrentPosition() == DR4B_DEPOSIT[1]) {
-            leftDR4BMotor.setPower(0);
-            rightDR4BMotor.setPower(0);
-        }
-    }
-
-    public void setDR4BForHighRung() {
-        leftDR4BMotor.setTargetPosition(DR4B_HIGH_RUNG[0]);
-        rightDR4BMotor.setTargetPosition(DR4B_HIGH_RUNG[1]);
-        leftDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftDR4BMotor.setPower(DR4B_SPEED);
-        rightDR4BMotor.setPower(DR4B_SPEED);
-
-        if (leftDR4BMotor.getCurrentPosition() == DR4B_HIGH_RUNG[0] && rightDR4BMotor.getCurrentPosition() == DR4B_HIGH_RUNG[1]) {
-            leftDR4BMotor.setPower(0);
-            rightDR4BMotor.setPower(0);
-        }
-    }
-
-    public void setArmServoForIntake() {
-        armServo.setPosition(ARM_COLLECT);
-    }
-
-    public void setArmServoForDeposit() {
-        armServo.setPosition(ARM_DEPOSIT);
-    }
-    public void setWristServoForSpecimen() {
-        wristServo.setPosition(WRIST_SPECIMEN);
-    }
-
-    public void setWristServoForIntake() {
-        wristServo.setPosition(WRIST_INTAKE);
-    }
-
-    public void setIntakeServoForIntake(int milliseconds) {
+    public void DR4BAndIntakeForBasket(int milliseconds, int othermilliseconds) {
         timer.reset();
+        leftDR4BMotor.setPower(1);
+        rightDR4BMotor.setPower(1);
         if (timer.milliseconds() == milliseconds) {
+            leftDR4BMotor.setPower(0);
+            rightDR4BMotor.setPower(0);
+        }
+        if (timer.milliseconds() == othermilliseconds) {
             intakeServo.setPower(INTAKE_COLLECT);
+
         }
     }
 
-    public void setIntakeServoForDeposit(int milliseconds) {
-        timer.reset();
-        if (timer.milliseconds() == milliseconds) {
-            intakeServo.setPower(INTAKE_DEPOSIT);
-        }
-    }
-
-    public void setIntakeServoOff() {
+    public void intakeOff() {
         intakeServo.setPower(INTAKE_OFF);
     }
 
-    public void setSpecimenServoOpen() {
-        specimenServo.setPosition(SPECIMEN_COLLECT);
-    }
-
-    public void setSpecimenServoClose() {
-        specimenServo.setPosition(SPECIMEN_HOLD);
+    public void justDR4B(int milliseconds) {
+        timer.reset();
+        leftDR4BMotor.setPower(1);
+        rightDR4BMotor.setPower(1);
+        if (timer.milliseconds() == milliseconds) {
+            leftDR4BMotor.setPower(0);
+            rightDR4BMotor.setPower(0);
+        }
     }
 
 }
