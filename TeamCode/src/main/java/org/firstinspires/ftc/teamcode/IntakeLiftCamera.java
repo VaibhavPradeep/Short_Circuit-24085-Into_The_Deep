@@ -64,8 +64,8 @@ public class IntakeLiftCamera {
 
         rightArmServo.setDirection(Servo.Direction.REVERSE);
 
-        leftArmServo.setPosition(0.2);
-        rightArmServo.setPosition(0.2);
+        // leftArmServo.setPosition(0);
+        // rightArmServo.setPosition(0);
     }
 
     public void moveIntakeServo (boolean a1,boolean x1, boolean b1) {
