@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-@Autonomous( name = "Basketism")
+@Autonomous( name = "human")
 public class HumanPlayerYawAuto extends OpMode {
 
     DriveTrainYawMethods auto = new DriveTrainYawMethods();
     // IntakeLiftCameraAuto ILCA = new IntakeLiftCameraAuto();
 
-    final double speed = 0.6;
+    final double speed = 0.3;
 
-    final int driveToRack = 20;
+    final int driveToRack = 5;
 
     final double turnAroundForSpecimen = 180;
 
@@ -27,7 +27,7 @@ public class HumanPlayerYawAuto extends OpMode {
         auto.drive(speed, driveToRack);
 
         // turn around
-        auto.strafe("right", 0.6, 23);
+        auto.strafe("right", 0.3, 23);
 
         //go up a bit
 
