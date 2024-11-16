@@ -30,7 +30,7 @@ public class BasketSideYawAuto extends OpMode {
         // move forward to basket
 
         // turn around
-        auto.drive(0.3,38);
+        auto.drive(0.3,35);
 
         ILCA.DR4BAndIntakeForBasket(10000, 4000);
 
