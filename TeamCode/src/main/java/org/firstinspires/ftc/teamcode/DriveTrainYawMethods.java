@@ -85,15 +85,18 @@ public class DriveTrainYawMethods {
 
         // reset the timeout time and start motion.
         runtime.reset();
-        frontLeft.setPower(Math.abs(speed));
-        backLeft.setPower(Math.abs(speed));
-        frontRight.setPower(Math.abs(speed));
-        backRight.setPower(Math.abs(speed));
+        frontLeft.setPower(speed);
+        backLeft.setPower(speed);
+        frontRight.setPower(speed);
+        backRight.setPower(speed);
 
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        if (frontLeft.getCurrentPosition() == newFrontLeftTargetDrive && frontRight.getCurrentPosition() == newFrontRightTargetDrive && backLeft.getCurrentPosition() == newBackLeftTargetDrive && backRight.getCurrentPosition() == newBackRightTargetDrive) {
+            frontLeft.setPower(0);
+            backLeft.setPower(0);
+            frontRight.setPower(0);
+            backRight.setPower(0);
+        }
+
     }
 
     public void strafe(String direction, double speed, double distance) {
@@ -140,11 +143,12 @@ public class DriveTrainYawMethods {
         frontRight.setPower(Math.abs(speed));
         backRight.setPower(Math.abs(speed));
 
-        // Stop all motion;
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        if (frontLeft.getCurrentPosition() == newFrontLeftTargetStrafe && frontRight.getCurrentPosition() == newFrontRightTargetSrafe && backLeft.getCurrentPosition() == newBackLeftTargetStrafe && backRight.getCurrentPosition() == newBackRightTargetStrafe) {
+            frontLeft.setPower(0);
+            backLeft.setPower(0);
+            frontRight.setPower(0);
+            backRight.setPower(0);
+        }
     }
 
     public double getAngleDifference(double angle1, double angle2) {
