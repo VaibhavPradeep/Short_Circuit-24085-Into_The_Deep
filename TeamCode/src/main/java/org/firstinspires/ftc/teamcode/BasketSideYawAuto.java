@@ -14,7 +14,7 @@ public class BasketSideYawAuto extends OpMode {
     final int driveToRack = 23;
 
     final double turnAroundForSpecimen = 180;
-    // 0ii
+    // 0iiok
 
     @Override
     public void init() {
