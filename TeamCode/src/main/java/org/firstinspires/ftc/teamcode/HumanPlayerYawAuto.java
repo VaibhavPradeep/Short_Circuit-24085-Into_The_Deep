@@ -10,7 +10,7 @@ public class HumanPlayerYawAuto extends OpMode {
 
     final double speed = 0.6;
 
-    final int driveToRack = 23;
+    final int driveToRack = 20;
 
     final double turnAroundForSpecimen = 180;
 
@@ -27,7 +27,7 @@ public class HumanPlayerYawAuto extends OpMode {
         auto.drive(speed, driveToRack);
 
         // turn around
-        auto.turn(speed, turnAroundForSpecimen, "left");
+        auto.strafe("right", 0.6, 23);
 
         //go up a bit
 
