@@ -25,7 +25,7 @@ public class IntakeLiftCamera {
     Servo specimenServo;
 
     //distance sensor
-    DistanceSensor distanceSensor;
+    // DistanceSensor distanceSensor;
 
     // INTAKE SERVO
     final double INTAKE_COLLECT    = -1.0;
@@ -43,7 +43,7 @@ public class IntakeLiftCamera {
     double DR4B_SPEED = 0.6;
 
     public void initILC(HardwareMap hwMap) {
-        distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
+        // distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
 
         leftDR4BMotor = hwMap.get(DcMotor.class, "leftDR4BMotor");
         rightDR4BMotor = hwMap.get(DcMotor.class, "rightDR4BMotor");
@@ -56,7 +56,7 @@ public class IntakeLiftCamera {
 
         specimenServo = hwMap.get(Servo.class,"specimenServo");
 
-        distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
+        // distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
 
         leftArmServo = hwMap.get(Servo.class, "leftArmServo");
         rightArmServo = hwMap.get(Servo.class, "rightArmServo");
@@ -199,9 +199,9 @@ public class IntakeLiftCamera {
         rightArmServo.setPosition(0.08);
     }
 
-    public double getDistance(DistanceUnit du){
-        return distanceSensor.getDistance(du);
-    }
+    // public double getDistance(DistanceUnit du){
+    //    return distanceSensor.getDistance(du);
+    //}
     public void addTelemetry(Telemetry telemetry) {
         telemetry.addData("left DR4B motor position", leftDR4BMotor.getCurrentPosition());
         telemetry.addData("right DR4B motor position", rightDR4BMotor.getCurrentPosition());
@@ -210,14 +210,6 @@ public class IntakeLiftCamera {
         telemetry.addData("right servo pos", rightArmServo.getPosition());
 
         telemetry.addData("specimen servo position", specimenServo.getPosition());
-
-        telemetry.addData("distance away from anything", getDistance(DistanceUnit.INCH));
-
-        if (getDistance(DistanceUnit.INCH) <= 3) {
-            telemetry.addLine("TOO CLOSE");
-        } else if (getDistance(DistanceUnit.INCH) <= 6) {
-            telemetry.addLine("GETTING CLOSE");
-        }
 
         telemetry.update();
     }
