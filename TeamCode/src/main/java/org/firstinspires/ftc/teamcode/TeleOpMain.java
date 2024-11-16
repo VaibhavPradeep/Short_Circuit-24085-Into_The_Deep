@@ -31,10 +31,10 @@ public class TeleOpMain extends OpMode {
         ILC.moveSpecimenServo(gamepad2.left_bumper, gamepad2.right_bumper);
 
         // moves arm servos, y is up, a is down
-        ILC.moveArmServos(gamepad2.y, gamepad2.a);
+        ILC.moveArmServos(gamepad2.y, gamepad2.x, gamepad2.a, gamepad2.b);
 
         // helps with arm positions
-        ILC.setArmZero(gamepad1.x);
+        //ILC.setArmZero(gamepad1.x);
 
         // updates telemetry
         ILC.addTelemetry(telemetry);

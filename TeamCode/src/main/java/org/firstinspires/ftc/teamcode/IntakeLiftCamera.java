@@ -151,36 +151,20 @@ public class IntakeLiftCamera {
 
     }
 
-    public void moveArmServos(boolean leftbump2, boolean rightbump2) {
-        // Get the current positions of both servos
-        double leftservoPosition = leftArmServo.getPosition();
-        double rightservoPosition = rightArmServo.getPosition();
-
-        // Calculate new positions
-        if (leftbump2) {
-            leftservoPosition += 0.5;
-            rightservoPosition += 0.5;
-            if (leftservoPosition > 1) {
-                leftservoPosition = 1;
-            }
-            if (rightservoPosition > 1) {
-                rightservoPosition = 1;
-            }
-        } else if (rightbump2) {
-            leftservoPosition -= 0.5;
-            rightservoPosition -= 0.5;
-            if (leftservoPosition < 0) {
-                leftservoPosition = 0;
-            }
-            if (rightservoPosition < 0) {
-                rightservoPosition = 0;
-            }
-        }
-
-        // Set both positions simultaneously
-        leftArmServo.setPosition(leftservoPosition);
-        rightArmServo.setPosition(rightservoPosition);
-
+    public void moveArmServos(boolean y, boolean x, boolean a, boolean b) {
+        if (y) {
+            leftArmServo.setPosition(0);
+            rightArmServo.setPosition(0);
+        } else if (x) {
+            leftArmServo.setPosition(0.33);
+            rightArmServo.setPosition(0.33);
+        } else if (a) {
+            leftArmServo.setPosition(0.67);
+            rightArmServo.setPosition(0.67);
+        } else if (b) {
+        leftArmServo.setPosition(1);
+        rightArmServo.setPosition(1);
+    }
     }
 
     public void setArmZero(boolean x2) {
