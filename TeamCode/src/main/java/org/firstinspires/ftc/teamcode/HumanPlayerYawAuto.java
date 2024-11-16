@@ -10,6 +10,10 @@ public class HumanPlayerYawAuto extends OpMode {
 
     final double speed = 0.6;
 
+    final int driveToRack = 23;
+
+    final double turnAroundForSpecimen = 180;
+
     @Override
     public void init() {
         auto.initDrivetrainYaw(hardwareMap);
@@ -20,10 +24,10 @@ public class HumanPlayerYawAuto extends OpMode {
     public void loop() {
 
         // move forward to basket
-        auto.drive(speed, 23);
+        auto.drive(speed, driveToRack);
 
         // turn around
-        auto.turn(speed, 180, "left");
+        auto.turn(speed, turnAroundForSpecimen, "left");
 
         //go up a bit
 
