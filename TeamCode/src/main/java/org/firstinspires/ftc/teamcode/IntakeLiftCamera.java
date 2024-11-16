@@ -37,7 +37,7 @@ public class IntakeLiftCamera {
     final double ARM_DEPOSIT = 1;
 
     // CHANGE LATER yyj
-    final double SPECIMEN_COLLECT = 0.3;
+    final double SPECIMEN_COLLECT = 0.4;
     final double SPECIMEN_HOLD = 0;
 
     double DR4B_SPEED = 0.6;
