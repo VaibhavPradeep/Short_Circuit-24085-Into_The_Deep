@@ -23,7 +23,7 @@ public class IntakeLiftCameraAuto {
     Servo specimenServo;
 
     //distance sensor
-    DistanceSensor distanceSensor;
+    // DistanceSensor distanceSensor;
 
     // DR4B
     final int[] DR4B_INTAKE = {0,0};
@@ -51,7 +51,7 @@ public class IntakeLiftCameraAuto {
     double DR4B_SPEED = 0.6;
 
     public void initILCA(HardwareMap hwMap) {
-        distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
+        //distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
 
         leftDR4BMotor = hwMap.get(DcMotor.class, "leftDR4BMotor");
         rightDR4BMotor = hwMap.get(DcMotor.class, "rightDR4BMotor");
@@ -62,7 +62,7 @@ public class IntakeLiftCameraAuto {
 
         specimenServo = hwMap.get(Servo.class,"specimenServo");
 
-        distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
+        //distanceSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
         wristServo = hwMap.get(Servo.class, "wristServo");
         armServo = hwMap.get(Servo.class, "armServo");
     }
