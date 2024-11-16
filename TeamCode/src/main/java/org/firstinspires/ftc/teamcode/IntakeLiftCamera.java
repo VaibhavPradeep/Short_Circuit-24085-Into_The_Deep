@@ -64,11 +64,8 @@ public class IntakeLiftCamera {
 
         rightArmServo.setDirection(Servo.Direction.REVERSE);
 
-        leftArmServo.setPosition(0);
-        rightArmServo.setPosition(0);
-
-        leftArmServo.setPosition(0.08);
-        rightArmServo.setPosition(0.08);
+        leftArmServo.setPosition(0.2);
+        rightArmServo.setPosition(0.2);
     }
 
     public void moveIntakeServo (boolean a1,boolean x1, boolean b1) {
@@ -155,34 +152,26 @@ public class IntakeLiftCamera {
     }
 
     public void moveArmServos(boolean leftbump2, boolean rightbump2) {
+        // Get the current positions of both servos
         double leftservoPosition = leftArmServo.getPosition();
         double rightservoPosition = rightArmServo.getPosition();
 
+        // Calculate new positions
         if (leftbump2) {
             leftservoPosition += 0.003;
             rightservoPosition += 0.003;
-            if (leftservoPosition > 1) {
-                leftservoPosition = 1;
-            }
-            if (rightservoPosition > 1) {
-                rightservoPosition = 1;
-            }
         } else if (rightbump2) {
             leftservoPosition -= 0.003;
             rightservoPosition -= 0.003;
-            if (leftservoPosition < 0) {
-                leftservoPosition = 0;
-            }
-            if (rightservoPosition < 0) {
-                rightservoPosition = 0;
-            }
         }
 
+        // Clamp the positions within the 0 to 1 range
+        leftservoPosition = Math.max(0, Math.min(1, leftservoPosition));
+        rightservoPosition = Math.max(0, Math.min(1, rightservoPosition));
+
+        // Set both positions simultaneously
         leftArmServo.setPosition(leftservoPosition);
         rightArmServo.setPosition(rightservoPosition);
-
-        leftservoPosition = leftArmServo.getPosition();
-        rightservoPosition = rightArmServo.getPosition();
 
     }
 
@@ -192,8 +181,8 @@ public class IntakeLiftCamera {
     }
 
     public void setArmAbove(boolean b2) {
-        leftArmServo.setPosition(0.08);
-        rightArmServo.setPosition(0.08);
+        leftArmServo.setPosition(0.2);
+        rightArmServo.setPosition(0.2);
     }
 
     // public double getDistance(DistanceUnit du){
