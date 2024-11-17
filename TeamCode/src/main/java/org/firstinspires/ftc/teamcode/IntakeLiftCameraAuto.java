@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,7 +17,6 @@ public class IntakeLiftCameraAuto {
 
     // intake
     CRServo intakeServo;
-    Servo wristServo;
     Servo leftArmServo;
     Servo rightArmServo;
 
@@ -28,27 +28,17 @@ public class IntakeLiftCameraAuto {
     // DistanceSensor distanceSensor;
 
     // DR4B
-    final int[] DR4B_INTAKE = {0,0};
-    final int[] DR4B_DEPOSIT = {50,50};
-
-    final int[] DR4B_HIGH_RUNG = {100,100};
 
     // INTAKE SERVO
     final double INTAKE_COLLECT    = -1.0;
     final double INTAKE_OFF        =  0.0;
     final double INTAKE_DEPOSIT    =  0.5;
 
-    // CHANGE, ARM SERVO
-    final double ARM_COLLECT = 0;
-    final double ARM_DEPOSIT = 1;
 
-    // CHANGE LATER
     final double SPECIMEN_COLLECT = 1.0;
     final double SPECIMEN_HOLD = 0;
 
     // WRIST SERVO POSITIONS, CHANGE
-    final double WRIST_SPECIMEN = 0;
-    final double WRIST_INTAKE = 0.5;
 
     double DR4B_SPEED = 0.6;
 
@@ -59,6 +49,9 @@ public class IntakeLiftCameraAuto {
         rightDR4BMotor = hwMap.get(DcMotor.class, "rightDR4BMotor");
         leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightDR4BMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         intakeServo = hwMap.get(CRServo.class, "intakeServo");
 
