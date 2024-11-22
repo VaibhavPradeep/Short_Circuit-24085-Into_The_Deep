@@ -3,10 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous( name = "human")
-public class HumanPlayerYawAuto extends OpMode {
+public class HumanPlayer extends OpMode {
 
-    DriveTrainYawMethods auto = new DriveTrainYawMethods();
-    // IntakeLiftCameraAuto ILCA = new IntakeLiftCameraAuto();
+    Drivetrain auto = new Drivetrain();
 
     final double speed = 0.3;
 
@@ -16,21 +15,12 @@ public class HumanPlayerYawAuto extends OpMode {
 
     @Override
     public void init() {
-        auto.initDrivetrainYaw(hardwareMap);
-        // ILCA.initILCA(hardwareMap);rg
+        auto.init(hardwareMap);
     }
 
     @Override
     public void start() {
-
-        // move forward to basket
-        auto.drive(speed, driveToRack);
-
-        // turn around
         auto.strafe("right", 0.3, 50);
-
-        //go up a bit
-
     }
 
     @Override

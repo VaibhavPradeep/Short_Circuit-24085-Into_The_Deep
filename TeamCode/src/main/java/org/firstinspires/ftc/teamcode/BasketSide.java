@@ -4,10 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 @Autonomous(name = "basket")
-public class BasketSideYawAuto extends OpMode {
+public class BasketSide extends OpMode {
 
-    DriveTrainYawMethods auto = new DriveTrainYawMethods();
-    IntakeLiftCameraAuto ILCA = new IntakeLiftCameraAuto();
+    Drivetrain auto = new Drivetrain();
 
     final double speed = 0.6;
 
@@ -20,8 +19,7 @@ public class BasketSideYawAuto extends OpMode {
 
     @Override
     public void init() {
-        auto.initDrivetrainYaw(hardwareMap);
-        ILCA.initILCA(hardwareMap);
+        auto.init(hardwareMap);
     }
 
     @Override
@@ -31,22 +29,6 @@ public class BasketSideYawAuto extends OpMode {
 
         // turn around
         auto.drive(0.3,35);
-
-        ILCA.DR4BAndIntakeForBasket(10000, 4000);
-
-        ILCA.intakeOff();
-
-        ILCA.justDR4B(1000);
-
-        ILCA.justDR4B(1000);
-
-        ILCA.justDR4B(1000);
-
-        ILCA.justDR4B(1000);
-
-        ILCA.justDR4B(1000);
-
-        ILCA.justDR4B(1000);
 
 
 

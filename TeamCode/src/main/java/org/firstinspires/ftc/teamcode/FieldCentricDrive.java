@@ -40,8 +40,10 @@ public class FieldCentricDrive extends OpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
         ));
-
-//         = BHI260IMU.AngleUnit.DEGREES;
+        /*
+        BHI260IMU.Parameters parameters = new BHI260IMU.Parameters();
+        parameters.angleUnit = BHI260IMU.AngleUnit.DEGREES;
+         */
         imu = hardwareMap.get(BHI260IMU.class, "imu");
         imu.initialize(parameters);
     }

@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-public class DriveTrainYawMethods {
+public class Drivetrain {
 
     final double WHEEL_DIAMETER = 4.09;
     final double TICKS_PER_WHEEL_REVOLUTION = 384.5;
-    final double INCHES_PER_WHEEL_REVOLUTION = 12.8632;
     final double WHEEL_COUNTS_PER_INCH = (TICKS_PER_WHEEL_REVOLUTION) / (WHEEL_DIAMETER * Math.PI);
     final double DRIVE_GEAR_REDUCTION = 1.0; // just one so not needed in equation
 
@@ -28,11 +27,11 @@ public class DriveTrainYawMethods {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    IMU imu;
-    IMU.Parameters parameters;
+    BHI260IMU imu; // Updated to use the new IMU type
+    BHI260IMU.Parameters parameters;
     YawPitchRollAngles angles;
 
-    public void initDrivetrainYaw(HardwareMap hwMap) {
+    public void init(HardwareMap hwMap) {
         frontLeft = hwMap.get(DcMotor.class, "frontLeft");
         backLeft = hwMap.get(DcMotor.class, "backLeft");
         frontRight = hwMap.get(DcMotor.class, "frontRight");
@@ -204,16 +203,16 @@ public class DriveTrainYawMethods {
     }
 
     public void initGyro(HardwareMap hwMap) {
-        parameters = new IMU.Parameters(
+        parameters = new BHI260IMU.Parameters(
                 new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.UP,
                         RevHubOrientationOnRobot.UsbFacingDirection.LEFT
                 )
         );
 
-        imu = hwMap.get(IMU.class, "imu");
-        angles = imu.getRobotYawPitchRollAngles();
+        imu = hwMap.get(BHI260IMU.class, "imu");
         imu.initialize(parameters);
+        angles = imu.getRobotYawPitchRollAngles(); // Correct usage of the newest IMU API
     }
 
 }

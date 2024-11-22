@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "TeleOpMain")
 public class TeleOpMain extends OpMode {
     MecanumDriveCircuit MD = new MecanumDriveCircuit();
-    IntakeLiftCamera ILC = new IntakeLiftCamera();
+    IntakeLiftCameraOld ILC = new IntakeLiftCameraOld();
 
     @Override
     public void init() {
