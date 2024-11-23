@@ -31,7 +31,7 @@ public class Drivetrain {
     BHI260IMU.Parameters parameters;
     YawPitchRollAngles angles;
 
-    public void init(HardwareMap hwMap) {
+    public void initDrivetrain(HardwareMap hwMap) {
         frontLeft = hwMap.get(DcMotor.class, "frontLeft");
         backLeft = hwMap.get(DcMotor.class, "backLeft");
         frontRight = hwMap.get(DcMotor.class, "frontRight");

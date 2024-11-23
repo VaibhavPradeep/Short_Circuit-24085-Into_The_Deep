@@ -19,7 +19,7 @@ public class BasketSide extends OpMode {
 
     @Override
     public void init() {
-        auto.init(hardwareMap);
+        auto.initDrivetrain(hardwareMap);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class HumanPlayer extends OpMode {
 
     @Override
     public void init() {
-        auto.init(hardwareMap);
+        auto.initDrivetrain(hardwareMap);
     }
 
     @Override

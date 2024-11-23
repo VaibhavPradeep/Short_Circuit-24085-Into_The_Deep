@@ -11,14 +11,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class TeleOpFC extends LinearOpMode {
     IntakeLiftCamera ILC = new IntakeLiftCamera();
-
     Drivetrain drivetrain = new Drivetrain();
 
     @Override
     public void runOpMode() throws InterruptedException {
+        ILC.initIntakeLiftCamera(hardwareMap);
+        drivetrain.initDrivetrain(hardwareMap);
 
         double speed = 0.8;
-        
+
         BHI260IMU imu; // Updated to use the new IMU type
         BHI260IMU.Parameters parameters;
         YawPitchRollAngles angles;
@@ -40,6 +41,7 @@ public class TeleOpFC extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.update();
 
+            // Drivetrain
             angles = imu.getRobotYawPitchRollAngles();
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double driveAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4 - angles.getYaw(AngleUnit.RADIANS);
@@ -75,12 +77,58 @@ public class TeleOpFC extends LinearOpMode {
                 drivetrain.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             }
 
+            // Double Reverse Four Bar
             if (gamepad2.dpad_up) {
-                ILC.dPadMove("up");
+                ILC.DR4BMove("up", gamepad2.left_trigger, gamepad2.right_trigger);
             } else if (gamepad2.dpad_down) {
-                ILC.dPadMove("down");
+                ILC.DR4BMove("down", gamepad2.left_trigger, gamepad2.right_trigger);
             }
 
+            // Intake
+            if (gamepad1.x) {
+                ILC.intakeIn();
+            } else if (gamepad1.a) {
+                ILC.intakeOut();
+            } else if (gamepad1.b) {
+                ILC.intakeOff();
+            }
+
+            // Coaxial Virtual Four Bar
+            // Virtual Four Bar
+            if (gamepad2.dpad_up) {
+                ILC.transferOrZeroCV4B();
+            } else if (gamepad2.dpad_down) {
+                ILC.collectCV4B();
+            }
+
+            // Rotate Intake
+            if (gamepad2.dpad_left) {
+                ILC.rotateToTransfer();
+            } else if (gamepad2.dpad_right) {
+                ILC.rotateToIntake();
+            }
+
+            // Outake
+            if (gamepad2.y) {
+                ILC.depositOutake();
+            } else if (gamepad1.a) {
+                ILC.transferOrZeroOutake();
+            }
+
+            // Specimen
+            if (gamepad2.left_bumper) {
+                ILC.collectSpecimen();
+            } else if (gamepad2.right_bumper) {
+                ILC.holdSpecimen();
+            }
+
+            // Other
+            if (gamepad1.b) {
+                ILC.zeroServos();
+            }
+
+            ILC.addTelemetry(telemetry);
+            telemetry.update();
         }
     }
 }
