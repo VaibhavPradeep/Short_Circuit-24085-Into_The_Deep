@@ -39,6 +39,6 @@ public class ServosTest extends OpMode {
             Servo1.setPosition(0.3);
             Servo1.setPosition(0.3);
         }
-// o
+// oi
     }
 }
