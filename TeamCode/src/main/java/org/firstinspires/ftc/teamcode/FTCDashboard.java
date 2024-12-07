@@ -1,5 +1,38 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp(name = "RobotTest")
+@Config
+public class FTCDashboard extends LinearOpMode {
+
+    Servo Servo1;
+    Servo Servo2;
+    public static double armPos = 0;
+
+    @Override public void runOpMode() throws InterruptedException {
+
+        // Wait until we're told to go
+        waitForStart();
+        Servo1 = hardwareMap.get(Servo.class, "servo1");
+        Servo2 = hardwareMap.get(Servo.class, "servo1");
+
+        while (opModeIsActive()) {
+            Servo1.setPosition(armPos);
+            Servo2.setPosition(armPos);
+        }
+    }
+}
+
+
+
+
+/*
+package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -42,3 +75,4 @@ public class FTCDashboard extends LinearOpMode {
     }
 }
 
+ */
