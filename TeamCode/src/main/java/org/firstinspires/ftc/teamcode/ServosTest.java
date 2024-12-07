@@ -28,16 +28,16 @@ public class ServosTest extends OpMode {
     public void loop() {
         if (gamepad1.y) {
             Servo1.setPosition(0);
-            Servo1.setPosition(0);
+            Servo2.setPosition(0);
         } else if (gamepad1.x) {
             Servo1.setPosition(0.1);
-            Servo1.setPosition(0.1);
+            Servo2.setPosition(0.1);
         } else if (gamepad1.a) {
             Servo1.setPosition(0.2);
-            Servo1.setPosition(0.2);
+            Servo2.setPosition(0.2);
         } else if (gamepad1.b) {
             Servo1.setPosition(0.3);
-            Servo1.setPosition(0.3);
+            Servo2.setPosition(0.3);
         }
 // oi
     }
