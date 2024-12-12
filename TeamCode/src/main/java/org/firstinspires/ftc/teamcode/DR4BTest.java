@@ -1,45 +1,43 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="motor encoder test", group="Testing")
+@TeleOp(name = "DR4B Test")
 public class DR4BTest extends OpMode {
+    int[] maxPositions = {4500, 4500}; // potentially 4600
+
+    int[] minPositions = {0, 0};
+    
     private DcMotor motor1;
     private DcMotor motor2;
 
-    public void DR4BMoving(double lefttrigger2, double righttrigger2) {
+    public void dPadMove(String direction) {
         int rightPos = motor2.getCurrentPosition();
         int leftPos = motor1.getCurrentPosition();
 
-        double DR4BSpeed = 0;
-
-        if(lefttrigger2 > 0.1) {
+        if(direction.equals("up") && rightPos <= maxPositions[0] && leftPos <= maxPositions[1]) {
             rightPos += 100;
             leftPos += 100;
-            DR4BSpeed = lefttrigger2;
         }
-        else if(righttrigger2 > 0.1) {
+        else if(direction.equals("down") && rightPos >= minPositions[0] && leftPos >= minPositions[1]) {
             rightPos -= 100;
             leftPos -= 100;
-            DR4BSpeed = righttrigger2;
         }
 
         motor1.setTargetPosition(leftPos);
         motor2.setTargetPosition(rightPos);
         motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor1.setPower(DR4BSpeed);
-        motor2.setPower(DR4BSpeed);
+        motor1.setPower(1);
+        motor2.setPower(1);
 
-        while (motor1.isBusy() && motor2.isBusy()) {
-            // Do nothing, just wait for the motors to finish moving
+        if (motor1.getCurrentPosition() == leftPos && motor2.getCurrentPosition() == rightPos) {
+            motor1.setPower(0);
+            motor2.setPower(0);
         }
-
-        motor1.setPower(0);
-        motor2.setPower(0);
-        DR4BSpeed = 0;
     }
 
     @Override
@@ -61,7 +59,12 @@ public class DR4BTest extends OpMode {
     @Override
     public void loop() {
 
-        DR4BMoving(gamepad2.left_trigger, gamepad2.right_trigger);
+        if(gamepad1.dpad_up) {
+            dPadMove("up");
+        }
+        else if (gamepad1.dpad_down) {
+            dPadMove("down");
+        }
 
         telemetry.addData("leftDR4B", motor1.getCurrentPosition());
         telemetry.addData("rightDR4B", motor2.getCurrentPosition());
