@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,6 +13,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class Drivetrain {
+
+    LinearOpMode opMode;
+
+    public Drivetrain(LinearOpMode op) {
+        opMode = op;
+    }
 
     final double WHEEL_DIAMETER = 4.09;
     final double TICKS_PER_WHEEL_REVOLUTION = 384.5;
@@ -37,8 +45,10 @@ public class Drivetrain {
         frontRight = hwMap.get(DcMotor.class, "frontRight");
         backRight = hwMap.get(DcMotor.class, "backRight");
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -68,10 +78,10 @@ public class Drivetrain {
         int newFrontRightTargetDrive;
         int newBackRightTargetDrive;
 
-        newFrontLeftTargetDrive = frontLeft.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newBackLeftTargetDrive = backLeft.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newFrontRightTargetDrive = frontRight.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newBackRightTargetDrive = backRight.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newFrontLeftTargetDrive = frontLeft.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newBackLeftTargetDrive = backLeft.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newFrontRightTargetDrive = frontRight.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newBackRightTargetDrive = backRight.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
 
         frontLeft.setTargetPosition(newFrontLeftTargetDrive);
         backLeft.setTargetPosition(newBackLeftTargetDrive);
@@ -83,17 +93,31 @@ public class Drivetrain {
         frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        frontLeft.setPower(speed);
-        backLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backRight.setPower(speed);
+        frontLeft.setPower(Math.abs(speed));
+        backLeft.setPower(Math.abs(speed));
+        frontRight.setPower(Math.abs(speed));
+        backRight.setPower(Math.abs(speed));
 
-        if (frontLeft.getCurrentPosition() == newFrontLeftTargetDrive && frontRight.getCurrentPosition() == newFrontRightTargetDrive && backLeft.getCurrentPosition() == newBackLeftTargetDrive && backRight.getCurrentPosition() == newBackRightTargetDrive) {
-            frontLeft.setPower(0);
-            backLeft.setPower(0);
-            frontRight.setPower(0);
-            backRight.setPower(0);
+        while (opMode.opModeIsActive() && (frontLeft.isBusy() && frontRight.isBusy())) {
+
+            // Display it for the driver.
+            opMode.telemetry.addData("Path1",  "Running to FL %7d :FR %7d :BL %7d :BR %7d", newFrontLeftTargetDrive,  newFrontRightTargetDrive, newBackLeftTargetDrive, newBackRightTargetDrive);
+            opMode.telemetry.addData("Path2",  "Running at FL %7f :FR %7f :BL %7f :BR %7f",
+                    frontLeft.getPower(),
+                    frontRight.getPower(),
+                    backLeft.getPower(),
+                    backRight.getPower());
+            opMode.telemetry.update();
+
+            if(opMode.isStopRequested()) {
+                break;
+            }
         }
+
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
 
     }
 
@@ -106,16 +130,16 @@ public class Drivetrain {
         direction = direction.toLowerCase();
 
         if(direction.equals("right")) {
-            newFrontLeftTargetStrafe = frontLeft.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
-            newBackLeftTargetStrafe = backLeft.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
-            newFrontRightTargetSrafe = frontRight.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
-            newBackRightTargetStrafe = backRight.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
-        }
-        else if(direction.equals("left")) {
             newFrontLeftTargetStrafe = frontLeft.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
             newBackLeftTargetStrafe = backLeft.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
             newFrontRightTargetSrafe = frontRight.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
             newBackRightTargetStrafe = backRight.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
+        }
+        else if(direction.equals("left")) {
+            newFrontLeftTargetStrafe = frontLeft.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
+            newBackLeftTargetStrafe = backLeft.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
+            newFrontRightTargetSrafe = frontRight.getCurrentPosition() + (int) (distance * WHEEL_COUNTS_PER_INCH);
+            newBackRightTargetStrafe = backRight.getCurrentPosition() - (int) (distance * WHEEL_COUNTS_PER_INCH);
         }
         else {
             newFrontLeftTargetStrafe = frontLeft.getCurrentPosition();
@@ -134,18 +158,31 @@ public class Drivetrain {
         frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // reset the timeout time and start motion.
-        frontLeft.setPower(speed);
-        backLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backRight.setPower(speed);
+        frontLeft.setPower(Math.abs(speed));
+        backLeft.setPower(Math.abs(speed));
+        frontRight.setPower(Math.abs(speed));
+        backRight.setPower(Math.abs(speed));
 
-        if (frontLeft.getCurrentPosition() == newFrontLeftTargetStrafe && frontRight.getCurrentPosition() == newFrontRightTargetSrafe && backLeft.getCurrentPosition() == newBackLeftTargetStrafe && backRight.getCurrentPosition() == newBackRightTargetStrafe) {
-            frontLeft.setPower(0);
-            backLeft.setPower(0);
-            frontRight.setPower(0);
-            backRight.setPower(0);
+        while (opMode.opModeIsActive() && (frontLeft.isBusy() && frontRight.isBusy())) {
+
+            // Display it for the driver.
+            opMode.telemetry.addData("Path1",  "Running to FL %7d :FR %7d :BL %7d :BR %7d", newFrontLeftTargetStrafe,  newFrontRightTargetSrafe, newBackLeftTargetStrafe, newBackRightTargetStrafe);
+            opMode.telemetry.addData("Path2",  "Running at FL %7f :FR %7f :BL %7f :BR %7f",
+                    frontLeft.getPower(),
+                    frontRight.getPower(),
+                    backLeft.getPower(),
+                    backRight.getPower());
+            opMode.telemetry.update();
+
+            if(opMode.isStopRequested()) {
+                break;
+            }
         }
+
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
     }
 
     public double getAngleDifference(double angle1, double angle2) {
@@ -181,8 +218,14 @@ public class Drivetrain {
         frontRight.setPower(-power);
         backRight.setPower(-power);
 
-        while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && directionMultiplier * getAngleDifference(angles.getYaw(AngleUnit.DEGREES), angle) < 0) {
+        while (opMode.opModeIsActive() && directionMultiplier * getAngleDifference(angles.getYaw(AngleUnit.DEGREES), angle) < 0) {
+            opMode.telemetry.addData("heading", angles.getYaw(AngleUnit.DEGREES));
+            opMode.telemetry.update();
             angles = imu.getRobotYawPitchRollAngles();
+
+            if(opMode.isStopRequested()) {
+                break;
+            }
         }
 
         frontLeft.setPower(0);

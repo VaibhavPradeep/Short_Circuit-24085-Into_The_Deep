@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class TeleOpFC extends LinearOpMode {
     IntakeLiftCamera ILC = new IntakeLiftCamera();
-    Drivetrain drivetrain = new Drivetrain();
+    Drivetrain drivetrain = new Drivetrain(this);
 
     @Override
     public void runOpMode() throws InterruptedException {

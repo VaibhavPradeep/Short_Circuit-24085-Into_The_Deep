@@ -63,22 +63,21 @@ public class IntakeLiftCamera {
     final double SPECIMEN_COLLECT = 0;
 
     // Double Reverse Four Bar
-    public void moveDR4BMotors (double lefttrigger2, double righttrigger2) {
+    public void resetDR4BMotors () {
+        leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void moveDR4BMotorsAuto (int ticks) {
         int leftDR4BMotorPos = leftDR4BMotor.getCurrentPosition();
         int rightDR4BMotorPos = rightDR4BMotor.getCurrentPosition();
 
-        double DR4BSpeed = 0;
+        double DR4BSpeed = 0.8;
 
-        if(lefttrigger2 > 0.1) {
-            leftDR4BMotorPos += 50;
-            rightDR4BMotorPos += 50;
-            DR4BSpeed = lefttrigger2;
-        }
-        else if(righttrigger2 > 0.1) {
-            leftDR4BMotorPos -= 50;
-            rightDR4BMotorPos -= 50;
-            DR4BSpeed = righttrigger2;
-        }
+        leftDR4BMotorPos += ticks;
+        rightDR4BMotorPos += ticks;
 
         leftDR4BMotor.setTargetPosition(leftDR4BMotorPos);
         rightDR4BMotor.setTargetPosition(rightDR4BMotorPos);
@@ -87,11 +86,12 @@ public class IntakeLiftCamera {
         leftDR4BMotor.setPower(DR4BSpeed);
         rightDR4BMotor.setPower(DR4BSpeed);
 
-        if (leftDR4BMotor.getCurrentPosition() == leftDR4BMotorPos && rightDR4BMotor.getCurrentPosition() == rightDR4BMotorPos) {
-            leftDR4BMotor.setPower(0);
-            rightDR4BMotor.setPower(0);
+        while (leftDR4BMotor.isBusy() && rightDR4BMotor.isBusy()) {
+            // Do nothing, just wait for the motors to finish moving
         }
 
+        leftDR4BMotor.setPower(0);
+        rightDR4BMotor.setPower(0);
         DR4BSpeed = 0;
     }
     public void DR4BMove(String direction, double lefttrigger2, double righttrigger2) {
@@ -118,11 +118,13 @@ public class IntakeLiftCamera {
         leftDR4BMotor.setPower(DR4BSpeed);
         rightDR4BMotor.setPower(DR4BSpeed);
 
-        if (leftDR4BMotor.getCurrentPosition() == leftPos && rightDR4BMotor.getCurrentPosition() == rightPos) {
-            leftDR4BMotor.setPower(0);
-            rightDR4BMotor.setPower(0);
-            DR4BSpeed = 0;
+        while (leftDR4BMotor.isBusy() && rightDR4BMotor.isBusy()) {
+            // Do nothing, just wait for the motors to finish moving
         }
+
+        leftDR4BMotor.setPower(0);
+        rightDR4BMotor.setPower(0);
+        DR4BSpeed = 0;
     }
 
     // Intake

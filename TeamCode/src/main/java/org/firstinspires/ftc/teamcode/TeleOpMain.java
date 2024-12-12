@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "TeleOpMain")
+@TeleOp(name = "TeleOpMainOld")
 public class TeleOpMain extends OpMode {
     MecanumDriveCircuit MD = new MecanumDriveCircuit();
     IntakeLiftCameraOld ILC = new IntakeLiftCameraOld();

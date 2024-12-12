@@ -1,19 +1,16 @@
-
-
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "servotest")
-public class ServosTest extends OpMode {
+@TeleOp(name = "servotest", group="Testing")
+public class ServosTest extends LinearOpMode {
     Servo Servo1;
     Servo Servo2;
 
     @Override
-    public void init() {
-
+    public void runOpMode() {
         Servo1 = hardwareMap.get(Servo.class, "servo1");
         Servo2 = hardwareMap.get(Servo.class, "servo2");
 
@@ -22,23 +19,34 @@ public class ServosTest extends OpMode {
         Servo1.setPosition(0);
         Servo2.setPosition(0);
 
-    }
+        waitForStart();
 
-    @Override
-    public void loop() {
-        if (gamepad1.y) {
-            Servo1.setPosition(0);
-            Servo2.setPosition(0);
-        } else if (gamepad1.x) {
-            Servo1.setPosition(0.1);
-            Servo2.setPosition(0.1);
-        } else if (gamepad1.a) {
-            Servo1.setPosition(0.2);
-            Servo2.setPosition(0.2);
-        } else if (gamepad1.b) {
-            Servo1.setPosition(0.3);
-            Servo2.setPosition(0.3);
+        while (opModeIsActive()) {
+            if (gamepad1.y) {
+                Servo1.setPosition(0);
+                Servo2.setPosition(0);
+            } else if (gamepad1.x) {
+                Servo1.setPosition(0.07);
+                Servo2.setPosition(0.07);
+            } else if (gamepad1.a) {
+                Servo1.setPosition(0.14);
+                Servo2.setPosition(0.14);
+            } else if (gamepad1.b) {
+                Servo1.setPosition(0.28);
+                Servo2.setPosition(0.28);
+            } else if (gamepad1.dpad_up) {
+                Servo1.setPosition(0.35);
+                Servo2.setPosition(0.35);
+            } else if (gamepad1.dpad_left) {
+                Servo1.setPosition(0.42);
+                Servo2.setPosition(0.42);
+            } else if (gamepad1.dpad_down) {
+                Servo1.setPosition(0.49);
+                Servo2.setPosition(0.49);
+            } else if (gamepad1.dpad_right) {
+                Servo1.setPosition(0.56);
+                Servo2.setPosition(0.56);
+            }
         }
-// oi
     }
 }

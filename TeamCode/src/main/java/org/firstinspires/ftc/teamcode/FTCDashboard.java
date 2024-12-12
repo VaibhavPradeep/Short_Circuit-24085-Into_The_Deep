@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "RobotTest")
+@TeleOp(name = "RobotTest", group="Testing")
 @Config
 public class FTCDashboard extends LinearOpMode {
 
