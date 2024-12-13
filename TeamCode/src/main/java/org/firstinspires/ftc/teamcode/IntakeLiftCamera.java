@@ -221,8 +221,7 @@ public class IntakeLiftCamera {
         leftDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightDR4BMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void addTelemetry(Telemetry telemetry) {
