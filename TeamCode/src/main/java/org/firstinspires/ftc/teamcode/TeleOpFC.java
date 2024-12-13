@@ -4,14 +4,20 @@ import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
+@TeleOp(name = "TeleOpITD")
 public class TeleOpFC extends LinearOpMode {
     IntakeLiftCamera ILC = new IntakeLiftCamera();
     Drivetrain drivetrain = new Drivetrain(this);
+
+    int[] maxPositions = {4500, 4500}; // potentially 4600
+
+    int[] minPositions = {0, 0};
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -78,16 +84,28 @@ public class TeleOpFC extends LinearOpMode {
             }
 
             // Double Reverse Four Bar
-            if (gamepad2.dpad_up) {
-                ILC.DR4BMove("up", gamepad2.left_trigger, gamepad2.right_trigger);
-            } else if (gamepad2.dpad_down) {
-                ILC.DR4BMove("down", gamepad2.left_trigger, gamepad2.right_trigger);
+            int rightPos = ILC.rightDR4BMotor.getCurrentPosition();
+            int leftPos = ILC.leftDR4BMotor.getCurrentPosition();
+
+            if(gamepad2.dpad_up && rightPos <= maxPositions[0] && leftPos <= maxPositions[1]) {
+                // Move motors forward
+                ILC.leftDR4BMotor.setPower(1);
+                ILC.rightDR4BMotor.setPower(1);
+            }
+            else if(gamepad2.dpad_down && rightPos >= minPositions[0] && leftPos >= minPositions[1]) {
+                // Move motors backward
+                ILC.leftDR4BMotor.setPower(-1);
+                ILC.rightDR4BMotor.setPower(-1);
+            } else {
+                // Stop motors if no bumper is pressed
+                ILC.leftDR4BMotor.setPower(0);
+                ILC.rightDR4BMotor.setPower(0);
             }
 
             // Intake
-            if (gamepad1.x) {
+            if (gamepad1.a) {
                 ILC.intakeIn();
-            } else if (gamepad1.a) {
+            } else if (gamepad1.x) {
                 ILC.intakeOut();
             } else if (gamepad1.b) {
                 ILC.intakeOff();

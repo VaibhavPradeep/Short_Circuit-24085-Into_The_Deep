@@ -33,17 +33,6 @@ public class DualMotorControlWithBumpers extends OpMode {
             // Move motors forward
             motor1.setPower(power);
             motor2.setPower(power);
-
-
-
-
-
-
-
-
-
-
-
         } else if (gamepad1.right_bumper) {
             // Move motors backward
             motor1.setPower(-power);

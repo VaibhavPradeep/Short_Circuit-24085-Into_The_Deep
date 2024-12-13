@@ -55,12 +55,12 @@ public class IntakeLiftCamera {
     // Outake
     final double LEFT_OUTAKE_TRANSFER = 0;
     final double RIGHT_OUTAKE_TRANSFER = 0;
-    final double LEFT_OUTAKE_DEPOSIT = 1.0;
-    final double RIGHT_OUTAKE_DEPOSIT = 1.0;
+    final double LEFT_OUTAKE_DEPOSIT = 0.45;
+    final double RIGHT_OUTAKE_DEPOSIT = 0.45;
 
     // Specimen
-    final double SPECIMEN_HOLD = 1.0;
-    final double SPECIMEN_COLLECT = 0;
+    final double SPECIMEN_HOLD = 0;
+    final double SPECIMEN_COLLECT = 0.35;
 
     // Double Reverse Four Bar
     public void resetDR4BMotors () {
