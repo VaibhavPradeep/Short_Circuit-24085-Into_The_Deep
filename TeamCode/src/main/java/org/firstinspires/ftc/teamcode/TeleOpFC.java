@@ -15,7 +15,7 @@ public class TeleOpFC extends LinearOpMode {
     IntakeLiftCamera ILC = new IntakeLiftCamera();
     Drivetrain drivetrain = new Drivetrain(this);
 
-    int[] maxPositions = {4500, 4500}; // potentially 4600
+    int[] maxPositions = {3400, 3400}; // potentially 3500
 
     int[] minPositions = {0, 0};
 
