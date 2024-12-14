@@ -46,8 +46,8 @@ public class IntakeLiftCamera {
     // Virtual Four Bar
     final double LEFT_CV4B_INTAKE = 0.26;
     final double RIGHT_CV4B_INTAKE = 0.26;
-    final double LEFT_CV4B_TRANSFER = 0;
-    final double RIGHT_CV4B_TRANSFER = 0;
+    final double LEFT_CV4B_TRANSFER = 0.05;
+    final double RIGHT_CV4B_TRANSFER = 0.05;
 
     // Rotate Intake
     final double ROTATE_FOR_INTAKE = 0;
