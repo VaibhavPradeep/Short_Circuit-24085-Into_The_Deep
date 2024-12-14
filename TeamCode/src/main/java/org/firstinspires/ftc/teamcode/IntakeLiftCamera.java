@@ -231,7 +231,7 @@ public class IntakeLiftCamera {
         leftOutakeServo = hwMap.get(Servo.class, "leftOutakeServo");
         rightOutakeServo = hwMap.get(Servo.class, "rightOutakeServo");
         rightOutakeServo.setDirection(Servo.Direction.REVERSE);
-        armOutakeServo = hwMap.get(Servo.class, "armOutakeServo");
+        // armOutakeServo = hwMap.get(Servo.class, "armOutakeServo");
 
         specimenServo = hwMap.get(Servo.class, "specimenServo");
         specimenServo.setDirection(Servo.Direction.REVERSE);
@@ -255,7 +255,7 @@ public class IntakeLiftCamera {
 
         telemetry.addData("left outake Servo position", leftOutakeServo.getPosition());
         telemetry.addData("right outake Servo position", rightOutakeServo.getPosition());
-        telemetry.addData("armOutakeServo", armOutakeServo.getPosition());
+        // telemetry.addData("armOutakeServo", armOutakeServo.getPosition());
 
         telemetry.addData("specimen servo position", specimenServo.getPosition());
 
