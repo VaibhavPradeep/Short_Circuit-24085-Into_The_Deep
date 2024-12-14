@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServosTest extends LinearOpMode {
     Servo Servo1;
     Servo Servo2;
+    // LEFT SERVO SHOULD BE REVERSED
 
     @Override
     public void runOpMode() {

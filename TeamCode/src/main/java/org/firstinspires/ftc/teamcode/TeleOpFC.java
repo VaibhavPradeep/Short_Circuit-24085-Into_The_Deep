@@ -66,8 +66,8 @@ public class TeleOpFC extends LinearOpMode {
             drivetrain.frontRight.setPower(FRPower);
             drivetrain.backLeft.setPower(BLPower);
             drivetrain.backRight.setPower(BRPower);
-
-            if (gamepad1.left_trigger > 0.75) {
+// Stopping robot from penetration
+            if (gamepad1.right_trigger > 0.75) {
                 speed = 0.4;
 
                 drivetrain.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -75,7 +75,7 @@ public class TeleOpFC extends LinearOpMode {
                 drivetrain.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 drivetrain.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             } else {
-                speed = 0.9;
+                speed = 1;
 
                 drivetrain.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 drivetrain.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -97,7 +97,7 @@ public class TeleOpFC extends LinearOpMode {
                 ILC.leftDR4BMotor.setPower(-1);
                 ILC.rightDR4BMotor.setPower(-1);
             } else {
-                // Stop motors if no bumper is pressed
+                // Stop motors if no bumper is presseduughbg
                 ILC.leftDR4BMotor.setPower(0);
                 ILC.rightDR4BMotor.setPower(0);
             }
@@ -138,11 +138,6 @@ public class TeleOpFC extends LinearOpMode {
                 ILC.collectSpecimen();
             } else if (gamepad2.right_bumper) {
                 ILC.holdSpecimen();
-            }
-
-            // Other
-            if (gamepad1.b) {
-                ILC.zeroServos();
             }
 
             ILC.addTelemetry(telemetry);

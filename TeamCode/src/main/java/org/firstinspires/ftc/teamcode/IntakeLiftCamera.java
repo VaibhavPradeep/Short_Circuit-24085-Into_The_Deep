@@ -16,7 +16,7 @@ public class IntakeLiftCamera {
 
     // Intake
     CRServo leftIntakeServo;
-    CRServo rightIntakeServo;
+    // CRServo rightIntakeServo;
 
     // Coaxial Virtual Four Bar
     Servo leftCV4BServo;
@@ -26,6 +26,7 @@ public class IntakeLiftCamera {
     // Outake
     Servo leftOutakeServo;
     Servo rightOutakeServo;
+    Servo armOutakeServo;
 
     // Specimen
     Servo specimenServo;
@@ -43,24 +44,26 @@ public class IntakeLiftCamera {
 
     // Coaxial Virtual Four Bar
     // Virtual Four Bar
-    final double LEFT_CV4B_INTAKE = 1;
-    final double RIGHT_CV4B_INTAKE = 1;
-    final double LEFT_CV4B_TRANSFER = 0;
+    final double LEFT_CV4B_INTAKE = 0.26;
+    final double RIGHT_CV4B_INTAKE = 0.26;
+    final double LEFT_CV4B_TRANSFER = 0.1;
     final double RIGHT_CV4B_TRANSFER = 0;
 
     // Rotate Intake
     final double ROTATE_FOR_INTAKE = 0;
-    final double ROTATE_FOR_TRANSFER = 1.0;
+    final double ROTATE_FOR_TRANSFER = 0.5;
 
     // Outake
     final double LEFT_OUTAKE_TRANSFER = 0;
     final double RIGHT_OUTAKE_TRANSFER = 0;
     final double LEFT_OUTAKE_DEPOSIT = 0.45;
     final double RIGHT_OUTAKE_DEPOSIT = 0.45;
+    final double ARM_OUTAKE_FIRST = 0;
+    final double ARM_OUTAKE_SECOND = 0.30;
 
     // Specimen
     final double SPECIMEN_HOLD = 0;
-    final double SPECIMEN_COLLECT = 0.35;
+    final double SPECIMEN_COLLECT = 0.28;
 
     // Double Reverse Four Bar
     public void resetDR4BMotors () {
@@ -130,12 +133,12 @@ public class IntakeLiftCamera {
     // Intake
     public void intakeIn() {
         leftIntakeServo.setPower(INTAKE_COLLECT);
-        rightIntakeServo.setPower(INTAKE_COLLECT);
+        // rightIntakeServo.setPower(INTAKE_COLLECT);
     }
 
     public void intakeOut() {
         leftIntakeServo.setPower(INTAKE_DEPOSIT);
-        rightIntakeServo.setPower(INTAKE_DEPOSIT);
+        // rightIntakeServo.setPower(INTAKE_DEPOSIT);
     }
 
     public void intakeOff() {
@@ -175,6 +178,14 @@ public class IntakeLiftCamera {
         rightOutakeServo.setPosition(RIGHT_OUTAKE_DEPOSIT);
     }
 
+    public void startingArmOutake() {
+        armOutakeServo.setPosition(ARM_OUTAKE_FIRST);
+    }
+
+    public void secondArmOutake() {
+        armOutakeServo.setPosition(ARM_OUTAKE_SECOND);
+    }
+
     // Specimen
     public void holdSpecimen() {
         specimenServo.setPosition(SPECIMEN_HOLD);
@@ -201,27 +212,31 @@ public class IntakeLiftCamera {
     public void initIntakeLiftCamera(HardwareMap hwMap) {
         leftDR4BMotor = hwMap.get(DcMotor.class, "leftDR4BMotor");
         rightDR4BMotor = hwMap.get(DcMotor.class, "rightDR4BMotor");
+        rightDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftIntakeServo = hwMap.get(CRServo.class, "leftIntakeServo");
-        rightIntakeServo = hwMap.get(CRServo.class, "rightIntakeServo");
+        // rightIntakeServo = hwMap.get(CRServo.class, "rightIntakeServo");
 
         leftCV4BServo = hwMap.get(Servo.class, "leftCV4BServo");
         rightCV4BServo = hwMap.get(Servo.class, "rightCV4BServo");
+        rightCV4BServo.setDirection(Servo.Direction.REVERSE);
 
         rotateIntakeServo = hwMap.get(Servo.class, "rotateIntakeServo");
 
         leftOutakeServo = hwMap.get(Servo.class, "leftOutakeServo");
         rightOutakeServo = hwMap.get(Servo.class, "rightOutakeServo");
+        rightOutakeServo.setDirection(Servo.Direction.REVERSE);
+        armOutakeServo = hwMap.get(Servo.class, "armOutakeServo");
 
         specimenServo = hwMap.get(Servo.class, "specimenServo");
+        specimenServo.setDirection(Servo.Direction.REVERSE);
+        specimenServo.setPosition(0.28);
 
         leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        rightDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void addTelemetry(Telemetry telemetry) {
@@ -235,6 +250,7 @@ public class IntakeLiftCamera {
 
         telemetry.addData("left outake Servo position", leftOutakeServo.getPosition());
         telemetry.addData("right outake Servo position", rightOutakeServo.getPosition());
+        telemetry.addData("armOutakeServo", armOutakeServo.getPosition());
 
         telemetry.addData("specimen servo position", specimenServo.getPosition());
 
