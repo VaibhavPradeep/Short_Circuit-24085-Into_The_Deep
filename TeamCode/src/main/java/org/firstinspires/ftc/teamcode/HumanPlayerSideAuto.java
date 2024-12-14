@@ -22,7 +22,7 @@ public class HumanPlayerSideAuto extends LinearOpMode {
 
             // scores specimen
             DT.drive(0.5,20);
-            ILC.moveDR4BMotorsAuto(500);
+            ILC.moveDR4BMotorsAuto(2800);
             DT.drive(0.5,4);
             ILC.moveDR4BMotorsAuto(-80);
             ILC.collectSpecimen();
