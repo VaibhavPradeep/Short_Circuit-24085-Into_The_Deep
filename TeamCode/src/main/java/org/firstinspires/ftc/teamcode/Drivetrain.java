@@ -46,8 +46,8 @@ public class Drivetrain {
         backRight = hwMap.get(DcMotor.class, "backRight");
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

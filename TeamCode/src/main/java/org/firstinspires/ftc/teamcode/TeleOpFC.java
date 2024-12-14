@@ -19,11 +19,20 @@ public class TeleOpFC extends LinearOpMode {
 
     int[] minPositions = {0, 0};
 
+    public void driveMecanum(double left_y, double left_x, double right_x){
+        double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
+        drivetrain.frontLeft.setPower((left_y + left_x + right_x) / maxPower);
+        drivetrain.frontRight.setPower((left_y - left_x - right_x) / maxPower);
+        drivetrain.backLeft.setPower((left_y - left_x + right_x) / maxPower);
+        drivetrain.backRight.setPower((left_y + left_x - right_x) / maxPower);
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         ILC.initIntakeLiftCamera(hardwareMap);
         drivetrain.initDrivetrain(hardwareMap);
 
+        /*
         double speed = 0.8;
 
         BHI260IMU imu; // Updated to use the new IMU type
@@ -41,13 +50,15 @@ public class TeleOpFC extends LinearOpMode {
         imu = hardwareMap.get(BHI260IMU.class, "imu");
         imu.initialize(parameters);
 
+         */
+
         // Wait until we're told to go
         waitForStart();
 
         while (opModeIsActive()) {
             telemetry.update();
 
-            // Drivetrain
+            /* Old Drivetrain
             angles = imu.getRobotYawPitchRollAngles();
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double driveAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4 - angles.getYaw(AngleUnit.RADIANS);
@@ -82,6 +93,10 @@ public class TeleOpFC extends LinearOpMode {
                 drivetrain.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 drivetrain.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             }
+
+             */
+
+            driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             // Double Reverse Four Bar
             int rightPos = ILC.rightDR4BMotor.getCurrentPosition();
