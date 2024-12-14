@@ -58,8 +58,8 @@ public class IntakeLiftCamera {
     final double RIGHT_OUTAKE_TRANSFER = 0;
     final double LEFT_OUTAKE_DEPOSIT = 0.45;
     final double RIGHT_OUTAKE_DEPOSIT = 0.45;
-    final double ARM_OUTAKE_FIRST = 0;
-    final double ARM_OUTAKE_SECOND = 0.30;
+    //final double ARM_OUTAKE_FIRST = 0;
+    //final double ARM_OUTAKE_SECOND = 0.30;
 
     // Specimen
     final double SPECIMEN_HOLD = 0;
@@ -178,6 +178,7 @@ public class IntakeLiftCamera {
         rightOutakeServo.setPosition(RIGHT_OUTAKE_DEPOSIT);
     }
 
+    /*
     public void startingArmOutake() {
         armOutakeServo.setPosition(ARM_OUTAKE_FIRST);
     }
@@ -185,6 +186,7 @@ public class IntakeLiftCamera {
     public void secondArmOutake() {
         armOutakeServo.setPosition(ARM_OUTAKE_SECOND);
     }
+     */
 
     // Specimen
     public void holdSpecimen() {

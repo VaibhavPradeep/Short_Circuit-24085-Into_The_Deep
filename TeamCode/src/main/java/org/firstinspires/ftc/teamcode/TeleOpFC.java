@@ -133,18 +133,20 @@ public class TeleOpFC extends LinearOpMode {
                 ILC.transferOrZeroOutake();
             }
 
-            // Specimen
+            //Specimen
             if (gamepad1.left_bumper) {
                 ILC.collectSpecimen();
             } else if (gamepad1.right_bumper) {
                 ILC.holdSpecimen();
             }
 
+            /*
             if (gamepad1.dpad_left) {
                 ILC.startingArmOutake();
             } else if (gamepad1.dpad_right) {
                 ILC.secondArmOutake();
             }
+             */
 
             ILC.addTelemetry(telemetry);
             telemetry.update();
