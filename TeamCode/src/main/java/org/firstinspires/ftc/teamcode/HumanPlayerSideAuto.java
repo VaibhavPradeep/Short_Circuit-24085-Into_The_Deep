@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+@Autonomous(name = "HumanPlayerSideAuto")
 public class HumanPlayerSideAuto extends LinearOpMode {
     IntakeLiftCamera ILC = new IntakeLiftCamera();
     Drivetrain DT = new Drivetrain(this);
