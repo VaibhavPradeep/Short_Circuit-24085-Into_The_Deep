@@ -46,7 +46,7 @@ public class IntakeLiftCamera {
     // Virtual Four Bar
     final double LEFT_CV4B_INTAKE = 0.26;
     final double RIGHT_CV4B_INTAKE = 0.26;
-    final double LEFT_CV4B_TRANSFER = 0.1;
+    final double LEFT_CV4B_TRANSFER = 0;
     final double RIGHT_CV4B_TRANSFER = 0;
 
     // Rotate Intake
@@ -220,6 +220,9 @@ public class IntakeLiftCamera {
         leftCV4BServo = hwMap.get(Servo.class, "leftCV4BServo");
         rightCV4BServo = hwMap.get(Servo.class, "rightCV4BServo");
         rightCV4BServo.setDirection(Servo.Direction.REVERSE);
+
+        leftCV4BServo.setPosition(0);
+        rightCV4BServo.setPosition(0);
 
         rotateIntakeServo = hwMap.get(Servo.class, "rotateIntakeServo");
 
