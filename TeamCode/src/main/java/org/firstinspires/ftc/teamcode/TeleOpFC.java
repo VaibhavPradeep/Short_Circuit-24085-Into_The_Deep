@@ -113,31 +113,37 @@ public class TeleOpFC extends LinearOpMode {
 
             // Coaxial Virtual Four Bar
             // Virtual Four Bar
-            if (gamepad2.dpad_up) {
+            if (gamepad2.y) {
                 ILC.transferOrZeroCV4B();
-            } else if (gamepad2.dpad_down) {
+            } else if (gamepad2.a) {
                 ILC.collectCV4B();
             }
 
             // Rotate Intake
-            if (gamepad2.dpad_left) {
+            if (gamepad2.x) {
                 ILC.rotateToTransfer();
-            } else if (gamepad2.dpad_right) {
+            } else if (gamepad2.b) {
                 ILC.rotateToIntake();
             }
 
             // Outake
-            if (gamepad2.y) {
+            if (gamepad2.left_bumper) {
                 ILC.depositOutake();
-            } else if (gamepad1.a) {
+            } else if (gamepad1.right_bumper) {
                 ILC.transferOrZeroOutake();
             }
 
             // Specimen
-            if (gamepad2.left_bumper) {
+            if (gamepad1.left_bumper) {
                 ILC.collectSpecimen();
-            } else if (gamepad2.right_bumper) {
+            } else if (gamepad1.right_bumper) {
                 ILC.holdSpecimen();
+            }
+
+            if (gamepad1.dpad_left) {
+                ILC.startingArmOutake();
+            } else if (gamepad1.dpad_right) {
+                ILC.secondArmOutake();
             }
 
             ILC.addTelemetry(telemetry);
