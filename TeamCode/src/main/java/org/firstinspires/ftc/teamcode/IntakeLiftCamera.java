@@ -44,8 +44,8 @@ public class IntakeLiftCamera {
 
     // Coaxial Virtual Four Bar
     // Virtual Four Bar
-    final double LEFT_CV4B_INTAKE = 0.26;
-    final double RIGHT_CV4B_INTAKE = 0.26;
+    final double LEFT_CV4B_INTAKE = 0.2;
+    final double RIGHT_CV4B_INTAKE = 0.2;
     final double LEFT_CV4B_TRANSFER = 0.05;
     final double RIGHT_CV4B_TRANSFER = 0.05;
 
