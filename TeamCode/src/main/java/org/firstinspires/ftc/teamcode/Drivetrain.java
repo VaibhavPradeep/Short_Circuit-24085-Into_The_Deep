@@ -191,59 +191,52 @@ public class Drivetrain {
 
     }
 
-    public void turn(double power, double angle, String direction) {
-        angles = imu.getRobotYawPitchRollAngles();
-
+    public void turn(double power, double targetAngle, String direction) {
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        int directionMultiplier = -1;
-
-        if (direction.equals("closest")) {
-
-            if (getAngleDifference(angles.getYaw(AngleUnit.DEGREES), angle) < 0) {
-                power *= -1;
-                directionMultiplier *= -1;
-            }
-
-        } else if (direction.equals("left")) {
-            power *= -1;
-            directionMultiplier *= -1;
+        boolean turningRight = direction.equalsIgnoreCase("right");
+        if (direction.equalsIgnoreCase("closest")) {
+            double angleDiff = getAngleDifference(angles.getYaw(AngleUnit.DEGREES), targetAngle);
+            turningRight = angleDiff < 0;
         }
 
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
-        frontRight.setPower(-power);
-        backRight.setPower(-power);
+        double turnPower = turningRight ? -power : power;
 
-        while (opMode.opModeIsActive() && directionMultiplier * getAngleDifference(angles.getYaw(AngleUnit.DEGREES), angle) < 0) {
-            opMode.telemetry.addData("heading", angles.getYaw(AngleUnit.DEGREES));
-            opMode.telemetry.update();
+        frontLeft.setPower(turnPower);
+        backLeft.setPower(turnPower);
+        frontRight.setPower(-turnPower);
+        backRight.setPower(-turnPower);
+
+        while (opMode.opModeIsActive()) {
             angles = imu.getRobotYawPitchRollAngles();
+            double currentYaw = angles.getYaw(AngleUnit.DEGREES);
+            double angleDiff = getAngleDifference(currentYaw, targetAngle);
 
-            if(opMode.isStopRequested()) {
+            opMode.telemetry.addData("Current Yaw", currentYaw);
+            opMode.telemetry.addData("Target Angle", targetAngle);
+            opMode.telemetry.addData("Angle Difference", angleDiff);
+            opMode.telemetry.update();
+
+            if (Math.abs(angleDiff) <= 2) { // Stop if within a 2-degree threshold
+                break;
+            }
+
+            if (opMode.isStopRequested()) {
                 break;
             }
         }
 
+        // Stop motors after turn
         frontLeft.setPower(0);
         backLeft.setPower(0);
         frontRight.setPower(0);
         backRight.setPower(0);
-
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
+
+
 
     public void initGyro(HardwareMap hwMap) {
         parameters = new BHI260IMU.Parameters(

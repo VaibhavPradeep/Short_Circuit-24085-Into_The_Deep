@@ -15,13 +15,13 @@ public class IntakeLiftCamera {
     DcMotor rightDR4BMotor;
 
     // Intake
-    CRServo leftIntakeServo;
+    // CRServo leftIntakeServo;
     // CRServo rightIntakeServo;
 
     // Coaxial Virtual Four Bar
-    Servo leftCV4BServo;
-    Servo rightCV4BServo;
-    Servo rotateIntakeServo;
+    // Servo leftCV4BServo;
+    // Servo rightCV4BServo;
+    // Servo rotateIntakeServo;
 
     // Outake
     Servo leftOutakeServo;
@@ -44,10 +44,13 @@ public class IntakeLiftCamera {
 
     // Coaxial Virtual Four Bar
     // Virtual Four Bar
-    final double LEFT_CV4B_INTAKE = 0.2;
-    final double RIGHT_CV4B_INTAKE = 0.2;
-    final double LEFT_CV4B_TRANSFER = 0.05;
-    final double RIGHT_CV4B_TRANSFER = 0.05;
+    final double LEFT_CV4B_INTAKE = 0.22;
+    final double RIGHT_CV4B_INTAKE = 0.22;
+
+    final double LEFT_CV4B_BOX = 0.11;
+    final double RIGHT_CV4B_BOX = 0.11;
+    final double LEFT_CV4B_TRANSFER = 0;
+    final double RIGHT_CV4B_TRANSFER = 0;
 
     // Rotate Intake
     final double ROTATE_FOR_INTAKE = 0;
@@ -130,7 +133,7 @@ public class IntakeLiftCamera {
         DR4BSpeed = 0;
     }
 
-    // Intake
+    /* Intake
     public void intakeIn() {
         leftIntakeServo.setPower(INTAKE_COLLECT);
         // rightIntakeServo.setPower(INTAKE_COLLECT);
@@ -153,6 +156,11 @@ public class IntakeLiftCamera {
         rightCV4BServo.setPosition(RIGHT_CV4B_INTAKE);
     }
 
+    public void submersibleCV4B() {
+        leftCV4BServo.setPosition(LEFT_CV4B_BOX);
+        rightCV4BServo.setPosition(RIGHT_CV4B_BOX);
+    }
+
     public void transferOrZeroCV4B() {
         leftCV4BServo.setPosition(LEFT_CV4B_TRANSFER);
         rightCV4BServo.setPosition(RIGHT_CV4B_TRANSFER);
@@ -166,6 +174,8 @@ public class IntakeLiftCamera {
     public void rotateToTransfer() {
         rotateIntakeServo.setPosition(ROTATE_FOR_TRANSFER);
     }
+
+     */
 
     // Outake
     public void transferOrZeroOutake() {
@@ -197,7 +207,7 @@ public class IntakeLiftCamera {
         specimenServo.setPosition(SPECIMEN_COLLECT);
     }
 
-    // Other
+    /* Other
     public void zeroServos() {
         leftCV4BServo.setPosition(0);
         rightCV4BServo.setPosition(0);
@@ -210,23 +220,25 @@ public class IntakeLiftCamera {
         specimenServo.setPosition(0);
     }
 
+     */
+
     // Init
     public void initIntakeLiftCamera(HardwareMap hwMap) {
         leftDR4BMotor = hwMap.get(DcMotor.class, "leftDR4BMotor");
         rightDR4BMotor = hwMap.get(DcMotor.class, "rightDR4BMotor");
         rightDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftIntakeServo = hwMap.get(CRServo.class, "leftIntakeServo");
+        //leftIntakeServo = hwMap.get(CRServo.class, "leftIntakeServo");
         // rightIntakeServo = hwMap.get(CRServo.class, "rightIntakeServo");
 
-        leftCV4BServo = hwMap.get(Servo.class, "leftCV4BServo");
-        rightCV4BServo = hwMap.get(Servo.class, "rightCV4BServo");
-        rightCV4BServo.setDirection(Servo.Direction.REVERSE);
+        //leftCV4BServo = hwMap.get(Servo.class, "leftCV4BServo");
+        //rightCV4BServo = hwMap.get(Servo.class, "rightCV4BServo");
+        //rightCV4BServo.setDirection(Servo.Direction.REVERSE);
 
-        leftCV4BServo.setPosition(0);
-        rightCV4BServo.setPosition(0);
+        //leftCV4BServo.setPosition(0);
+        //rightCV4BServo.setPosition(0);
 
-        rotateIntakeServo = hwMap.get(Servo.class, "rotateIntakeServo");
+        //rotateIntakeServo = hwMap.get(Servo.class, "rotateIntakeServo");
 
         leftOutakeServo = hwMap.get(Servo.class, "leftOutakeServo");
         rightOutakeServo = hwMap.get(Servo.class, "rightOutakeServo");
@@ -235,7 +247,6 @@ public class IntakeLiftCamera {
 
         specimenServo = hwMap.get(Servo.class, "specimenServo");
         specimenServo.setDirection(Servo.Direction.REVERSE);
-        specimenServo.setPosition(0.28);
 
         leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -248,10 +259,10 @@ public class IntakeLiftCamera {
         telemetry.addData("left DR4B motor position", leftDR4BMotor.getCurrentPosition());
         telemetry.addData("right DR4B motor position", rightDR4BMotor.getCurrentPosition());
 
-        telemetry.addData("left CV4B Servo position", leftCV4BServo.getPosition());
-        telemetry.addData("right CV4B Servo position", rightCV4BServo.getPosition());
+        //telemetry.addData("left CV4B Servo position", leftCV4BServo.getPosition());
+        //telemetry.addData("right CV4B Servo position", rightCV4BServo.getPosition());
 
-        telemetry.addData("rotate intake Servo position", rotateIntakeServo.getPosition());
+        //telemetry.addData("rotate intake Servo position", rotateIntakeServo.getPosition());
 
         telemetry.addData("left outake Servo position", leftOutakeServo.getPosition());
         telemetry.addData("right outake Servo position", rightOutakeServo.getPosition());

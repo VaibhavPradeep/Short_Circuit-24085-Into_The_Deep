@@ -31,6 +31,7 @@ public class TeleOpFC extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ILC.initIntakeLiftCamera(hardwareMap);
         drivetrain.initDrivetrain(hardwareMap);
+        ILC.specimenServo.setPosition(0.28);
 
         /*
         double speed = 0.8;
@@ -102,12 +103,12 @@ public class TeleOpFC extends LinearOpMode {
             int rightPos = ILC.rightDR4BMotor.getCurrentPosition();
             int leftPos = ILC.leftDR4BMotor.getCurrentPosition();
 
-            if(gamepad2.dpad_up && rightPos <= maxPositions[0] && leftPos <= maxPositions[1]) {
+            if(gamepad2.dpad_up) {
                 // Move motors forward
                 ILC.leftDR4BMotor.setPower(1);
                 ILC.rightDR4BMotor.setPower(1);
             }
-            else if(gamepad2.dpad_down && rightPos >= minPositions[0] && leftPos >= minPositions[1]) {
+            else if(gamepad2.dpad_down) {
                 // Move motors backward
                 ILC.leftDR4BMotor.setPower(-1);
                 ILC.rightDR4BMotor.setPower(-1);
@@ -117,6 +118,7 @@ public class TeleOpFC extends LinearOpMode {
                 ILC.rightDR4BMotor.setPower(0);
             }
 
+            /*
             // Intake
             if (gamepad1.a) {
                 ILC.intakeIn();
@@ -132,21 +134,19 @@ public class TeleOpFC extends LinearOpMode {
                 ILC.transferOrZeroCV4B();
             } else if (gamepad2.a) {
                 ILC.collectCV4B();
+            } else if (gamepad2.x) {
+                ILC.submersibleCV4B();
             }
 
             // Rotate Intake
-            if (gamepad2.x) {
+            if (gamepad2.dpad_left) {
                 ILC.rotateToTransfer();
-            } else if (gamepad2.b) {
+            } else if (gamepad2.dpad_right) {
                 ILC.rotateToIntake();
             }
+             */
 
             // Outake
-            if (gamepad2.left_bumper) {
-                ILC.depositOutake();
-            } else if (gamepad1.right_bumper) {
-                ILC.transferOrZeroOutake();
-            }
 
             //Specimen
             if (gamepad1.left_bumper) {
