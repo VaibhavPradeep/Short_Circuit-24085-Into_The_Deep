@@ -18,11 +18,11 @@ public class DR4BTest extends OpMode {
         int rightPos = motor2.getCurrentPosition();
         int leftPos = motor1.getCurrentPosition();
 
-        if(direction.equals("up") && rightPos <= maxPositions[0] && leftPos <= maxPositions[1]) {
+        if(direction.equals("up")) {
             rightPos += 100;
             leftPos += 100;
         }
-        else if(direction.equals("down") && rightPos >= minPositions[0] && leftPos >= minPositions[1]) {
+        else if(direction.equals("down")) {
             rightPos -= 100;
             leftPos -= 100;
         }

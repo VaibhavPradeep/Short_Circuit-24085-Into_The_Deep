@@ -1,14 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BHI260IMU;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp(name = "TeleOpITD")
 public class TeleOpFC extends LinearOpMode {
@@ -31,7 +24,7 @@ public class TeleOpFC extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ILC.initIntakeLiftCamera(hardwareMap);
         drivetrain.initDrivetrain(hardwareMap);
-        ILC.specimenServo.setPosition(0.28);
+        ILC.clawServo.setPosition(0.28);
 
         /*
         double speed = 0.8;
@@ -150,9 +143,9 @@ public class TeleOpFC extends LinearOpMode {
 
             //Specimen
             if (gamepad1.left_bumper) {
-                ILC.collectSpecimen();
+                ILC.collectBrick();
             } else if (gamepad1.right_bumper) {
-                ILC.holdSpecimen();
+                ILC.holdBrick();
             }
 
             /*

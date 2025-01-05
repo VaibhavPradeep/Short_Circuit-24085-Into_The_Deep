@@ -9,19 +9,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class IntakeLiftCamera {
+    // Notes: rotate intake servo should be reversed
+    // left CV4B reversed, right is forward
+
     // Motors and Servos
     // Double Reverse Four Bar
     DcMotor leftDR4BMotor;
     DcMotor rightDR4BMotor;
 
     // Intake
-    // CRServo leftIntakeServo;
-    // CRServo rightIntakeServo;
+    CRServo leftIntakeServo;
+    CRServo rightIntakeServo;
+    Servo stopServo;
 
     // Coaxial Virtual Four Bar
-    // Servo leftCV4BServo;
-    // Servo rightCV4BServo;
-    // Servo rotateIntakeServo;
+    Servo leftCV4BServo;
+    Servo rightCV4BServo;
+    Servo rotateIntakeServo;
 
     // Outake
     Servo leftOutakeServo;
@@ -29,13 +33,7 @@ public class IntakeLiftCamera {
     Servo armOutakeServo;
 
     // Specimen
-    Servo specimenServo;
-
-    // Positions/other
-    // Double Reverse Four Bar
-    int[] maxPositions = {4200, 4200}; // potentially 4300
-    int[] minPositions = {0, 0};
-    int slideSpeed = 1;
+    Servo clawServo;
 
     // Intake
     final double INTAKE_COLLECT    = -1.0;
@@ -47,93 +45,53 @@ public class IntakeLiftCamera {
     final double LEFT_CV4B_INTAKE = 0.22;
     final double RIGHT_CV4B_INTAKE = 0.22;
 
-    final double LEFT_CV4B_BOX = 0.11;
-    final double RIGHT_CV4B_BOX = 0.11;
+    final double LEFT_CV4B_BOX = 0.14;
+    final double RIGHT_CV4B_BOX = 0.14;
     final double LEFT_CV4B_TRANSFER = 0;
     final double RIGHT_CV4B_TRANSFER = 0;
 
     // Rotate Intake
     final double ROTATE_FOR_INTAKE = 0;
-    final double ROTATE_FOR_TRANSFER = 0.5;
+    final double ROTATE_FOR_TRANSFER = 0.3;
 
     // Outake
     final double LEFT_OUTAKE_TRANSFER = 0;
     final double RIGHT_OUTAKE_TRANSFER = 0;
     final double LEFT_OUTAKE_DEPOSIT = 0.45;
     final double RIGHT_OUTAKE_DEPOSIT = 0.45;
-    //final double ARM_OUTAKE_FIRST = 0;
-    //final double ARM_OUTAKE_SECOND = 0.30;
 
     // Specimen
-    final double SPECIMEN_HOLD = 0;
-    final double SPECIMEN_COLLECT = 0.28;
+    final double BRICK_HOLD = 0;
+    final double BRICK_COLLECT = 0.28;
 
     // Double Reverse Four Bar
-    public void resetDR4BMotors () {
-        leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void moveDR4BMotorsAuto (int ticks) {
-        int leftDR4BMotorPos = leftDR4BMotor.getCurrentPosition();
-        int rightDR4BMotorPos = rightDR4BMotor.getCurrentPosition();
-
-        double DR4BSpeed = 0.8;
-
-        leftDR4BMotorPos += ticks;
-        rightDR4BMotorPos += ticks;
-
-        leftDR4BMotor.setTargetPosition(leftDR4BMotorPos);
-        rightDR4BMotor.setTargetPosition(rightDR4BMotorPos);
-        leftDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftDR4BMotor.setPower(DR4BSpeed);
-        rightDR4BMotor.setPower(DR4BSpeed);
-
-        while (leftDR4BMotor.isBusy() && rightDR4BMotor.isBusy()) {
-            // Do nothing, just wait for the motors to finish moving
-        }
-
-        leftDR4BMotor.setPower(0);
-        rightDR4BMotor.setPower(0);
-        DR4BSpeed = 0;
-    }
-    public void DR4BMove(String direction, double lefttrigger2, double righttrigger2) {
+    public void dPadMove(String direction) {
         int rightPos = rightDR4BMotor.getCurrentPosition();
         int leftPos = leftDR4BMotor.getCurrentPosition();
 
-        double DR4BSpeed = 0;
-
-        if(lefttrigger2 > 0.1 && direction.equals("up") ) {
+        if(direction.equals("up")) {
             rightPos += 100;
             leftPos += 100;
-            DR4BSpeed = lefttrigger2;
         }
-        else if(righttrigger2 > 0.1 && direction.equals("down")) {
+        else if(direction.equals("down")) {
             rightPos -= 100;
             leftPos -= 100;
-            DR4BSpeed = righttrigger2;
         }
 
         leftDR4BMotor.setTargetPosition(leftPos);
         rightDR4BMotor.setTargetPosition(rightPos);
         leftDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDR4BMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftDR4BMotor.setPower(DR4BSpeed);
-        rightDR4BMotor.setPower(DR4BSpeed);
+        leftDR4BMotor.setPower(1);
+        rightDR4BMotor.setPower(1);
 
-        while (leftDR4BMotor.isBusy() && rightDR4BMotor.isBusy()) {
-            // Do nothing, just wait for the motors to finish moving
+        if (leftDR4BMotor.getCurrentPosition() == leftPos && rightDR4BMotor.getCurrentPosition() == rightPos) {
+            leftDR4BMotor.setPower(0);
+            rightDR4BMotor.setPower(0);
         }
-
-        leftDR4BMotor.setPower(0);
-        rightDR4BMotor.setPower(0);
-        DR4BSpeed = 0;
     }
 
-    /* Intake
+    // Intake
     public void intakeIn() {
         leftIntakeServo.setPower(INTAKE_COLLECT);
         // rightIntakeServo.setPower(INTAKE_COLLECT);
@@ -175,10 +133,8 @@ public class IntakeLiftCamera {
         rotateIntakeServo.setPosition(ROTATE_FOR_TRANSFER);
     }
 
-     */
-
     // Outake
-    public void transferOrZeroOutake() {
+    public void transferOutake() {
         leftOutakeServo.setPosition(LEFT_OUTAKE_TRANSFER);
         rightOutakeServo.setPosition(RIGHT_OUTAKE_TRANSFER);
     }
@@ -188,69 +144,49 @@ public class IntakeLiftCamera {
         rightOutakeServo.setPosition(RIGHT_OUTAKE_DEPOSIT);
     }
 
-    /*
-    public void startingArmOutake() {
-        armOutakeServo.setPosition(ARM_OUTAKE_FIRST);
-    }
-
-    public void secondArmOutake() {
-        armOutakeServo.setPosition(ARM_OUTAKE_SECOND);
-    }
-     */
-
     // Specimen
-    public void holdSpecimen() {
-        specimenServo.setPosition(SPECIMEN_HOLD);
+    public void holdBrick() {
+        clawServo.setPosition(BRICK_HOLD);
     }
 
-    public void collectSpecimen() {
-        specimenServo.setPosition(SPECIMEN_COLLECT);
+    public void collectBrick() {
+        clawServo.setPosition(BRICK_COLLECT);
     }
-
-    /* Other
-    public void zeroServos() {
-        leftCV4BServo.setPosition(0);
-        rightCV4BServo.setPosition(0);
-
-        rotateIntakeServo.setPosition(0);
-
-        leftOutakeServo.setPosition(0);
-        rightOutakeServo.setPosition(0);
-
-        specimenServo.setPosition(0);
-    }
-
-     */
 
     // Init
     public void initIntakeLiftCamera(HardwareMap hwMap) {
+        // correct
         leftDR4BMotor = hwMap.get(DcMotor.class, "leftDR4BMotor");
         rightDR4BMotor = hwMap.get(DcMotor.class, "rightDR4BMotor");
         rightDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //leftIntakeServo = hwMap.get(CRServo.class, "leftIntakeServo");
-        // rightIntakeServo = hwMap.get(CRServo.class, "rightIntakeServo");
+        leftIntakeServo = hwMap.get(CRServo.class, "leftIntakeServo");
+        rightIntakeServo = hwMap.get(CRServo.class, "rightIntakeServo");
 
-        //leftCV4BServo = hwMap.get(Servo.class, "leftCV4BServo");
-        //rightCV4BServo = hwMap.get(Servo.class, "rightCV4BServo");
-        //rightCV4BServo.setDirection(Servo.Direction.REVERSE);
+        // correct
+        leftCV4BServo = hwMap.get(Servo.class, "leftCV4BServo");
+        rightCV4BServo = hwMap.get(Servo.class, "rightCV4BServo");
+        rightCV4BServo.setDirection(Servo.Direction.REVERSE);
 
-        //leftCV4BServo.setPosition(0);
-        //rightCV4BServo.setPosition(0);
+        leftCV4BServo.setPosition(0);
+        rightCV4BServo.setPosition(0);
 
-        //rotateIntakeServo = hwMap.get(Servo.class, "rotateIntakeServo");
+        // correct
+        rotateIntakeServo = hwMap.get(Servo.class, "rotateIntakeServo");
+        rotateIntakeServo.setDirection(Servo.Direction.REVERSE);
 
+        // correct
         leftOutakeServo = hwMap.get(Servo.class, "leftOutakeServo");
         rightOutakeServo = hwMap.get(Servo.class, "rightOutakeServo");
         rightOutakeServo.setDirection(Servo.Direction.REVERSE);
-        // armOutakeServo = hwMap.get(Servo.class, "armOutakeServo");
 
-        specimenServo = hwMap.get(Servo.class, "specimenServo");
-        specimenServo.setDirection(Servo.Direction.REVERSE);
+        // correct
+        clawServo = hwMap.get(Servo.class, "clawServo");
+        clawServo.setDirection(Servo.Direction.REVERSE);
 
+        // correct
         leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         leftDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
@@ -259,16 +195,15 @@ public class IntakeLiftCamera {
         telemetry.addData("left DR4B motor position", leftDR4BMotor.getCurrentPosition());
         telemetry.addData("right DR4B motor position", rightDR4BMotor.getCurrentPosition());
 
-        //telemetry.addData("left CV4B Servo position", leftCV4BServo.getPosition());
-        //telemetry.addData("right CV4B Servo position", rightCV4BServo.getPosition());
+        telemetry.addData("left CV4B Servo position", leftCV4BServo.getPosition());
+        telemetry.addData("right CV4B Servo position", rightCV4BServo.getPosition());
 
-        //telemetry.addData("rotate intake Servo position", rotateIntakeServo.getPosition());
+        telemetry.addData("rotate intake Servo position", rotateIntakeServo.getPosition());
 
         telemetry.addData("left outake Servo position", leftOutakeServo.getPosition());
         telemetry.addData("right outake Servo position", rightOutakeServo.getPosition());
-        // telemetry.addData("armOutakeServo", armOutakeServo.getPosition());
 
-        telemetry.addData("specimen servo position", specimenServo.getPosition());
+        telemetry.addData("claw servo position", clawServo.getPosition());
 
         telemetry.update();
     }

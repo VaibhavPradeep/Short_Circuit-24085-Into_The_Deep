@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,12 +13,13 @@ public class MecanumDriveCircuit{
     DcMotor backLeft;
     DcMotor backRight;
 
+    /*
     double left_y;
     double left_x;
     double right_x;
 
     // driveMechanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
+    */
     public void initDrive(HardwareMap hwMap) {
         frontLeft = hwMap.get(DcMotor.class, "frontLeft");
         frontRight = hwMap.get(DcMotor.class, "frontRight");
@@ -26,11 +28,13 @@ public class MecanumDriveCircuit{
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -51,5 +55,5 @@ public class MecanumDriveCircuit{
         backLeft.setPower((left_y + left_x - right_x) / maxPower);
         backRight.setPower((left_y - left_x + right_x) / maxPower);
     }
-
 }
+
