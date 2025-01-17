@@ -56,12 +56,12 @@ public class IntakeLiftCamera {
     final double ROTATE_FOR_TRANSFER = 0.3;
 
     // Outake
-    final double LEFT_OUTAKE_TRANSFER = 0.3;
-    final double RIGHT_OUTAKE_TRANSFER = 0.3;
-    final double LEFT_OUTAKE_DEPOSIT = 0.6;
-    final double RIGHT_OUTAKE_DEPOSIT = 0.6;
-    final double LEFT_OUTAKE_SPECIMEN_COLLECT = 0.725;
-    final double RIGHT_OUTAKE_SPECIMEN_COLLECT = 0.725;
+    final double LEFT_OUTAKE_TRANSFER = 0.7;
+    final double RIGHT_OUTAKE_TRANSFER = 0.7;
+    final double LEFT_OUTAKE_DEPOSIT = 0.8;
+    final double RIGHT_OUTAKE_DEPOSIT = 0.8;
+    final double LEFT_OUTAKE_SPECIMEN_COLLECT = 0.97;
+    final double RIGHT_OUTAKE_SPECIMEN_COLLECT = 0.97;
 
     // Specimen
     final double BRICK_HOLD = 0;
