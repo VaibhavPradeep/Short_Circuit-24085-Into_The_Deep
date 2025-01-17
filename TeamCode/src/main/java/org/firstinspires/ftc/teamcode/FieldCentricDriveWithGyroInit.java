@@ -35,10 +35,10 @@ public class FieldCentricDriveWithGyroInit extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, "frontRight");
         rightBack = hardwareMap.get(DcMotor.class, "backRight");
 
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
 
         BHI260IMU imu;
         BHI260IMU.Parameters parameters;
