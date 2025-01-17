@@ -1,22 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TimeTrajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-/*
+
 @Config
 @TeleOp(name = "OdometryHPSAuto")
 public class OdometryHPSAuto extends LinearOpMode {
@@ -61,10 +55,7 @@ public class OdometryHPSAuto extends LinearOpMode {
     IntakeLiftCamera ILC = new IntakeLiftCamera();
 
     @Override
-    public void loo
-
-    @Override
-    public runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {
         // Initial Pose
         Pose2d initialPose = new Pose2d(startX, startY, Math.toRadians(startHeading));
         Pose2d nextPose = new Pose2d(startX, -43, Math.toRadians(startHeading));
@@ -140,11 +131,4 @@ public class OdometryHPSAuto extends LinearOpMode {
                 )
         );
     }
-
-    @Override
-    public void runOpMode() throws InterruptedException {
-
-    }
 }
-
- */
