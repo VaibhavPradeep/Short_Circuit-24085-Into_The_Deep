@@ -143,9 +143,9 @@ public class TeleOpFC extends LinearOpMode {
 
             //Specimen
             if (gamepad1.left_bumper) {
-                ILC.collectBrick();
+                ILC.collectBrickClaw();
             } else if (gamepad1.right_bumper) {
-                ILC.holdBrick();
+                ILC.holdBrickClaw();
             }
 
             /*
