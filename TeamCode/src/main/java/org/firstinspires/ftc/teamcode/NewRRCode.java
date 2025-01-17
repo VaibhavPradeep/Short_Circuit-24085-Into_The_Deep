@@ -81,7 +81,7 @@ public class NewRRCode extends OpMode {
     public class OutakeServos {
         private Servo leftOutakeServo;
         private Servo rightOutakeServo;
-        // ergjeroigjeri
+        // ergjeroigjeri 8erg84gugr8egru
 
         public OutakeServos(HardwareMap hardwareMap) {
             leftOutakeServo = hardwareMap.get(Servo.class, "leftOutakeServo");
