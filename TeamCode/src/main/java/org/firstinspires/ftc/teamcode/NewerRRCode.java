@@ -1,25 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import androidx.annotation.NonNull;
-
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class NewRRCode extends OpMode {
-    Pose2d initialPose = new Pose2d(startX, startY, Math.toRadians(startHeading));
-    Pose2d nextPose = new Pose2d(startX, -43, Math.toRadians(startHeading));
-    MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-    ElapsedTime timer = new ElapsedTime();
+@Config
+@Autonomous(name = "newest auto RR")
+public class NewerRRCode extends LinearOpMode {
     // Configurable variables
     public static double startX = 9.5; // Starting X position
     public static int DR4B_TICKS = 0;
@@ -33,17 +33,6 @@ public class NewRRCode extends OpMode {
     public static double strafeToY5 = -4;
     public static double lineToYSplineHeading6 = -65;
     public static double turnAngle7 = 180;
-    int visionOutputPosition = 1;
-
-    int fourbarPosition = 0;
-
-
-    public void waitForTime(double secs){
-        timer.reset();
-        while (timer.time() < secs){
-            // ILC.DR4BMove(fourbarPosition);
-        }
-    }
 
     public class Claw {
         private Servo claw;
@@ -60,7 +49,7 @@ public class NewRRCode extends OpMode {
             }
         }
         public Action closeClaw() {
-            return new CloseClaw();
+            return new Claw.CloseClaw();
         }
 
         public class OpenClaw implements Action {
@@ -71,7 +60,7 @@ public class NewRRCode extends OpMode {
             }
         }
         public Action openClaw() {
-            return new OpenClaw();
+            return new Claw.OpenClaw();
         }
     }
 
@@ -94,7 +83,7 @@ public class NewRRCode extends OpMode {
             }
         }
         public Action initOutake() {
-            return new InitOutake();
+            return new OutakeServos.InitOutake();
         }
 
         public class PreScoreOutake implements Action {
@@ -106,7 +95,7 @@ public class NewRRCode extends OpMode {
             }
         }
         public Action preScoreOutake() {
-            return new PreScoreOutake();
+            return new OutakeServos.PreScoreOutake();
         }
 
         public class ScoreOutake implements Action {
@@ -118,21 +107,17 @@ public class NewRRCode extends OpMode {
             }
         }
         public Action scoreOutake() {
-            return new ScoreOutake();
+            return new OutakeServos.ScoreOutake();
         }
     }
-    Claw claw = new Claw(hardwareMap);
-    OutakeServos outakeServos = new OutakeServos(hardwareMap);
-
 
     @Override
-    public void init() {
-
-
-    }
-
-    @Override
-    public void start(){
+    public void runOpMode() {
+        Pose2d initialPose = new Pose2d(startX, startY, Math.toRadians(startHeading));
+        Pose2d nextPose = new Pose2d(startX, -43, Math.toRadians(startHeading));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        Claw claw = new Claw(hardwareMap);
+        OutakeServos outakeServos = new OutakeServos(hardwareMap);
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
@@ -160,14 +145,14 @@ public class NewRRCode extends OpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        claw.closeClaw(),
+                        outakeServos.initOutake(),
+                        tab1build,
+                        outakeServos.preScoreOutake(),
+                        outakeServos.scoreOutake(),
+                        claw.openClaw(),
                         trajectoryActionCloseOut
                 )
         );
-    }
-
-    @Override
-    public void loop() {
-        // Trajectory setup for tab1
-        //ILC.DR4BMove(fourbarPosition);
     }
 }
