@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Autonomous(name = "newest auto RR")
+@Autonomous(name = "newer auto RR")
 public class NewerRRCode extends LinearOpMode {
     // Configurable variables
     public static double startX = 9.5; // Starting X position
