@@ -39,7 +39,7 @@ public class TeleOpMeet3 extends LinearOpMode {
         ILC.rotateIntakeServo.setPosition(0);
         ILC.leftOutakeServo.setPosition(0);
         ILC.rightOutakeServo.setPosition(0);
-        ILC.clawServo.setPosition(0.4);
+        ILC.clawServo.setPosition(0);
         ILC.intakeClawServo.setPosition(0);
 
         BHI260IMU imu;
@@ -88,8 +88,8 @@ public class TeleOpMeet3 extends LinearOpMode {
 
              */
             double y = -gamepad1.left_stick_y; // CHANGE NEG OR POS
-            double x = gamepad1.left_stick_x * 1.1; // CHANGE NEG OR POS
-            double rx = gamepad1.right_stick_x; // rotating
+            double x = -gamepad1.left_stick_x * 1.1; // CHANGE NEG OR POS
+            double rx = -gamepad1.right_stick_x; // rotating
 
             angles = imu.getRobotYawPitchRollAngles();
             double yaw = angles.getYaw(AngleUnit.RADIANS); // robot heading
@@ -105,10 +105,10 @@ public class TeleOpMeet3 extends LinearOpMode {
             double frontRightPower = (rotatedY - rotatedX - rx) / denominator;
             double backRightPower = (rotatedY + rotatedX - rx) / denominator;
 
-            drivetrain.frontLeft.setPower(frontLeftPower);
-            drivetrain.backLeft.setPower(backLeftPower);
-            drivetrain.frontRight.setPower(frontRightPower);
-            drivetrain.backRight.setPower(backRightPower);
+            drivetrain.frontLeft.setPower(-frontLeftPower);
+            drivetrain.backLeft.setPower(-backLeftPower);
+            drivetrain.frontRight.setPower(-frontRightPower);
+            drivetrain.backRight.setPower(-backRightPower);
 
             telemetry.addData("Yaw (radians)", yaw);
             telemetry.addData("Pitch (radians)", pitch);
@@ -165,24 +165,17 @@ public class TeleOpMeet3 extends LinearOpMode {
                 ILC.holdBrickClaw();
             }
 
-            // intake claw
-            if (gamepad1.left_trigger > 0.75) {
-                ILC.collectBrickIntake();
-            } else if (gamepad1.right_trigger > 0.75) {
-                ILC.holdBrickIntake();
-            }
-
 
             if(gamepad2.a && !aAlreadyPressed) {
                 motorOn = !motorOn;
                 if (motorOn) {
                     ILC.standbyOutake();
-                    ILC.DR4BMove(315);
+                    ILC.DR4BMove(950);
                     ILC.depositOutake();
                     ILC.collectBrickClaw();
                 } else {
                     ILC.standbyOutake();
-                    ILC.DR4BMove(-315);
+                    ILC.DR4BMove(-950);
                 }
             }
         }

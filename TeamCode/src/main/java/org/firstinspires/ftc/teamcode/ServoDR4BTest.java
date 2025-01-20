@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoDR4BTest extends LinearOpMode {
     Servo Servo1;
     Servo Servo2;
+    Servo Servo3;
 
     DcMotor leftDR4BMotor;
     DcMotor rightDR4BMotor;
@@ -19,6 +20,7 @@ public class ServoDR4BTest extends LinearOpMode {
     // Expose servo position to FTC Dashboard
     public static double servoPosition = 0.4;
     public static int DR4BPosition = 250;
+    public static double clawPos = 0;
 
     public void DR4BMove(int ticks) {
         leftDR4BMotor.setTargetPosition(ticks);
@@ -40,6 +42,8 @@ public class ServoDR4BTest extends LinearOpMode {
         // LEFT SERVO SHOULD BE REVERSED
         Servo1 = hardwareMap.get(Servo.class, "servo1");
         Servo2 = hardwareMap.get(Servo.class, "servo2");
+        Servo3 = hardwareMap.get(Servo.class, "servo3");
+        Servo3.setDirection(Servo.Direction.FORWARD);
 
         Servo2.setDirection(Servo.Direction.REVERSE);
 
@@ -62,6 +66,8 @@ public class ServoDR4BTest extends LinearOpMode {
             // Update servo positions based on the variable values
             Servo1.setPosition(servoPosition);
             Servo2.setPosition(servoPosition);
+
+            Servo3.setPosition(clawPos);
 
             DR4BMove(DR4BPosition);
 
