@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "DR4BWithIK")
+@TeleOp(name = "DR4BWithIK", group = "Testing")
 public class DR4BWithIK extends LinearOpMode {
 
     private DcMotor motor1;

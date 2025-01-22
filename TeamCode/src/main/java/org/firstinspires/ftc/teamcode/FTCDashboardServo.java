@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-@TeleOp(name = "FTCDashboardServo")
+@TeleOp(name = "FTC Dashboard Servo")
 public class FTCDashboardServo extends LinearOpMode {
     Servo Servo1;
     Servo Servo2;

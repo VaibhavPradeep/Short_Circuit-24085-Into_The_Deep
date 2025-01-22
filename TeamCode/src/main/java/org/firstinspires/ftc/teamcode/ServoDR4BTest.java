@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@TeleOp(name = "ServoDR4BTest")
+@TeleOp(name = "Servo DR4B Test", group = "Testing")
 public class ServoDR4BTest extends LinearOpMode {
     Servo Servo1;
     Servo Servo2;

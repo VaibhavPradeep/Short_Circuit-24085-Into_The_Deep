@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
-@TeleOp(name = " PIDForDR4B")
+@TeleOp(name = " PIDForDR4B", group = "Testing")
 public class PIDForDR4B extends LinearOpMode {
     private PIDController controller;
     public static double p = 0, i = 0, d = 0;

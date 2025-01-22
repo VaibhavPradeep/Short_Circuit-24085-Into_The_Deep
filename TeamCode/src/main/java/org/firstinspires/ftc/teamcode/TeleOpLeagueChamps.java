@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name = "TeleOpMeet3")
-public class TeleOpMeet3 extends LinearOpMode {
+@TeleOp(name = "TeleOp League Champs")
+public class TeleOpLeagueChamps extends LinearOpMode {
 
     IntakeLiftCamera ILC = new IntakeLiftCamera();
     Drivetrain drivetrain = new Drivetrain(this);
@@ -142,13 +142,6 @@ public class TeleOpMeet3 extends LinearOpMode {
                 ILC.collectCV4B();
             }
 
-            // rotate intake
-            if (gamepad1.x) {
-                ILC.rotateToIntake();
-            } else if (gamepad1.b) {
-                ILC.rotateToTransfer();
-            }
-
             // outake servo bars
             if (gamepad2.x) {
                 ILC.standbyOutake();
@@ -169,13 +162,10 @@ public class TeleOpMeet3 extends LinearOpMode {
             if(gamepad2.a && !aAlreadyPressed) {
                 motorOn = !motorOn;
                 if (motorOn) {
-                    ILC.standbyOutake();
-                    ILC.DR4BMove(950);
+                    ILC.DR4BMove(850);
                     ILC.depositOutake();
-                    ILC.collectBrickClaw();
                 } else {
-                    ILC.standbyOutake();
-                    ILC.DR4BMove(-950);
+                    ILC.DR4BMove(-850);
                 }
             }
         }

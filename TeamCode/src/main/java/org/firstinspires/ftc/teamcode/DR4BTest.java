@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "DR4B Test")
+@TeleOp(name = "DR4B Test", group = "Testing")
 public class DR4BTest extends OpMode {
     int[] maxPositions = {4500, 4500}; // potentially 4600
 

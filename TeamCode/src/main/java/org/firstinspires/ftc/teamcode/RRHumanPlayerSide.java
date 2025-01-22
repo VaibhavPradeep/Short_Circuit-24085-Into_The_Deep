@@ -1,24 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import androidx.annotation.NonNull;
-
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "Newest RR Code")
-public class NewestRRCode extends OpMode {
-
+@Config
+@Autonomous(name = "RR Human Player Side")
+public class RRHumanPlayerSide extends LinearOpMode {
     // Configurable variables
     public static double startX = 9.5; // Starting X position
     public static int DR4B_TICKS = 0;
@@ -30,7 +31,7 @@ public class NewestRRCode extends OpMode {
     public static double lineToYSplineHeading4 = -4;
     public static double strafeToX5 = 48;
     public static double strafeToY5 = -4;
-    public static double lineToYSplineHeading6 = -65;
+    public static double lineToYSplineHeading6 = -69;
     public static double turnAngle7 = 180;
     public static int fourBarPos = 0;
 
@@ -77,8 +78,8 @@ public class NewestRRCode extends OpMode {
         public class InitOutake implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                leftOutakeServo.setPosition(0.35);
-                rightOutakeServo.setPosition(0.35);
+                leftOutakeServo.setPosition(0.9);
+                rightOutakeServo.setPosition(0.9);
                 return false;
             }
         }
@@ -89,20 +90,20 @@ public class NewestRRCode extends OpMode {
         public class GetSpecimenOutake implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                leftOutakeServo.setPosition(0.8);
-                rightOutakeServo.setPosition(0.8);
+                leftOutakeServo.setPosition(1);
+                rightOutakeServo.setPosition(1);
                 return false;
             }
         }
         public Action getSpecimenOutake() {
-            return new OutakeServos.GetSpecimenOutake();
+            return new GetSpecimenOutake();
         }
 
         public class ScoreOutake implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                leftOutakeServo.setPosition(0.45);
-                rightOutakeServo.setPosition(0.45);
+                leftOutakeServo.setPosition(0.77);
+                rightOutakeServo.setPosition(0.77);
                 return false;
             }
         }
@@ -139,18 +140,11 @@ public class NewestRRCode extends OpMode {
             leftDR4BMotor.setPower(0);
             rightDR4BMotor.setPower(0);
         }
-        public void HoldPosition() {
-            leftDR4BMotor.setTargetPosition(fourBarPos);
-            rightDR4BMotor.setTargetPosition(fourBarPos);
-        }
         public class LiftUp implements Action {
-            public LiftUp(){
-                super();
-            }
-
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                fourBarPos = 950;
+                fourBarPos = 850;
+                DR4B(fourBarPos);
                 return false;
             }
         }
@@ -160,7 +154,7 @@ public class NewestRRCode extends OpMode {
         public class LiftDown implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                fourBarPos = -950;
+                fourBarPos = -850;
                 DR4B(fourBarPos);
                 return false;
             }
@@ -184,65 +178,150 @@ public class NewestRRCode extends OpMode {
         }
     }
 
-    Pose2d initialPose = new Pose2d(startX, startY, Math.toRadians(startHeading));
-    Pose2d nextPose = new Pose2d(startX, -43, Math.toRadians(startHeading));
-    MecanumDrive drive;
-    Claw claw;
-    OutakeServos outakeServos;
-    DR4BMove dr4BMove;
-    EverythingElse everythingElse;
-
     @Override
-    public void init() {
-        drive = new MecanumDrive(hardwareMap, initialPose);
-        claw = new Claw(hardwareMap);
-        outakeServos = new OutakeServos(hardwareMap);
-        dr4BMove = new DR4BMove(hardwareMap);
-        everythingElse = new EverythingElse(hardwareMap);
-    }
+    public void runOpMode() {
+        Pose2d initialPose = new Pose2d(startX, startY, Math.toRadians(startHeading));
+        Pose2d pose2 = new Pose2d(startX, -43, Math.toRadians(startHeading));
+        Pose2d pose3 = new Pose2d(9.5, -51, Math.toRadians(startHeading));
+        Pose2d pose4 = new Pose2d(48,-67.5, Math.toRadians(90));
+        Pose2d pose5 = new Pose2d(10.5, -63, Math.toRadians(270));
+        Pose2d pose6 = new Pose2d(startX, -43, Math.toRadians(startHeading));
+        Pose2d pose7 = new Pose2d(9.5, -51, Math.toRadians(startHeading));
+        Pose2d pose8 = new Pose2d(48,-67.5, Math.toRadians(90));
+        Pose2d pose9 = new Pose2d(11.5, -63, Math.toRadians(270));
+        Pose2d pose10 = new Pose2d(11.5, -51, Math.toRadians(startHeading));
 
-    @Override
-    public void start() {
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        Claw claw = new Claw(hardwareMap);
+        OutakeServos outakeServos = new OutakeServos(hardwareMap);
+        DR4BMove dr4BMove = new DR4BMove(hardwareMap);
+        EverythingElse everythingElse = new EverythingElse(hardwareMap);
+
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .waitSeconds(3)
                 .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
                 .lineToY(lineToYSplineHeading1) // Valid for downward Y movement
                 .waitSeconds(1);
 
-        // Now create tab2 for the remaining trajectory
-        TrajectoryActionBuilder tab2 = drive.actionBuilder(nextPose)
+        // Now create tab2 for the remaining trajectories
+        TrajectoryActionBuilder tab2 = drive.actionBuilder(pose2)
+                .waitSeconds(1)
                 .setTangent(Math.toRadians(90)) // Tangent aligns with upward Y movement
-                .lineToY(lineToYSplineHeading2) // Valid for upward Y movement
+                .lineToY(lineToYSplineHeading2); // Valid for upward Y movement
+
+        TrajectoryActionBuilder tab3 = drive.actionBuilder(pose3)
+                .waitSeconds(1)
                 .setTangent(Math.toRadians(0)) // Tangent aligns with rightward X movement
                 .lineToX(lineToXSplineHeading3) // Valid for rightward X movement
-                .waitSeconds(1)
+                .waitSeconds(0.5)
                 .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
                 .lineToY(lineToYSplineHeading4) // Valid for downward Y movement
                 .setTangent(Math.toRadians(0)) // Tangent aligns with rightward X movement
                 .strafeTo(new Vector2d(strafeToX5, strafeToY5)) // Valid for simultaneous X-Y movement
-                .waitSeconds(1)
+                .waitSeconds(0.5)
                 .setTangent(Math.toRadians(90)) // Tangent aligns with downward Y movement
                 .lineToY(lineToYSplineHeading6)
-                .turn(Math.toRadians(turnAngle7));
-        //Action trajectoryActionCloseOut = tab2.endTrajectory().fresh().build();
+                .waitSeconds(0.5)
+                .setTangent(Math.toRadians(270))
+                .lineToY(-55)
+                .turn(Math.toRadians(turnAngle7))
+                .setTangent(90)
+                .lineToY(-67.5)
+                .waitSeconds(2);
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        claw.closeClaw(),
-                        outakeServos.scoreOutake(),
-                        dr4BMove.liftUp(),
-                        tab1.build(),
-                        //claw.openClaw(),
-                        tab2.build()
-                )
-        );
-    }
+        TrajectoryActionBuilder tab4 = drive.actionBuilder(pose4)
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(270))
+                .lineToY(-63)
+                .waitSeconds(0.5)
+                .setTangent(Math.toRadians(270))
+                .lineToXSplineHeading(10.5, Math.toRadians(270))
+                .waitSeconds(0.5);
 
-    @Override
-    public void loop() {
-        dr4BMove.DR4B(fourBarPos);
-        telemetry.addData("Trying to get to", fourBarPos);
-        telemetry.addData("Actually At", dr4BMove.leftDR4BMotor.getCurrentPosition());
-        telemetry.update();
+        TrajectoryActionBuilder tab5 = drive.actionBuilder(pose5)
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(270))
+                .lineToY(-43);
+
+        TrajectoryActionBuilder tab6 = drive.actionBuilder(pose6)
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(90)) // Tangent aligns with upward Y movement
+                .lineToY(lineToYSplineHeading2); // Valid for upward Y movement
+
+        TrajectoryActionBuilder tab7 = drive.actionBuilder(pose7)
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(270)) // Tangent aligns with leftward X movement
+                .lineToX(-43) // Move along the X-axis to -43
+                .waitSeconds(0.5)
+                .turn(Math.toRadians(180))
+                .waitSeconds(0.5)
+                .setTangent(90)
+                .lineToY(-67.5)
+                .waitSeconds(2);
+
+        TrajectoryActionBuilder tab8 = drive.actionBuilder(pose8)
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(270))
+                .lineToY(-63)
+                .waitSeconds(0.5)
+                .setTangent(Math.toRadians(270))
+                .lineToXSplineHeading(11.5, Math.toRadians(270))
+                .waitSeconds(0.5);
+
+        TrajectoryActionBuilder tab9 = drive.actionBuilder(pose9)
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
+                .lineToY(lineToYSplineHeading1) // Valid for downward Y movement
+                .waitSeconds(1);
+
+        TrajectoryActionBuilder tab10 = drive.actionBuilder(pose10)
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(90)) // Tangent aligns with upward Y movement
+                .lineToY(lineToYSplineHeading2);
+
+        waitForStart();
+
+        if (opModeIsActive()) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            claw.closeClaw(),
+                            outakeServos.scoreOutake(),
+                            dr4BMove.liftUp(),
+                            tab1.build(),
+                            claw.openClaw(),
+                            tab2.build(),
+                            dr4BMove.liftDown(),
+                            outakeServos.getSpecimenOutake(),
+                            tab3.build(),
+                            claw.closeClaw(),
+                            outakeServos.initOutake(),
+                            tab4.build(),
+                            outakeServos.scoreOutake(),
+                            dr4BMove.liftUp(),
+                            tab5.build(),
+                            claw.openClaw(),
+                            tab6.build(),
+                            dr4BMove.liftDown(),
+                            outakeServos.getSpecimenOutake(),
+                            tab7.build(),
+                            claw.closeClaw(),
+                            outakeServos.initOutake(),
+                            tab8.build(),
+                            outakeServos.scoreOutake(),
+                            dr4BMove.liftUp(),
+                            tab9.build(),
+                            claw.openClaw(),
+                            tab10.build(),
+                            outakeServos.getSpecimenOutake(),
+                            dr4BMove.liftDown()
+                        )
+            );
+        }
+
+        while (opModeIsActive()) {
+
+            dr4BMove.DR4B(fourBarPos);
+
+        }
     }
 }
