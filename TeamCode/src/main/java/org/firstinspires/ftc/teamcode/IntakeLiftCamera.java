@@ -31,7 +31,7 @@ public class IntakeLiftCamera {
     // Outake
     Servo leftOutakeServo;
     Servo rightOutakeServo;
-    Servo armOutakeServo;
+    Servo wristServo;
 
     // Specimen
     Servo clawServo;
@@ -43,17 +43,12 @@ public class IntakeLiftCamera {
 
     // Coaxial Virtual Four Bar
     // Virtual Four Bar
-    final double LEFT_CV4B_INTAKE = 0.22;
-    final double RIGHT_CV4B_INTAKE = 0.22;
+    // 0.2 cv4b, 0.4 rotate intake servo for getting in submersible
+    // 0.255 for cv4b and  0.7 for rotate intake to get a thing from submersible
+    // 0 for pick and 0.34 for other picking, wrist servo
+    // all 0.12 for rotate intake for sagging, 0 for cv4b
+    // 0 for everything not sagging
 
-    final double LEFT_CV4B_BOX = 0.14;
-    final double RIGHT_CV4B_BOX = 0.14;
-    final double LEFT_CV4B_TRANSFER = 0;
-    final double RIGHT_CV4B_TRANSFER  = 0;
-
-    // Rotate Intake
-    final double ROTATE_FOR_INTAKE = 0;
-    final double ROTATE_FOR_TRANSFER = 0.3;
 
     // Outake
     final double LEFT_OUTAKE_TRANSFER = 0.35;
@@ -122,47 +117,41 @@ public class IntakeLiftCamera {
         rightDR4BMotor.setPower(1);
     }
 
-        // Intake
-    public void intakeIn() {
-        leftIntakeServo.setPower(INTAKE_COLLECT);
-        // rightIntakeServo.setPower(INTAKE_COLLECT);
-    }
-
-    public void intakeOut() {
-        leftIntakeServo.setPower(INTAKE_DEPOSIT);
-        // rightIntakeServo.setPower(INTAKE_DEPOSIT);
-    }
-
-    public void intakeOff() {
-        leftIntakeServo.setPower(INTAKE_OFF);
-        leftIntakeServo.setPower(INTAKE_OFF);
-    }
 
     //Coaxial Virtual Four Bar
     // Virtual Four Bar
     public void collectCV4B() {
-        leftCV4BServo.setPosition(LEFT_CV4B_INTAKE);
-        rightCV4BServo.setPosition(RIGHT_CV4B_INTAKE);
+        leftCV4BServo.setPosition(0.255);
+        rightCV4BServo.setPosition(0.255);
+        rotateIntakeServo.setPosition(0.7);
     }
 
     public void submersibleCV4B() {
-        leftCV4BServo.setPosition(LEFT_CV4B_BOX);
-        rightCV4BServo.setPosition(RIGHT_CV4B_BOX);
+        leftCV4BServo.setPosition(0.2);
+        rightCV4BServo.setPosition(0.2);
+        rotateIntakeServo.setPosition(0.4);
     }
 
-    public void transferOrZeroCV4B() {
-        leftCV4BServo.setPosition(LEFT_CV4B_TRANSFER);
-        rightCV4BServo.setPosition(RIGHT_CV4B_TRANSFER);
+    public void zeroCV4B() {
+        leftCV4BServo.setPosition(0);
+        rightCV4BServo.setPosition(0);
+        rotateIntakeServo.setPosition(0);
     }
 
-    // Coaxial Mechanism, Rotate Intake
-    public void rotateToIntake() {
-        rotateIntakeServo.setPosition(ROTATE_FOR_INTAKE);
+    public void sagggingCV4B () {
+        leftCV4BServo.setPosition(0);
+        rightCV4BServo.setPosition(0);
+        rotateIntakeServo.setPosition(0.12);
     }
 
-    public void rotateToTransfer() {
-        rotateIntakeServo.setPosition(ROTATE_FOR_TRANSFER);
+    public void normalPickup() {
+        wristServo.setPosition(0);
     }
+
+    public void turnedPickup() {
+        wristServo.setPosition(0.34);
+    }
+
 
     // Outake
     public void standbyOutake() {
@@ -194,7 +183,7 @@ public class IntakeLiftCamera {
     }
 
     public void collectBrickIntake() {
-        intakeClawServo.setPosition(1);
+        intakeClawServo.setPosition(0.28);
     }
 
     // Init
@@ -222,7 +211,8 @@ public class IntakeLiftCamera {
         clawServo.setDirection(Servo.Direction.REVERSE);
 
         intakeClawServo = hwMap.get(Servo.class, "intakeClawServo");
-        intakeClawServo.setDirection(Servo.Direction.REVERSE);
+
+        wristServo = hwMap.get(Servo.class, "wristServo");
 
 
         // correct
@@ -244,7 +234,6 @@ public class IntakeLiftCamera {
         telemetry.addData("left outake Servo position", leftOutakeServo.getPosition());
         telemetry.addData("right outake Servo position", rightOutakeServo.getPosition());
 
-        telemetry.addData("claw servo position", clawServo.getPosition());
 
         telemetry.update();
     }

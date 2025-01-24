@@ -22,16 +22,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class RRHumanPlayerSide extends LinearOpMode {
     // Configurable variables
     public static double startX = 9.5; // Starting X position
-    public static int DR4B_TICKS = 0;
     public static double startY = -72; // Starting Y position
     public static double startHeading = 270; // Starting heading in degrees
-    public static double lineToYSplineHeading1 = -43; // Target Y position for spline heading
+    public static double lineToYSplineHeading1 = -41; // Target Y position for spline heading
     public static double lineToYSplineHeading2 = -51;
     public static double lineToXSplineHeading3 = 36;
-    public static double lineToYSplineHeading4 = -4;
+    public static double lineToYSplineHeading4 = -20;
     public static double strafeToX5 = 48;
-    public static double strafeToY5 = -4;
-    public static double lineToYSplineHeading6 = -69;
+    public static double strafeToY5 = -20;
+    public static double lineToYSplineHeading6 = -69.75;
     public static double turnAngle7 = 180;
     public static int fourBarPos = 0;
 
@@ -120,6 +119,10 @@ public class RRHumanPlayerSide extends LinearOpMode {
             leftDR4BMotor = hardwareMap.get(DcMotor.class, "leftDR4BMotor");
             rightDR4BMotor = hardwareMap.get(DcMotor.class, "rightDR4BMotor");
             rightDR4BMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftDR4BMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightDR4BMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         public void DR4B(int ticks) {
@@ -130,6 +133,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
             leftDR4BMotor.setPower(1);
             rightDR4BMotor.setPower(1);
 
+            /*
             // Wait until the motors reach the target position
             if (leftDR4BMotor.getCurrentPosition() == ticks && rightDR4BMotor.getCurrentPosition() == ticks) {
                 leftDR4BMotor.setPower(0);
@@ -139,11 +143,13 @@ public class RRHumanPlayerSide extends LinearOpMode {
             // Stop the motors once the target position is reached
             leftDR4BMotor.setPower(0);
             rightDR4BMotor.setPower(0);
+
+             */
         }
         public class LiftUp implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                fourBarPos = 850;
+                fourBarPos = 1550;
                 DR4B(fourBarPos);
                 return false;
             }
@@ -154,7 +160,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
         public class LiftDown implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                fourBarPos = -850;
+                fourBarPos = -600;
                 DR4B(fourBarPos);
                 return false;
             }
@@ -176,18 +182,32 @@ public class RRHumanPlayerSide extends LinearOpMode {
             rotateIntakeServo = hardwareMap.get(Servo.class, "rotateIntakeServo");
             intakeClawServo = hardwareMap.get(Servo.class, "intakeClawServo");
         }
+
+        public class InitEverythingElse implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                leftCV4BServo.setPosition(0.2);
+                rightCV4BServo.setPosition(0.2);
+                rotateIntakeServo.setPosition(0);
+                return false;
+            }
+        }
+        public Action initEverythingElse() {
+            return new EverythingElse.InitEverythingElse();
+        }
+
     }
 
     @Override
     public void runOpMode() {
         Pose2d initialPose = new Pose2d(startX, startY, Math.toRadians(startHeading));
-        Pose2d pose2 = new Pose2d(startX, -43, Math.toRadians(startHeading));
+        Pose2d pose2 = new Pose2d(startX, -41, Math.toRadians(startHeading));
         Pose2d pose3 = new Pose2d(9.5, -51, Math.toRadians(startHeading));
-        Pose2d pose4 = new Pose2d(48,-67.5, Math.toRadians(90));
+        Pose2d pose4 = new Pose2d(48,-69.75, Math.toRadians(90));
         Pose2d pose5 = new Pose2d(10.5, -63, Math.toRadians(270));
-        Pose2d pose6 = new Pose2d(startX, -43, Math.toRadians(startHeading));
-        Pose2d pose7 = new Pose2d(9.5, -51, Math.toRadians(startHeading));
-        Pose2d pose8 = new Pose2d(48,-67.5, Math.toRadians(90));
+        Pose2d pose6 = new Pose2d(startX, -41, Math.toRadians(startHeading));
+        Pose2d pose7 = new Pose2d(10.5, -51, Math.toRadians(startHeading));
+        Pose2d pose8 = new Pose2d(48,-69.75, Math.toRadians(90));
         Pose2d pose9 = new Pose2d(11.5, -63, Math.toRadians(270));
         Pose2d pose10 = new Pose2d(11.5, -51, Math.toRadians(startHeading));
 
@@ -201,7 +221,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
                 .waitSeconds(3)
                 .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
                 .lineToY(lineToYSplineHeading1) // Valid for downward Y movement
-                .waitSeconds(1);
+                .waitSeconds(4);
 
         // Now create tab2 for the remaining trajectories
         TrajectoryActionBuilder tab2 = drive.actionBuilder(pose2)
@@ -212,36 +232,35 @@ public class RRHumanPlayerSide extends LinearOpMode {
         TrajectoryActionBuilder tab3 = drive.actionBuilder(pose3)
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(0)) // Tangent aligns with rightward X movement
-                .lineToX(lineToXSplineHeading3) // Valid for rightward X movement
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
-                .lineToY(lineToYSplineHeading4) // Valid for downward Y movement
+                .lineToX(lineToXSplineHeading3)// Valid for rightward X movement
+                .waitSeconds(0.25)
+                .setTangent(Math.toRadians(270))
+                .lineToY(lineToYSplineHeading4)// Valid for downward Y movement
+                .waitSeconds(0.25)
+                .turn(Math.toRadians(180))
+                .waitSeconds(0.25)
                 .setTangent(Math.toRadians(0)) // Tangent aligns with rightward X movement
                 .strafeTo(new Vector2d(strafeToX5, strafeToY5)) // Valid for simultaneous X-Y movement
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(90)) // Tangent aligns with downward Y movement
+                .waitSeconds(0.25)
+                .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
                 .lineToY(lineToYSplineHeading6)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(270))
-                .lineToY(-55)
-                .turn(Math.toRadians(turnAngle7))
-                .setTangent(90)
-                .lineToY(-67.5)
-                .waitSeconds(2);
+                .waitSeconds(1);
+
 
         TrajectoryActionBuilder tab4 = drive.actionBuilder(pose4)
                 .waitSeconds(1)
-                .setTangent(Math.toRadians(270))
+                .setTangent(Math.toRadians(90))
                 .lineToY(-63)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(270))
-                .lineToXSplineHeading(10.5, Math.toRadians(270))
-                .waitSeconds(0.5);
+                .waitSeconds(0.25)
+                .setTangent(Math.toRadians(180))
+                .lineToX(10.5)
+                .waitSeconds(0.25)
+                .turn(Math.toRadians(180));
 
         TrajectoryActionBuilder tab5 = drive.actionBuilder(pose5)
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(270))
-                .lineToY(-43);
+                .lineToY(-41);
 
         TrajectoryActionBuilder tab6 = drive.actionBuilder(pose6)
                 .waitSeconds(1)
@@ -250,40 +269,44 @@ public class RRHumanPlayerSide extends LinearOpMode {
 
         TrajectoryActionBuilder tab7 = drive.actionBuilder(pose7)
                 .waitSeconds(1)
-                .setTangent(Math.toRadians(270)) // Tangent aligns with leftward X movement
-                .lineToX(-43) // Move along the X-axis to -43
-                .waitSeconds(0.5)
+                .setTangent(Math.toRadians(0)) // Tangent aligns with leftward X movement
+                .lineToX(-41) // Move along the X-axis to -43
+                .waitSeconds(0.25)
                 .turn(Math.toRadians(180))
-                .waitSeconds(0.5)
-                .setTangent(90)
-                .lineToY(-67.5)
-                .waitSeconds(2);
+                .waitSeconds(0.25)
+                .setTangent(270)
+                .lineToY(-69.75)
+                .waitSeconds(0.25);
 
         TrajectoryActionBuilder tab8 = drive.actionBuilder(pose8)
                 .waitSeconds(1)
-                .setTangent(Math.toRadians(270))
+                .setTangent(Math.toRadians(90))
                 .lineToY(-63)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(270))
-                .lineToXSplineHeading(11.5, Math.toRadians(270))
-                .waitSeconds(0.5);
+                .waitSeconds(0.25)
+                .setTangent(Math.toRadians(180))
+                .lineToX(11.5)
+                .waitSeconds(0.25)
+                .turn(Math.toRadians(180));
+
 
         TrajectoryActionBuilder tab9 = drive.actionBuilder(pose9)
                 .waitSeconds(1)
-                .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
-                .lineToY(lineToYSplineHeading1) // Valid for downward Y movement
-                .waitSeconds(1);
+                .setTangent(Math.toRadians(270))
+                .lineToY(-41);
 
         TrajectoryActionBuilder tab10 = drive.actionBuilder(pose10)
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(90)) // Tangent aligns with upward Y movement
                 .lineToY(lineToYSplineHeading2);
 
+
+
         waitForStart();
 
         if (opModeIsActive()) {
             Actions.runBlocking(
                     new SequentialAction(
+                            everythingElse.initEverythingElse(),
                             claw.closeClaw(),
                             outakeServos.scoreOutake(),
                             dr4BMove.liftUp(),
@@ -294,7 +317,6 @@ public class RRHumanPlayerSide extends LinearOpMode {
                             outakeServos.getSpecimenOutake(),
                             tab3.build(),
                             claw.closeClaw(),
-                            outakeServos.initOutake(),
                             tab4.build(),
                             outakeServos.scoreOutake(),
                             dr4BMove.liftUp(),
@@ -305,7 +327,6 @@ public class RRHumanPlayerSide extends LinearOpMode {
                             outakeServos.getSpecimenOutake(),
                             tab7.build(),
                             claw.closeClaw(),
-                            outakeServos.initOutake(),
                             tab8.build(),
                             outakeServos.scoreOutake(),
                             dr4BMove.liftUp(),

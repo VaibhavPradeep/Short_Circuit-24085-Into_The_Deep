@@ -34,14 +34,6 @@ public class TeleOpLeagueChamps extends LinearOpMode {
         drivetrain.initDrivetrain(hardwareMap);
         ILC.initIntakeLiftCamera(hardwareMap);
 
-        ILC.leftCV4BServo.setPosition(0);
-        ILC.rightCV4BServo.setPosition(0);
-        ILC.rotateIntakeServo.setPosition(0);
-        ILC.leftOutakeServo.setPosition(0);
-        ILC.rightOutakeServo.setPosition(0);
-        ILC.clawServo.setPosition(0);
-        ILC.intakeClawServo.setPosition(0);
-
         BHI260IMU imu;
         BHI260IMU.Parameters parameters;
         YawPitchRollAngles angles;
@@ -105,10 +97,10 @@ public class TeleOpLeagueChamps extends LinearOpMode {
             double frontRightPower = (rotatedY - rotatedX - rx) / denominator;
             double backRightPower = (rotatedY + rotatedX - rx) / denominator;
 
-            drivetrain.frontLeft.setPower(-frontLeftPower);
-            drivetrain.backLeft.setPower(-backLeftPower);
-            drivetrain.frontRight.setPower(-frontRightPower);
-            drivetrain.backRight.setPower(-backRightPower);
+            drivetrain.frontLeft.setPower(frontLeftPower);
+            drivetrain.backLeft.setPower(backLeftPower);
+            drivetrain.frontRight.setPower(frontRightPower);
+            drivetrain.backRight.setPower(backRightPower);
 
             telemetry.addData("Yaw (radians)", yaw);
             telemetry.addData("Pitch (radians)", pitch);
@@ -126,20 +118,22 @@ public class TeleOpLeagueChamps extends LinearOpMode {
                 ILC.dPadMove("down");
             }
 
-            // intake
-            if (gamepad1.left_trigger > 0.75) {
-                ILC.holdBrickIntake();
-            } else if (gamepad1.left_trigger > 0.75) {
-                ILC.collectBrickIntake();
+            if (gamepad1.y) {
+                ILC.normalPickup();
+            } else if (gamepad1.a) {
+                ILC.turnedPickup();
             }
+
 
             // coaxial virtual four bar
             if (gamepad1.dpad_up) {
-                ILC.transferOrZeroCV4B();
-            } else if (gamepad1.dpad_left) {
+                ILC.sagggingCV4B();
+            } else if (gamepad1.dpad_right) {
                 ILC.submersibleCV4B();
             } else if (gamepad1.dpad_down) {
                 ILC.collectCV4B();
+            } else if (gamepad1.dpad_left) {
+                ILC.zeroCV4B();
             }
 
             // outake servo bars
@@ -149,6 +143,12 @@ public class TeleOpLeagueChamps extends LinearOpMode {
                 ILC.specimenCollectOutake();
             } else if (gamepad2.y) {
                 ILC.depositOutake();
+            }
+
+            if (gamepad1.x) {
+                ILC.holdBrickIntake();
+            } else if (gamepad1.b) {
+                ILC.collectBrickIntake();
             }
 
             // claw servo
