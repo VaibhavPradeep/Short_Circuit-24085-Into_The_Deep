@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -17,16 +18,32 @@ public class TeleOpLeagueChamps extends LinearOpMode {
     boolean aAlreadyPressed;
     boolean motorOn;
 
-    /*
-    public void driveMecanum(double left_y, double left_x, double right_x, double left_trigger){
-        double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 0.8);
+    ElapsedTime timer = new ElapsedTime();
+
+    public void driveMecanum(double left_y, double left_x, double right_x, boolean brake){
+        double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
+
+
+        if (brake == true) {
+            drivetrain.frontLeft.setPower(((left_y - left_x - right_x) / maxPower)/1.5);
+            drivetrain.frontRight.setPower(((left_y + left_x + right_x) / maxPower));
+            drivetrain.backLeft.setPower(((left_y + left_x - right_x) / maxPower)/1.5);
+            drivetrain.backRight.setPower(((left_y - left_x + right_x) / maxPower)/1.5);
+        } else {
+            drivetrain.frontLeft.setPower((left_y - left_x - right_x) / maxPower);
+            drivetrain.frontRight.setPower((left_y + left_x + right_x) / maxPower);
+            drivetrain.backLeft.setPower((left_y + left_x - right_x) / maxPower);
+            drivetrain.backRight.setPower((left_y - left_x + right_x) / maxPower);
+        }
+
+        /*
         drivetrain.frontLeft.setPower((left_y - left_x - right_x) / maxPower);
         drivetrain.frontRight.setPower((left_y + left_x + right_x) / maxPower);
         drivetrain.backLeft.setPower((left_y + left_x - right_x) / maxPower);
         drivetrain.backRight.setPower((left_y - left_x + right_x) / maxPower);
+         */
     }
 
-     */
 
 
     @Override
@@ -57,7 +74,7 @@ public class TeleOpLeagueChamps extends LinearOpMode {
             telemetry.update();
 
             // drivetrain
-            //driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger);
+            driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_bumper);
 
             // double reverse four bar
             // 215 dr4b, 0.5 outake bar
@@ -79,6 +96,7 @@ public class TeleOpLeagueChamps extends LinearOpMode {
             }
 
              */
+            /*
             double y = -gamepad1.left_stick_y; // CHANGE NEG OR POS
             double x = -gamepad1.left_stick_x * 1.1; // CHANGE NEG OR POS
             double rx = -gamepad1.right_stick_x; // rotating
@@ -111,6 +129,8 @@ public class TeleOpLeagueChamps extends LinearOpMode {
             telemetry.addData("BR Power", backRightPower);
             telemetry.update();
 
+             */
+
             if(gamepad2.dpad_up) {
                 ILC.dPadMove("up");
             }
@@ -131,6 +151,7 @@ public class TeleOpLeagueChamps extends LinearOpMode {
             } else if (gamepad1.dpad_right) {
                 ILC.submersibleCV4B();
             } else if (gamepad1.dpad_down) {
+                ILC.collectBrickIntake();
                 ILC.collectCV4B();
             } else if (gamepad1.dpad_left) {
                 ILC.zeroCV4B();
@@ -159,6 +180,25 @@ public class TeleOpLeagueChamps extends LinearOpMode {
             }
 
 
+            if (gamepad1.left_trigger > 0.75) {
+                /*
+                timer.reset();
+                ILC.holdBrickIntake();
+                ILC.zeroCV4B();
+                ILC.sagggingCV4B();
+                ILC.standbyOutake();
+                ILC.collectBrickClaw();
+
+                 */
+            } else if (gamepad1.right_trigger > 0.75) {
+                //ILC.holdBrickClaw();
+                //ILC.collectBrickIntake();
+            }
+
+
+
+
+            /*
             if(gamepad2.a && !aAlreadyPressed) {
                 motorOn = !motorOn;
                 if (motorOn) {
@@ -167,7 +207,10 @@ public class TeleOpLeagueChamps extends LinearOpMode {
                 } else {
                     ILC.DR4BMove(-850);
                 }
+
             }
+
+             */
         }
     }
 }

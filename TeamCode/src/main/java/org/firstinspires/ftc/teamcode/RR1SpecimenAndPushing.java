@@ -1,36 +1,36 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Autonomous(name = "RR Human Player Side")
-public class RRHumanPlayerSide extends LinearOpMode {
+@Autonomous(name = "RR1SpecimenAndPushing")
+public class RR1SpecimenAndPushing extends LinearOpMode {
     // Configurable variables
     public static double startX = 9.5; // Starting X position
     public static double startY = -72; // Starting Y position
     public static double startHeading = 270; // Starting heading in degrees
     public static double lineToYSplineHeading1 = -41; // Target Y position for spline heading
-    public static double lineToYSplineHeading2 = -51;
+    public static double lineToYSplineHeading2 = -55;
     public static double lineToXSplineHeading3 = 36;
     public static double lineToYSplineHeading4 = -20;
     public static double strafeToX5 = 48;
     public static double strafeToY5 = -20;
-    public static double lineToYSplineHeading6 = -69.75;
+    public static double lineToYSplineHeading6 = -67;
     public static double turnAngle7 = 180;
     public static int fourBarPos = 0;
 
@@ -50,7 +50,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
             }
         }
         public Action closeClaw() {
-            return new Claw.CloseClaw();
+            return new CloseClaw();
         }
 
         public class OpenClaw implements Action {
@@ -61,7 +61,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
             }
         }
         public Action openClaw() {
-            return new Claw.OpenClaw();
+            return new OpenClaw();
         }
     }
 
@@ -84,7 +84,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
             }
         }
         public Action initOutake() {
-            return new OutakeServos.InitOutake();
+            return new InitOutake();
         }
 
         public class GetSpecimenOutake implements Action {
@@ -108,7 +108,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
             }
         }
         public Action scoreOutake() {
-            return new OutakeServos.ScoreOutake();
+            return new ScoreOutake();
         }
     }
 
@@ -150,13 +150,13 @@ public class RRHumanPlayerSide extends LinearOpMode {
         public class LiftUp implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                fourBarPos = 1550;
+                fourBarPos = 900;
                 DR4B(fourBarPos);
                 return false;
             }
         }
         public Action liftUp() {
-            return new DR4BMove.LiftUp();
+            return new LiftUp();
         }
         public class LiftDown implements Action {
             @Override
@@ -167,7 +167,7 @@ public class RRHumanPlayerSide extends LinearOpMode {
             }
         }
         public Action liftDown() {
-            return new DR4BMove.LiftDown();
+            return new LiftDown();
         }
     }
 
@@ -187,14 +187,17 @@ public class RRHumanPlayerSide extends LinearOpMode {
         public class InitEverythingElse implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                leftCV4BServo.setPosition(0.2);
-                rightCV4BServo.setPosition(0.2);
-                rotateIntakeServo.setPosition(0);
+                leftCV4BServo.setPosition(0.1);
+                rightCV4BServo.setPosition(0.1);
+                rotateIntakeServo.setPosition(0.55);
+                while (leftCV4BServo.getPosition() != 0.1 && rotateIntakeServo.getPosition() != 0.5) {
+
+                }
                 return false;
             }
         }
         public Action initEverythingElse() {
-            return new EverythingElse.InitEverythingElse();
+            return new InitEverythingElse();
         }
 
     }
@@ -203,14 +206,8 @@ public class RRHumanPlayerSide extends LinearOpMode {
     public void runOpMode() {
         Pose2d initialPose = new Pose2d(startX, startY, Math.toRadians(startHeading));
         Pose2d pose2 = new Pose2d(startX, -41, Math.toRadians(startHeading));
-        Pose2d pose3 = new Pose2d(9.5, -51, Math.toRadians(startHeading));
-        Pose2d pose4 = new Pose2d(48,-69.75, Math.toRadians(90));
-        Pose2d pose5 = new Pose2d(10.5, -63, Math.toRadians(270));
-        Pose2d pose6 = new Pose2d(startX, -41, Math.toRadians(startHeading));
-        Pose2d pose7 = new Pose2d(10.5, -51, Math.toRadians(startHeading));
-        Pose2d pose8 = new Pose2d(48,-69.75, Math.toRadians(90));
-        Pose2d pose9 = new Pose2d(11.5, -63, Math.toRadians(270));
-        Pose2d pose10 = new Pose2d(11.5, -51, Math.toRadians(startHeading));
+        Pose2d pose3 = new Pose2d(9.5, -55, Math.toRadians(startHeading));
+
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Claw claw = new Claw(hardwareMap);
@@ -222,13 +219,13 @@ public class RRHumanPlayerSide extends LinearOpMode {
                 .waitSeconds(3)
                 .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
                 .lineToY(lineToYSplineHeading1) // Valid for downward Y movement
-                .waitSeconds(4);
+                .waitSeconds(0.2);
 
         // Now create tab2 for the remaining trajectories
         TrajectoryActionBuilder tab2 = drive.actionBuilder(pose2)
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(90)) // Tangent aligns with upward Y movement
-                .lineToY(lineToYSplineHeading2); // Valid for upward Y movement
+                .lineToY(lineToYSplineHeading2); // Valid for upward Y moveme
 
         TrajectoryActionBuilder tab3 = drive.actionBuilder(pose3)
                 .waitSeconds(1)
@@ -238,69 +235,24 @@ public class RRHumanPlayerSide extends LinearOpMode {
                 .setTangent(Math.toRadians(270))
                 .lineToY(lineToYSplineHeading4)// Valid for downward Y movement
                 .waitSeconds(0.25)
-                .turn(Math.toRadians(180))
-                .waitSeconds(0.25)
                 .setTangent(Math.toRadians(0)) // Tangent aligns with rightward X movement
                 .strafeTo(new Vector2d(strafeToX5, strafeToY5)) // Valid for simultaneous X-Y movement
                 .waitSeconds(0.25)
-                .setTangent(Math.toRadians(270)) // Tangent aligns with downward Y movement
+                .setTangent(Math.toRadians(90)) // Tangent aligns with downward Y movement
                 .lineToY(lineToYSplineHeading6)
-                .waitSeconds(1);
-
-
-        TrajectoryActionBuilder tab4 = drive.actionBuilder(pose4)
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90))
-                .lineToY(-63)
                 .waitSeconds(0.25)
-                .setTangent(Math.toRadians(180))
-                .lineToX(10.5)
+                .lineToY(-20)
+                .setTangent(Math.toRadians(0)) // Tangent aligns with rightward X movement
+                .strafeTo(new Vector2d(60, strafeToY5))
+                .setTangent(90)
+                .lineToY(-67)
                 .waitSeconds(0.25)
-                .turn(Math.toRadians(180));
-
-        TrajectoryActionBuilder tab5 = drive.actionBuilder(pose5)
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(270))
-                .lineToY(-41);
-
-        TrajectoryActionBuilder tab6 = drive.actionBuilder(pose6)
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90)) // Tangent aligns with upward Y movement
-                .lineToY(lineToYSplineHeading2); // Valid for upward Y movement
-
-        TrajectoryActionBuilder tab7 = drive.actionBuilder(pose7)
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(0)) // Tangent aligns with leftward X movement
-                .lineToX(-41) // Move along the X-axis to -43
-                .waitSeconds(0.25)
-                .turn(Math.toRadians(180))
-                .waitSeconds(0.25)
-                .setTangent(270)
-                .lineToY(-69.75)
-                .waitSeconds(0.25);
-
-        TrajectoryActionBuilder tab8 = drive.actionBuilder(pose8)
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90))
-                .lineToY(-63)
-                .waitSeconds(0.25)
-                .setTangent(Math.toRadians(180))
-                .lineToX(11.5)
-                .waitSeconds(0.25)
-                .turn(Math.toRadians(180));
-
-
-        TrajectoryActionBuilder tab9 = drive.actionBuilder(pose9)
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(270))
-                .lineToY(-41);
-
-        TrajectoryActionBuilder tab10 = drive.actionBuilder(pose10)
-                .waitSeconds(1)
-                .setTangent(Math.toRadians(90)) // Tangent aligns with upward Y movement
-                .lineToY(lineToYSplineHeading2);
-
-
+                .lineToY(-20)
+                .setTangent(0)
+                .strafeTo(new Vector2d(64.5, strafeToY5))
+                .setTangent(90)
+                .lineToY(-67)
+                ;
 
         waitForStart();
 
@@ -312,31 +264,9 @@ public class RRHumanPlayerSide extends LinearOpMode {
                             outakeServos.scoreOutake(),
                             dr4BMove.liftUp(),
                             tab1.build(),
-                            claw.openClaw(),
-                            tab2.build(),
-                            dr4BMove.liftDown(),
-                            outakeServos.getSpecimenOutake(),
-                            tab3.build(),
-                            claw.closeClaw(),
-                            tab4.build(),
-                            outakeServos.scoreOutake(),
-                            dr4BMove.liftUp(),
-                            tab5.build(),
-                            claw.openClaw(),
-                            tab6.build(),
-                            dr4BMove.liftDown(),
-                            outakeServos.getSpecimenOutake(),
-                            tab7.build(),
-                            claw.closeClaw(),
-                            tab8.build(),
-                            outakeServos.scoreOutake(),
-                            dr4BMove.liftUp(),
-                            tab9.build(),
-                            claw.openClaw(),
-                            tab10.build(),
-                            outakeServos.getSpecimenOutake(),
-                            dr4BMove.liftDown()
-                        )
+                            //claw.openClaw(),
+                            tab2.build()
+                    )
             );
         }
 
@@ -347,3 +277,4 @@ public class RRHumanPlayerSide extends LinearOpMode {
         }
     }
 }
+

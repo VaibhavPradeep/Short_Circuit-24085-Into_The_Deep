@@ -44,19 +44,20 @@ public class IntakeLiftCamera {
     // Coaxial Virtual Four Bar
     // Virtual Four Bar
     // 0.2 cv4b, 0.4 rotate intake servo for getting in submersible
-    // 0.255 for cv4b and  0.7 for rotate intake to get a thing from submersible
+    // 0.249 for cv4b and  0.7 for rotate intake to get a thing from submersible
     // 0 for pick and 0.34 for other picking, wrist servo
     // all 0.12 for rotate intake for sagging, 0 for cv4b
     // 0 for everything not sagging
+    //0.265
 
 
     // Outake
-    final double LEFT_OUTAKE_TRANSFER = 0.35;
-    final double RIGHT_OUTAKE_TRANSFER = 0.35;
+    final double LEFT_OUTAKE_TRANSFER = 0.31;
+    final double RIGHT_OUTAKE_TRANSFER = 0.31;
     final double LEFT_OUTAKE_DEPOSIT = 0.77;
     final double RIGHT_OUTAKE_DEPOSIT = 0.77;
-    final double LEFT_OUTAKE_SPECIMEN_COLLECT = 1;
-    final double RIGHT_OUTAKE_SPECIMEN_COLLECT = 1;
+    final double LEFT_OUTAKE_SPECIMEN_COLLECT = 0.96;
+    final double RIGHT_OUTAKE_SPECIMEN_COLLECT = 0.96;
 
     // Specimen
     final double BRICK_HOLD = 0;
@@ -68,12 +69,12 @@ public class IntakeLiftCamera {
         int leftPos = leftDR4BMotor.getCurrentPosition();
 
         if(direction.equals("up")) {
-            rightPos += 50;
-            leftPos += 50;
+            rightPos += 100;
+            leftPos += 100;
         }
         else if(direction.equals("down")) {
-            rightPos -= 50;
-            leftPos -= 50;
+            rightPos -= 100;
+            leftPos -= 100;
         }
 
         leftDR4BMotor.setTargetPosition(leftPos);
@@ -122,7 +123,7 @@ public class IntakeLiftCamera {
     // Virtual Four Bar
     public void collectCV4B() {
         leftCV4BServo.setPosition(0.255);
-        rightCV4BServo.setPosition(0.255);
+        rightCV4BServo.setPosition(0.265);
         rotateIntakeServo.setPosition(0.7);
     }
 
@@ -141,7 +142,7 @@ public class IntakeLiftCamera {
     public void sagggingCV4B () {
         leftCV4BServo.setPosition(0);
         rightCV4BServo.setPosition(0);
-        rotateIntakeServo.setPosition(0.12);
+        rotateIntakeServo.setPosition(0.16);
     }
 
     public void normalPickup() {
