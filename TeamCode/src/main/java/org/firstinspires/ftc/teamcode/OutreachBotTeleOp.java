@@ -6,13 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "TaiwanBotTeleOp")
-public class TaiwanBotTeleOp extends OpMode {
+@TeleOp(name = "OutreachBotTeleOp")
+public class OutreachBotTeleOp extends OpMode {
     // find values
     final double ARM_INTAKE = 0;
     final double ARM_OUTTAKE = 0;
     final double CLAW_HOLD = 0;
     final double CLAW_RELEASE = 0;
+
 
     DcMotor frontLeft;
     DcMotor frontRight;
