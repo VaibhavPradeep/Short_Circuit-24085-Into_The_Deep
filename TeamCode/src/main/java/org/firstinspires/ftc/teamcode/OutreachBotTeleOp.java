@@ -13,6 +13,8 @@ public class OutreachBotTeleOp extends OpMode {
     final double ARM_OUTTAKE = 0;
     final double CLAW_HOLD = 0;
     final double CLAW_RELEASE = 0;
+    final double DRONE_HOLD = 0;
+    final double DRONE_RELEASE = 0.3;
 
 
     DcMotor frontLeft;
@@ -22,6 +24,7 @@ public class OutreachBotTeleOp extends OpMode {
     DcMotor slide;
     Servo claw;
     Servo arm;
+    Servo drone;
 
     public void driveMecanum(double left_y, double left_x, double right_x){
         double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
@@ -59,6 +62,9 @@ public class OutreachBotTeleOp extends OpMode {
         claw = hardwareMap.get(Servo.class,"claw");
         arm = hardwareMap.get(Servo.class,"arm");
         slide = hardwareMap.get(DcMotor.class, "slide");
+        drone = hardwareMap.get(Servo.class, "drone");
+
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -101,6 +107,12 @@ public class OutreachBotTeleOp extends OpMode {
         }
         else if (gamepad1.b) {
             claw.setPosition(CLAW_RELEASE);
+        }
+
+        if (gamepad1.left_trigger > 0.75) {
+            drone.setPosition(DRONE_RELEASE);
+        } else if (gamepad1.right_trigger > 0.75) {
+            drone.setPosition(DRONE_HOLD);
         }
     }
 }
