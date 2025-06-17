@@ -38,15 +38,15 @@ public class OutreachBotTeleOp extends OpMode {
         int pos = slide.getCurrentPosition();
 
         if(direction.equals("up")) {
-            pos += 75;
+            pos += 5;
         }
         else if(direction.equals("down")) {
-            pos -= 75;
+            pos -= 5;
         }
 
         slide.setTargetPosition(pos);
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slide.setPower(0.75);
+        slide.setPower(0.3);
 
         if (slide.getCurrentPosition() == pos) {
             slide.setPower(0);
