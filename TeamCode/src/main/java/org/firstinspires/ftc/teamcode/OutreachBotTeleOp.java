@@ -40,7 +40,7 @@ public class OutreachBotTeleOp extends OpMode {
         if(direction.equals("up")) {
             pos += 75;
         }
-        else if(direction.equals("down")) {
+        else if(direction.equals("down") && pos > 75) {
             pos -= 75;
         }
 
