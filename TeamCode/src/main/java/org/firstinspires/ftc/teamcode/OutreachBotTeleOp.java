@@ -64,6 +64,9 @@ public class OutreachBotTeleOp extends OpMode {
         slide = hardwareMap.get(DcMotor.class, "slide");
         drone = hardwareMap.get(Servo.class, "drone");
 
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         arm.setDirection(Servo.Direction.REVERSE);
         claw.setDirection(Servo.Direction.REVERSE);
 
