@@ -65,6 +65,7 @@ public class OutreachBotTeleOp extends OpMode {
         drone = hardwareMap.get(Servo.class, "drone");
 
         arm.setDirection(Servo.Direction.REVERSE);
+        claw.setDirection(Servo.Direction.REVERSE);
 
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
