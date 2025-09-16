@@ -7,18 +7,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name="Simple Tank Drive", group="Basic")
 public class SimpleTankDrive extends OpMode {
 
-    // 4A. Declare motor variables
+    // 4A. Declare motor variables for the 2 motors
     private DcMotor leftDrive;
     private DcMotor rightDrive;
 
     // 5A. init() runs once when INIT is pressed
     @Override
     public void init() {
-        // 5B. Map hardware names to variables
+        // 5B. Map hardware names to variables, to sync them to the driver hub configuration
         leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
-        // 5C. Reverse right motor so both sides drive forward together
+        // 5C. Reverse right motor so both sides drive forward together, change if needed
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
     }
@@ -26,7 +26,8 @@ public class SimpleTankDrive extends OpMode {
     // 6A. loop() runs repeatedly after PLAY is pressed
     @Override
     public void loop() {
-        // 6B. Read driver joystick inputs
+        // 6B. Read driver joystick inputs, so left power is for left motor, and right is for right motor
+        // remember the
         double leftPower = -gamepad1.left_stick_y;
         double rightPower = -gamepad1.right_stick_y;
 
