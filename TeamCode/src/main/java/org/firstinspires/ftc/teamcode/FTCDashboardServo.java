@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.config.Config;
 @TeleOp(name = "FTC Dashboard Servo")
 public class FTCDashboardServo extends LinearOpMode {
     Servo Servo1;
+
     Servo Servo2;
 
     // Expose servo position to FTC Dashboard
