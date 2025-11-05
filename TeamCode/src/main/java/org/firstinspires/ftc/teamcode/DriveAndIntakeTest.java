@@ -36,16 +36,16 @@ public class DriveAndIntakeTest extends OpMode {
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
-
+  
     public static double leverPos = 0;
     public static double pitchPos = 0;
 
     public void driveMecanum(double left_y, double left_x, double right_x){
         double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
-        frontLeft.setPower((left_y - left_x + right_x) / maxPower);
-        frontRight.setPower((left_y + left_x - right_x) / maxPower);
-        backLeft.setPower((left_y + left_x + right_x) / maxPower);
-        backRight.setPower((left_y - left_x - right_x) / maxPower);
+        frontLeft.setPower((left_y - left_x - right_x) / maxPower);
+        frontRight.setPower((left_y + left_x + right_x) / maxPower);
+        backLeft.setPower((left_y + left_x - right_x) / maxPower);
+        backRight.setPower((left_y - left_x + right_x) / maxPower);
     }
 
     public void dPadMove(String direction) {
@@ -97,10 +97,10 @@ public class DriveAndIntakeTest extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         pitchServo.setDirection(Servo.Direction.REVERSE);

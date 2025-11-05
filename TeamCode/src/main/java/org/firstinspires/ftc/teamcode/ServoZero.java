@@ -37,7 +37,6 @@ public class ServoZero extends OpMode {
         pitchServo = hardwareMap.get(Servo.class,"pitchServo");
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
-        colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
 
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
