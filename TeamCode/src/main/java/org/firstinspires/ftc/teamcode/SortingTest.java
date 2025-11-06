@@ -78,12 +78,13 @@ public class SortingTest extends OpMode {
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
-        huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
+        huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
 
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
 
+        leverServo.setDirection(Servo.Direction.REVERSE);
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -251,7 +252,7 @@ public class SortingTest extends OpMode {
     }
 
     public void leverOn() {
-        leverServo.setPosition(leverPos);
+        leverServo.setPosition(0.22);
     }
 
     public boolean detectPurple() {
