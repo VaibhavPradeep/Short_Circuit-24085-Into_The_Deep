@@ -16,8 +16,8 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "DriveAndIntakeTest")
-public class DriveAndIntakeTest extends OpMode {
+@TeleOp(name = "lever servo Test")
+public class LeverServoTest extends OpMode {
 
 
     // lever pos 0 as up and 0.123 and the bottom
@@ -129,68 +129,11 @@ public class DriveAndIntakeTest extends OpMode {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        leverServo.setPosition(0.16);
+        leverServo.setPosition(0);
     }
 
     @Override
     public void loop() {
-        driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
-        if (gamepad1.a) {
-            intakeMotor.setPower(1);
-        }
-        if (gamepad1.b) {
-            intakeMotor.setPower(0);
-        }
-
-        /*
-        if (gamepad1.dpad_left) {
-            dPadMove("up");
-        }
-        if (gamepad1.dpad_right) {
-            dPadMove("down");
-        }
-
-         */
-
-        if (gamepad1.x) {
-            shootingMotor.setPower(1);
-        }
-        if (gamepad1.y) {
-            shootingMotor.setPower(0);
-        }
-
-        if (gamepad1.left_bumper) {
-            transferMotor.setPower(1);
-        }
-        if (gamepad1.right_bumper) {
-            transferMotor.setPower(0);
-        }
-
-        /*
         leverServo.setPosition(leverPos);
-        pitchServo.setPosition(pitchPos);
-
-         */
-        // 0.45
-
-        if (gamepad1.dpad_up) {
-            sorterServo.setPower(0.5);
-        }
-        if (gamepad1.dpad_down) {
-            sorterServo.setPower(0);
-        }
-
-        /*
-        if (gamepad1.dpad_left) {
-            shootingMotor.setPower(1);
-            transferMotor.setPower(1);
-            leverServo.setPosition(0);
-        }
-
-         */
-        transferMotor.setPower(1);
-        timer.reset();
-        leverServo.setPosition(0);
     }
 }
