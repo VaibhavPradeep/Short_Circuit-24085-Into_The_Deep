@@ -17,6 +17,10 @@ import java.util.concurrent.TimeUnit;
 @Config
 @TeleOp(name = "DriveAndIntakeTest")
 public class DriveAndIntakeTest extends OpMode {
+
+
+    // lever pos 0 as up and 0.123 and the bottom
+    // pitch innit pos should be 0.5
     final int READ_PERIOD = 1;
 
     // TODO: find lever pos
@@ -48,6 +52,7 @@ public class DriveAndIntakeTest extends OpMode {
         backRight.setPower((left_y - left_x + right_x) / maxPower);
     }
 
+    /*
     public void dPadMove(String direction) {
         int pos = rotationMotor.getCurrentPosition();
 
@@ -66,6 +71,8 @@ public class DriveAndIntakeTest extends OpMode {
             rotationMotor.setPower(0);
         }
     }
+
+     */
     
     @Override
     public void init() {
@@ -132,12 +139,15 @@ public class DriveAndIntakeTest extends OpMode {
             intakeMotor.setPower(0);
         }
 
+        /*
         if (gamepad1.dpad_left) {
             dPadMove("up");
         }
         if (gamepad1.dpad_right) {
             dPadMove("down");
         }
+
+         */
 
         if (gamepad1.x) {
             shootingMotor.setPower(1);
@@ -153,9 +163,15 @@ public class DriveAndIntakeTest extends OpMode {
             transferMotor.setPower(0);
         }
 
+        /*
         leverServo.setPosition(leverPos);
         pitchServo.setPosition(pitchPos);
+
+         */
         // 0.45
-        
+
+        if (gamepad1.right_trigger > 0.5) {
+            sorterServo.setPower(1);
+        }
     }
 }
