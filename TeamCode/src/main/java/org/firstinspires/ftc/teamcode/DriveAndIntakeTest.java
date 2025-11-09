@@ -129,7 +129,6 @@ public class DriveAndIntakeTest extends OpMode {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        leverServo.setPosition(0.16);
     }
 
     @Override
@@ -164,7 +163,7 @@ public class DriveAndIntakeTest extends OpMode {
             transferMotor.setPower(1);
         }
         if (gamepad1.right_bumper) {
-            transferMotor.setPower(0);
+            transferMotor.setPower(-1);
         }
 
         /*
@@ -175,10 +174,10 @@ public class DriveAndIntakeTest extends OpMode {
         // 0.45
 
         if (gamepad1.dpad_up) {
-            sorterServo.setPower(0.5);
+            leverServo.setPosition(0);
         }
         if (gamepad1.dpad_down) {
-            sorterServo.setPower(0);
+            leverServo.setPosition(0.16);
         }
 
         /*
@@ -189,8 +188,5 @@ public class DriveAndIntakeTest extends OpMode {
         }
 
          */
-        transferMotor.setPower(1);
-        timer.reset();
-        leverServo.setPosition(0);
     }
 }
