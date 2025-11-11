@@ -68,7 +68,7 @@ public class NewPIDExternalIMU extends OpMode {
 
     // TODO: FIND OUT THESE VALUES
     static final double TICKS_PER_REV = 1440; // adjust to your motor
-    static final double GEAR_RATIO = 1.0;     // adjust if geared
+    static final double GEAR_RATIO = 1.0;     //adjust if geared
     static final double TICKS_TO_RADIANS = 2 * Math.PI / (TICKS_PER_REV * GEAR_RATIO);
 
     @Override
