@@ -18,6 +18,26 @@ import java.util.concurrent.TimeUnit;
 @Config
 @TeleOp(name = "no sorting husky test")
 public class NoSortingHuskyTest extends OpMode {
+
+    /* Option 1:
+    divide total time needed into 6, so we get 60 degree rotations,
+    color sensor to detect the ball color
+    manual button to run it to normal position
+     */
+
+    /*
+    Option 2:
+    Husky lens: object symbol alignment
+    color sensor detection
+     */
+
+    /*
+    Option 3:
+    thru bore encoder: into sixths,
+    color sensor detection
+     */
+
+
     public static double transferElapseTime = 0;
     ElapsedTime timer = new ElapsedTime();
     public enum MotifCode{
