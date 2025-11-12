@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -9,14 +8,14 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
-import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp(name = "dont run")
-public class NewestSorting extends OpMode {
+public class NewestSortingTest extends OpMode {
     final int READ_PERIOD = 1;
     DcMotor intakeMotor;
     Servo pitchServo;
@@ -32,8 +31,9 @@ public class NewestSorting extends OpMode {
     BNO055IMU turretImu;
     Deadline rateLimit;
 
-    Encoder sorterEncoder;
-    
+    DcMotor sorterEncoder;
+
+    ElapsedTime timer = new ElapsedTime();
     @Override
     public void init() {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -43,9 +43,11 @@ public class NewestSorting extends OpMode {
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
-        sorterEncoder = hardwareMap.get(Encoder.class, "sorterEncoder");
+        sorterEncoder = hardwareMap.get(DcMotor.class, "sorterEncoder");
 
 
+        sorterEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sorterEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
@@ -62,12 +64,18 @@ public class NewestSorting extends OpMode {
         // Choose the algorithm
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         // huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
+        timer.reset();
     }
 
     @Override
     public void loop() {
+        while (timer.milliseconds() <= 115) {
+            sorterEncoder.setPower(1);
+        }
 
-        sorterEncoder.getPositionAndVelocity();
+        telemetry.addData("encoder ticks", sorterEncoder.getCurrentPosition());
+
+
 
     }
 }

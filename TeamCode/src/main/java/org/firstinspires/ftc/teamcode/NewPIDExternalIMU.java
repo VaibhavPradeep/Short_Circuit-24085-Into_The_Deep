@@ -166,7 +166,6 @@ public class NewPIDExternalIMU extends OpMode {
          */
         controller.setPID(p,i,d);
         angles   = turretImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-
         double currentYaw = angles.firstAngle;
         double pid = controller.calculate(currentYaw,targetAngleRadians);
         rotationMotor.setPower(pid);
@@ -219,5 +218,4 @@ public class NewPIDExternalIMU extends OpMode {
         return radians;
     }
      */
-
 }
