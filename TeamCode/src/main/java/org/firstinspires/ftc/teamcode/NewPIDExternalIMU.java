@@ -3,11 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,23 +14,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 @Config
 @TeleOp(name = "NewPID external imu")
 public class NewPIDExternalIMU extends OpMode {
 
+    private PIDController controller;
 
     final int READ_PERIOD = 1;
 
@@ -51,16 +45,13 @@ public class NewPIDExternalIMU extends OpMode {
     HuskyLens huskyLens;
     Deadline rateLimit;
     public static double integralSum = 0;
-    public static double kp = 0;
-    public static double ki = 0;
-    public static double kd = 0;
+    public static double p = 0;
+    public static double i = 0;
+    public static double d = 0;
     public static double target = 0;
     public static double targetAngle = 90;
     double targetAngleRadians = Math.toRadians(targetAngle);
     Orientation angles;
-
-    Acceleration gravity;
-    double yawOffset = 0;
 
     BNO055IMU turretImu;
     ElapsedTime timer = new ElapsedTime();
@@ -73,6 +64,8 @@ public class NewPIDExternalIMU extends OpMode {
 
     @Override
     public void init() {
+        controller = new PIDController(p,i,d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         /*
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -123,16 +116,6 @@ public class NewPIDExternalIMU extends OpMode {
         turretImu.initialize(parameters);
 
         // Set up our telemetry dashboard
-        turretImu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
-        angles = turretImu.getAngularOrientation(
-                AxesReference.INTRINSIC,
-                AxesOrder.ZYX,
-                AngleUnit.RADIANS
-        );
-
-        yawOffset = angles.firstAngle;
-        timer.reset();
         integralSum = 0;
         lastError = 0;
 
@@ -181,13 +164,19 @@ public class NewPIDExternalIMU extends OpMode {
         double power = PIDControl(targetAngleRadians, currentAngle);
 
          */
+        controller.setPID(p,i,d);
         angles   = turretImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        gravity  = turretImu.getGravity();
 
         double currentYaw = angles.firstAngle;
-        double power = PIDControl(targetAngleRadians, currentYaw);
+        double pid = controller.calculate(currentYaw,targetAngleRadians);
+        rotationMotor.setPower(pid);
 
-        rotationMotor.setPower(Math.max(-1.0, Math.min(1.0, power)));
+        telemetry.addData("Pos: ", currentYaw);
+        telemetry.addData("target: ", targetAngleRadians);
+        telemetry.update();
+        //double power = PIDControl(targetAngleRadians, currentYaw);
+
+        //rotationMotor.setPower(Math.max(-1.0, Math.min(1.0, power)));
 
         /*
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -199,6 +188,7 @@ public class NewPIDExternalIMU extends OpMode {
 
     }
 
+    /*
     public double PIDControl(double reference, double state) {
         // IF CONTINUOUS
         // double error = angleWrap(reference - state);
@@ -214,6 +204,7 @@ public class NewPIDExternalIMU extends OpMode {
         double output = (error * kp) + (derivative * kd) + (integralSum * ki);
         return output;
     }
+     */
 
     // IF CONTINUOUS
 
