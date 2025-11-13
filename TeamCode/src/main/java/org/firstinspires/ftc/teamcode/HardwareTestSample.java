@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -31,6 +33,10 @@ public class HardwareTestSample extends OpMode {
 
     ColorSensor colorSensor;
     HuskyLens huskyLens;
+    HuskyLens huskyLens2;
+
+    IMU imu;
+    BNO055IMU turretImu;
     Deadline rateLimit;
     
     @Override
@@ -40,7 +46,11 @@ public class HardwareTestSample extends OpMode {
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
-        huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
+        imu = hardwareMap.get(IMU.class, "imu");
+        turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
+
+        huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
+        huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
 
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");

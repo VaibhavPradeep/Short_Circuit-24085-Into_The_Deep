@@ -7,19 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class Drivetrain {
-
-    LinearOpMode opMode;
-
-    public Drivetrain(LinearOpMode op) {
-        opMode = op;
-    }
-
     final double WHEEL_DIAMETER = 4.09;
     final double TICKS_PER_WHEEL_REVOLUTION = 384.5;
     final double WHEEL_COUNTS_PER_INCH = (TICKS_PER_WHEEL_REVOLUTION) / (WHEEL_DIAMETER * Math.PI);
@@ -35,8 +29,8 @@ public class Drivetrain {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    BHI260IMU imu; // Updated to use the new IMU type
-    BHI260IMU.Parameters parameters;
+    IMU imu; // Updated to use the new IMU type
+
     YawPitchRollAngles angles;
 
     public void initDrivetrain(HardwareMap hwMap) {
@@ -73,10 +67,10 @@ public class Drivetrain {
         int newFrontRightTargetDrive;
         int newBackRightTargetDrive;
 
-        newFrontLeftTargetDrive = frontLeft.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newBackLeftTargetDrive = backLeft.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newFrontRightTargetDrive = frontRight.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
-        newBackRightTargetDrive = backRight.getCurrentPosition() - (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newFrontLeftTargetDrive = frontLeft.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newBackLeftTargetDrive = backLeft.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newFrontRightTargetDrive = frontRight.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
+        newBackRightTargetDrive = backRight.getCurrentPosition() + (int)(distance * WHEEL_COUNTS_PER_INCH);
 
         frontLeft.setTargetPosition(newFrontLeftTargetDrive);
         backLeft.setTargetPosition(newBackLeftTargetDrive);
@@ -93,21 +87,7 @@ public class Drivetrain {
         frontRight.setPower(Math.abs(speed));
         backRight.setPower(Math.abs(speed));
 
-        while (opMode.opModeIsActive() && (frontLeft.isBusy() && frontRight.isBusy())) {
 
-            // Display it for the driver.
-            opMode.telemetry.addData("Path1",  "Running to FL %7d :FR %7d :BL %7d :BR %7d", newFrontLeftTargetDrive,  newFrontRightTargetDrive, newBackLeftTargetDrive, newBackRightTargetDrive);
-            opMode.telemetry.addData("Path2",  "Running at FL %7f :FR %7f :BL %7f :BR %7f",
-                    frontLeft.getPower(),
-                    frontRight.getPower(),
-                    backLeft.getPower(),
-                    backRight.getPower());
-            opMode.telemetry.update();
-
-            if(opMode.isStopRequested()) {
-                break;
-            }
-        }
 
         frontLeft.setPower(0);
         backLeft.setPower(0);
@@ -158,21 +138,7 @@ public class Drivetrain {
         frontRight.setPower(Math.abs(speed));
         backRight.setPower(Math.abs(speed));
 
-        while (opMode.opModeIsActive() && (frontLeft.isBusy() && frontRight.isBusy())) {
 
-            // Display it for the driver.
-            opMode.telemetry.addData("Path1",  "Running to FL %7d :FR %7d :BL %7d :BR %7d", newFrontLeftTargetStrafe,  newFrontRightTargetSrafe, newBackLeftTargetStrafe, newBackRightTargetStrafe);
-            opMode.telemetry.addData("Path2",  "Running at FL %7f :FR %7f :BL %7f :BR %7f",
-                    frontLeft.getPower(),
-                    frontRight.getPower(),
-                    backLeft.getPower(),
-                    backRight.getPower());
-            opMode.telemetry.update();
-
-            if(opMode.isStopRequested()) {
-                break;
-            }
-        }
 
         frontLeft.setPower(0);
         backLeft.setPower(0);
@@ -200,29 +166,12 @@ public class Drivetrain {
 
         double turnPower = turningRight ? -power : power;
 
-        frontLeft.setPower(turnPower);
-        backLeft.setPower(turnPower);
-        frontRight.setPower(-turnPower);
-        backRight.setPower(-turnPower);
+        frontLeft.setPower(-turnPower);
+        backLeft.setPower(-turnPower);
+        frontRight.setPower(turnPower);
+        backRight.setPower(turnPower);
 
-        while (opMode.opModeIsActive()) {
-            angles = imu.getRobotYawPitchRollAngles();
-            double currentYaw = angles.getYaw(AngleUnit.DEGREES);
-            double angleDiff = getAngleDifference(currentYaw, targetAngle);
 
-            opMode.telemetry.addData("Current Yaw", currentYaw);
-            opMode.telemetry.addData("Target Angle", targetAngle);
-            opMode.telemetry.addData("Angle Difference", angleDiff);
-            opMode.telemetry.update();
-
-            if (Math.abs(angleDiff) <= 2) { // Stop if within a 2-degree threshold
-                break;
-            }
-
-            if (opMode.isStopRequested()) {
-                break;
-            }
-        }
 
         // Stop motors after turn
         frontLeft.setPower(0);
@@ -234,14 +183,14 @@ public class Drivetrain {
 
 
     public void initGyro(HardwareMap hwMap) {
-        parameters = new BHI260IMU.Parameters(
+        IMU.Parameters parameters = new IMU.Parameters(
                 new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.UP,
                         RevHubOrientationOnRobot.UsbFacingDirection.LEFT
                 )
         );
 
-        imu = hwMap.get(BHI260IMU.class, "imu");
+        imu = hwMap.get(IMU.class, "imu");
         imu.initialize(parameters);
         angles = imu.getRobotYawPitchRollAngles(); // Correct usage of the newest IMU API
     }
