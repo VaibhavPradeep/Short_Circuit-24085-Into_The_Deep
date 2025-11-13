@@ -34,8 +34,6 @@ public class NewestSorting extends OpMode {
     HuskyLens huskyLens2;
     BNO055IMU turretImu;
     Deadline rateLimit;
-
-    DcMotor sorterEncoder;
     public static int encoderAmount = 0;
 
     boolean detected = false;
@@ -50,12 +48,10 @@ public class NewestSorting extends OpMode {
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
-        turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
-        sorterEncoder = hardwareMap.get(DcMotor.class, "sorterEncoder");
 
 
-        sorterEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sorterEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
@@ -88,11 +84,11 @@ public class NewestSorting extends OpMode {
         HuskyLens.Block[] blocks = huskyLens.blocks();
         telemetry.addData("Block count", blocks.length);
 
-        int currentPos = sorterEncoder.getCurrentPosition();
+        int currentPos = rotationMotor.getCurrentPosition();
         int newPos = currentPos + encoderAmount;
 
         if (gamepad1.a) {
-            while (sorterEncoder.getCurrentPosition() <= newPos) {
+            while (rotationMotor.getCurrentPosition() <= newPos) {
                 sorterServo.setPower(1);
             }
         }
@@ -112,7 +108,7 @@ public class NewestSorting extends OpMode {
         }
 
 
-        telemetry.addData("encoder ticks", sorterEncoder.getCurrentPosition());
+        telemetry.addData("encoder ticks", rotationMotor.getCurrentPosition());
 
 
 
