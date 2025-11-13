@@ -93,6 +93,10 @@ public class NewestSorting extends OpMode {
             }
         }
 
+        if (detectGreen() || detectPurple()) {
+            telemetry.addLine(" Ready to transfer!");
+        }
+
         if (gamepad1.b) {
             for (int i = 0; i < blocks.length; i++) {
                 telemetry.addData("Block", blocks[i].toString());
@@ -112,5 +116,21 @@ public class NewestSorting extends OpMode {
 
 
 
+    }
+
+    public boolean detectGreen() {
+        if (colorSensor.green() >= 150) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean detectPurple() {
+        if (colorSensor.red() >= 100 && colorSensor.blue() >= 100) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
