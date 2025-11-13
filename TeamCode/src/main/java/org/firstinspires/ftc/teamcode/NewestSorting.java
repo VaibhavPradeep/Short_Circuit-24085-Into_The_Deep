@@ -89,7 +89,7 @@ public class NewestSorting extends OpMode {
 
         if (gamepad1.a) {
             while (rotationMotor.getCurrentPosition() <= newPos) {
-                sorterServo.setPower(1);
+                sorterServo.setPower(0.5);
             }
         }
 
@@ -103,7 +103,7 @@ public class NewestSorting extends OpMode {
                 if (blocks[i].id == 1) {
                     detected = true;
                     while (blocks[i].x != 0) {
-                        sorterServo.setPower(1);
+                        sorterServo.setPower(0.5);
                     }
                 }
                 // Example of accessing block fields:
