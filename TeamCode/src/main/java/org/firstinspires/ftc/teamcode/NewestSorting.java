@@ -88,8 +88,11 @@ public class NewestSorting extends OpMode {
         HuskyLens.Block[] blocks = huskyLens.blocks();
         telemetry.addData("Block count", blocks.length);
 
+        int currentPos = sorterEncoder.getCurrentPosition();
+        int newPos = currentPos + encoderAmount;
+
         if (gamepad1.a) {
-            while (sorterEncoder.getCurrentPosition() <= encoderAmount) {
+            while (sorterEncoder.getCurrentPosition() <= newPos) {
                 sorterServo.setPower(1);
             }
         }
