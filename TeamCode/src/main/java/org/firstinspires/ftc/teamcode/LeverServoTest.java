@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -41,6 +42,8 @@ public class LeverServoTest extends OpMode {
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
+    HuskyLens huskyLens2;
+    BNO055IMU turretImu;
 
     ElapsedTime timer = new ElapsedTime();
   
@@ -84,6 +87,17 @@ public class LeverServoTest extends OpMode {
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
+        huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
+        turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        turretImu.initialize(parameters);
 
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
