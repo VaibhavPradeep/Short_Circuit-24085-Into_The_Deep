@@ -59,8 +59,8 @@ public class NewestSorting extends OpMode {
         // and named "imu".
         turretImu.initialize(parameters);
 
-        rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
@@ -95,11 +95,11 @@ public class NewestSorting extends OpMode {
         HuskyLens.Block[] blocks = huskyLens.blocks();
         telemetry.addData("Block count", blocks.length);
 
-        int currentPos = rotationMotor.getCurrentPosition();
+        int currentPos = intakeMotor.getCurrentPosition();
         int newPos = currentPos + encoderAmount;
 
         if (gamepad1.a) {
-            while (rotationMotor.getCurrentPosition() <= newPos) {
+            while (intakeMotor.getCurrentPosition() <= newPos) {
                 sorterServo.setPower(0.5);
             }
         }
@@ -123,7 +123,7 @@ public class NewestSorting extends OpMode {
         }
 
 
-        telemetry.addData("encoder ticks", rotationMotor.getCurrentPosition());
+        telemetry.addData("encoder ticks", intakeMotor.getCurrentPosition());
 
 
 
