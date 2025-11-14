@@ -48,6 +48,7 @@ public class NewestSorting extends OpMode {
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
+        turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
 
 
         rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

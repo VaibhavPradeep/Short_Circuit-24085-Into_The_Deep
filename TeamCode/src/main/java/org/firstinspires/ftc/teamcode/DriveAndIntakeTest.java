@@ -43,6 +43,7 @@ public class DriveAndIntakeTest extends OpMode {
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
+    BNO055IMU turretImu;
 
     ElapsedTime timer = new ElapsedTime();
   
@@ -91,6 +92,7 @@ public class DriveAndIntakeTest extends OpMode {
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
+        turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
 
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

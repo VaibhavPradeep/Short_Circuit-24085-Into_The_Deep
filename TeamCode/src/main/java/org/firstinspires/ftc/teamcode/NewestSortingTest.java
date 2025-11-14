@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "dont run")
+@TeleOp(name = "newest sorting test")
 public class NewestSortingTest extends OpMode {
     final int READ_PERIOD = 1;
     DcMotor intakeMotor;
@@ -28,6 +28,7 @@ public class NewestSortingTest extends OpMode {
 
     ColorSensor colorSensor;
     HuskyLens huskyLens;
+    HuskyLens huskyLens2;
     BNO055IMU turretImu;
     Deadline rateLimit;
 
@@ -42,6 +43,7 @@ public class NewestSortingTest extends OpMode {
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
+        huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
         turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
         sorterEncoder = hardwareMap.get(DcMotor.class, "sorterEncoder");
 
