@@ -4,13 +4,16 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 @TeleOp(name = "NewPID external imu")
-public class NewPIDExternalIMU extends OpMode {
+public class PIDYaw extends OpMode {
 
     private PIDController controller;
 
@@ -43,8 +46,6 @@ public class NewPIDExternalIMU extends OpMode {
 
     ColorSensor colorSensor;
     HuskyLens huskyLens;
-
-    HuskyLens huskyLens2;
     Deadline rateLimit;
     public static double integralSum = 0;
     public static double p = 0;
@@ -56,6 +57,7 @@ public class NewPIDExternalIMU extends OpMode {
     Orientation angles;
 
     BNO055IMU turretImu;
+    IMU imu;
     ElapsedTime timer = new ElapsedTime();
     public double lastError = 0;
 
@@ -89,7 +91,6 @@ public class NewPIDExternalIMU extends OpMode {
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
-        huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
 
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
@@ -140,6 +141,17 @@ public class NewPIDExternalIMU extends OpMode {
         imu.resetYaw();
 
          */
+
+        IMU.Parameters parameters2 = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+                )
+        );
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(parameters2);
+        //angles = imu.getRobotYawPitchRollAngles(); // Correct usage of the newest IMU API
 
     }
 
