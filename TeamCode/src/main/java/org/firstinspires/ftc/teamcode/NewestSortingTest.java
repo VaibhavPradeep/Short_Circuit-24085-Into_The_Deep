@@ -63,6 +63,9 @@ public class NewestSortingTest extends OpMode {
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
 
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
