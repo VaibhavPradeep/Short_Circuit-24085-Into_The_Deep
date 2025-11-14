@@ -48,6 +48,15 @@ public class NewestSortingTest extends OpMode {
         sorterEncoder = hardwareMap.get(DcMotor.class, "sorterEncoder");
 
 
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        turretImu.initialize(parameters);
+
         sorterEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sorterEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
