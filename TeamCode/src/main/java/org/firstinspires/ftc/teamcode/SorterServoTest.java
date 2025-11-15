@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -18,29 +17,30 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "husky test ")
-public class HuskyTest extends OpMode {
+@TeleOp(name = "SorterServoTest")
+public class SorterServoTest extends OpMode {
     final int READ_PERIOD = 1;
     DcMotor intakeMotor;
     Servo pitchServo;
     DcMotor rotationMotor;
     DcMotor shootingMotor;
-
     DcMotor transferMotor;
-    CRServo sorterServo;
+    Servo sorterServo;
     Servo leverServo;
-
     ColorSensor colorSensor;
     HuskyLens huskyLens;
-
     HuskyLens huskyLens2;
     IMU turretImu;
     Deadline rateLimit;
-    public static int encoderAmount = 0;
-
-    boolean detected = false;
-
     ElapsedTime timer = new ElapsedTime();
+
+    public static double servopos = 0;
+
+    boolean prevX = false;
+    boolean sorting = false;
+
+    public static int timeAmount = 70;
+
     @Override
     public void init() {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -52,61 +52,40 @@ public class HuskyTest extends OpMode {
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
         turretImu = hardwareMap.get(IMU.class, "turretImu");
 
+        // Set up parameters for turret orientation (adjust based on mounting)
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
 
         // Initialize
         turretImu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
+        sorterServo = hardwareMap.get(Servo.class, "sorterServo");
+        leverServo = hardwareMap.get(Servo.class,"leverServo");
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
-        sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
-        leverServo = hardwareMap.get(Servo.class,"leverServo");
-
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         // Rate limiter for telemetry
         rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         rateLimit.expire();
-
         leverServo.setPosition(0);
-
         // Choose the algorithm
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
-        huskyLens2.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
         // huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
         timer.reset();
+    }
 
-
+    @Override
+    public void start() {
+        timer.reset();
     }
 
     @Override
     public void loop() {
-
-        if (!rateLimit.hasExpired()) {
-            return;
-        }
-        rateLimit.reset();
-
-        // Get blocks (recognized objects)
-        HuskyLens.Block[] blocks = huskyLens2.blocks();
-        telemetry.addData("Block count", blocks.length);
-
-        for (int i = 0; i < blocks.length; i++) {
-            telemetry.addData("Block", blocks[i].toString());
-            if (blocks[i].id == 1) {
-                telemetry.addData("husky pos x axis", blocks[i].x);
-                while (blocks[i].x == 160) {
-                    telemetry.addLine("at optimal position");
-                }
-            }
-            // Example of accessing block fields:
-            // blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height, blocks[i].id
-        }
+        sorterServo.setPosition(servopos);
 
 
     }

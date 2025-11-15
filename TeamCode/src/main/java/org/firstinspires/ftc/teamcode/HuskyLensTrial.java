@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "HuskyLensTrial_Iterative")
+//@TeleOp(name = "HuskyLensTrial_Iterative")
 public class HuskyLensTrial extends OpMode {
     /* tag id 1: GPP
     2: PGP

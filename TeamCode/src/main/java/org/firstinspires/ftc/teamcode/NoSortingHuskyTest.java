@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "no sorting husky test")
+// @TeleOp(name = "no sorting husky test")
 public class NoSortingHuskyTest extends OpMode {
 
     /* Option 1:

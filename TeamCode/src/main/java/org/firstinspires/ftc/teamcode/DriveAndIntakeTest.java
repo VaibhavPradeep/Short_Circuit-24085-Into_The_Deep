@@ -16,7 +16,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "DriveAndIntakeTest")
+@TeleOp(name = "use this teleop")
 public class DriveAndIntakeTest extends OpMode {
     // lever pos 0 as up and 0.123 and the bottom
     // pitch innit pos should be 0.5
@@ -38,6 +38,11 @@ public class DriveAndIntakeTest extends OpMode {
     DcMotor backLeft;
     DcMotor backRight;
     IMU turretImu;
+
+    boolean prevX = false;
+    boolean sorting = false;
+
+    public static int timeAmount = 110;
     ElapsedTime timer = new ElapsedTime();
     public static double leverPos = 0;
     public static double pitchPos = 0;
@@ -77,6 +82,7 @@ public class DriveAndIntakeTest extends OpMode {
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
         turretImu = hardwareMap.get(IMU.class, "turretImu");
+
 
         // Set up parameters for turret orientation (adjust based on mounting)
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
@@ -120,6 +126,10 @@ public class DriveAndIntakeTest extends OpMode {
         backRight.setPower(0);
     }
 
+    public void start() {
+        timer.reset();
+    }
+
     @Override
     public void loop() {
         driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
@@ -129,37 +139,65 @@ public class DriveAndIntakeTest extends OpMode {
         if (gamepad1.b) {
             intakeMotor.setPower(0);
         }
+        if (gamepad1.x) {
+            intakeMotor.setPower(-1);
+        }
+
         /* if (gamepad1.dpad_left) {
             dPadMove("up");
         }
         if (gamepad1.dpad_right) {
             dPadMove("down");
         } */
-        if (gamepad1.x) {
+        if (gamepad2.x) {
             shootingMotor.setPower(1);
-        }
-        if (gamepad1.y) {
-            shootingMotor.setPower(0);
-        }
-        if (gamepad1.left_bumper) {
             transferMotor.setPower(1);
         }
-        if (gamepad1.right_bumper) {
-            transferMotor.setPower(-1);
+        if (gamepad2.y) {
+            shootingMotor.setPower(0);
+            transferMotor.setPower(0);
         }
         /* leverServo.setPosition(leverPos);
         pitchServo.setPosition(pitchPos); */
         // 0.45
-        if (gamepad1.dpad_up) {
-            leverServo.setPosition(0);
+        if (gamepad2.dpad_up) {
+            leverServo.setPosition(0.23);
         }
-        if (gamepad1.dpad_down) {
-            leverServo.setPosition(0.16);
+        if (gamepad2.dpad_down) {
+            leverServo.setPosition(0);
         }
         /* if (gamepad1.dpad_left) {
             shootingMotor.setPower(1);
             transferMotor.setPower(1);
             leverServo.setPosition(0);
         } */
+
+        boolean xPressed = gamepad2.left_bumper;
+        boolean xJustPressed = xPressed && !prevX;
+
+        if (xJustPressed && !sorting) {
+            sorting = true;
+            timer.reset();
+        }
+
+// Run the 70 ms action
+        if (sorting) {
+            if (timer.milliseconds() <= timeAmount) {
+                sorterServo.setPower(1.0);
+            } else {
+                sorterServo.setPower(0.0);
+                sorting = false;
+            }
+        } else {
+            sorterServo.setPower(0.0);
+        }
+
+// Save button state for next loop
+        prevX = xPressed;
+
+        telemetry.addData("sorting", sorting);
+        telemetry.addData("timer", timer.milliseconds());
+        telemetry.addData("xJustPressed", xJustPressed);
+        telemetry.update();
     }
 }

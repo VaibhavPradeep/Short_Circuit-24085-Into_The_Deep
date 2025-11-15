@@ -31,7 +31,7 @@ public class NewestSorting extends OpMode {
     IMU turretImu;
     Deadline rateLimit;
     public static int encoderAmount = 0;
-    boolean detected = false;
+    boolean sorting = false;
     ElapsedTime timer = new ElapsedTime();
 
     @Override
@@ -48,7 +48,7 @@ public class NewestSorting extends OpMode {
         // Set up parameters for turret orientation (adjust based on mounting)
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
         );
 
         // Initialize
@@ -83,11 +83,25 @@ public class NewestSorting extends OpMode {
         telemetry.addData("Block count", blocks.length);
         int currentPos = intakeMotor.getCurrentPosition();
         int newPos = currentPos + encoderAmount;
-        if (gamepad1.a) {
-            while (intakeMotor.getCurrentPosition() <= newPos) {
-                sorterServo.setPower(0.5);
-            }
+
+
+        // When X is pressed, start a sort cycle
+        if (gamepad1.x && !sorting) {
+            sorting = true;
+            timer.reset();
         }
+
+        if (sorting) {
+            if (intakeMotor.getCurrentPosition() <= newPos) {
+                sorterServo.setPower(1.0);
+            } else {
+                sorterServo.setPower(0.0);
+                sorting = false;  // done
+            }
+        } else {
+            sorterServo.setPower(0.0);
+        }
+
         if (detectGreen() || detectPurple()) {
             telemetry.addLine(" Ready to transfer!");
         }
@@ -95,8 +109,7 @@ public class NewestSorting extends OpMode {
             for (int i = 0; i < blocks.length; i++) {
                 telemetry.addData("Block", blocks[i].toString());
                 if (blocks[i].id == 1) {
-                    detected = true;
-                    while (blocks[i].x != 0) {
+                    if (blocks[i].x < 185) {
                         sorterServo.setPower(0.5);
                     }
                 }

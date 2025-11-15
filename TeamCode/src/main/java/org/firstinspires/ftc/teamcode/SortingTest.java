@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "sorting test")
+//@TeleOp(name = "sorting test")
 public class SortingTest extends OpMode {
     public static double transferElapseTime = 0;
     ElapsedTime timer = new ElapsedTime();
