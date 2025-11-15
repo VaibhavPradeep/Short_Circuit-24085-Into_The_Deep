@@ -48,16 +48,16 @@ public class NewestSorting extends OpMode {
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
-        turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
+       // turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+      //  BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+      //  parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
+      //  parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
-        turretImu.initialize(parameters);
+       // turretImu.initialize(parameters);
 
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
