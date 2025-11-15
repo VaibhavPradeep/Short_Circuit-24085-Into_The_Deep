@@ -6,11 +6,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
@@ -50,12 +53,11 @@ public class NewPIDExternalIMU extends OpMode {
     public static double p = 0;
     public static double i = 0;
     public static double d = 0;
-    public static double target = 0;
     public static double targetAngle = 90;
-    double targetAngleRadians = Math.toRadians(targetAngle);
-    Orientation angles;
 
-    BNO055IMU turretImu;
+    public static double MIN_ANGLE = 20;
+    public static double MAX_ANGLE = 330;
+    IMU turretImu;
     ElapsedTime timer = new ElapsedTime();
     public double lastError = 0;
 
@@ -82,7 +84,7 @@ public class NewPIDExternalIMU extends OpMode {
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
-        turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
+        turretImu = hardwareMap.get(IMU.class, "turretImu");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         pitchServo = hardwareMap.get(Servo.class,"pitchServo");
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
@@ -109,15 +111,16 @@ public class NewPIDExternalIMU extends OpMode {
         // huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
 
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        // Set up parameters for turret orientation (adjust based on mounting)
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP
+        );
 
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        turretImu.initialize(parameters);
+        // Initialize
+        turretImu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        turretImu.resetYaw();
         // Set up our telemetry dashboard
         integralSum = 0;
         lastError = 0;
@@ -166,15 +169,48 @@ public class NewPIDExternalIMU extends OpMode {
         double currentAngle = orientation.getYaw(AngleUnit.RADIANS);
         double power = PIDControl(targetAngleRadians, currentAngle);
 
+
          */
         controller.setPID(p,i,d);
+        /*
         angles   = turretImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         double currentYaw = angles.firstAngle;
-        double pid = controller.calculate(currentYaw,targetAngleRadians);
-        rotationMotor.setPower(pid);
 
-        telemetry.addData("Pos: ", currentYaw);
-        telemetry.addData("target: ", targetAngleRadians);
+         */
+        YawPitchRollAngles orientation = turretImu.getRobotYawPitchRollAngles();
+        double yawDeg = orientation.getYaw(AngleUnit.DEGREES);
+
+        double currentAngleDeg = yawDeg;
+        if (currentAngleDeg < 0) {
+            currentAngleDeg += 360.0;
+        }
+
+        double unclampedTargetDeg = targetAngle;
+        double currentTargetDeg = unclampedTargetDeg;
+        if (currentTargetDeg < MIN_ANGLE) {
+            currentTargetDeg = MIN_ANGLE;
+        }
+        if (currentTargetDeg > MAX_ANGLE) {
+            currentTargetDeg = MAX_ANGLE;
+        }
+
+
+
+        double pidOutput = controller.calculate(currentAngleDeg,currentTargetDeg);
+
+        if (currentAngleDeg <= MIN_ANGLE && pidOutput < 0) {
+            pidOutput = 0;
+        }
+        if (currentAngleDeg >= MAX_ANGLE && pidOutput > 0) {
+            pidOutput = 0;
+        }
+
+        pidOutput = Math.max(-1.0, Math.min(1.0, pidOutput));
+
+        rotationMotor.setPower(pidOutput);
+
+        telemetry.addData("Pos: ", currentAngleDeg);
+        telemetry.addData("target: ", currentTargetDeg);
         telemetry.update();
         //double power = PIDControl(targetAngleRadians, currentYaw);
 

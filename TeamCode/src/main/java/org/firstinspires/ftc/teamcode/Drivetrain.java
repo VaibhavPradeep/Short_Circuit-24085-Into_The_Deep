@@ -155,6 +155,7 @@ public class Drivetrain {
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        /*
         boolean turningRight = direction.equalsIgnoreCase("right");
         if (direction.equalsIgnoreCase("closest")) {
             double angleDiff = getAngleDifference(angles.getYaw(AngleUnit.DEGREES), targetAngle);
@@ -167,6 +168,8 @@ public class Drivetrain {
         backLeft.setPower(-turnPower);
         frontRight.setPower(turnPower);
         backRight.setPower(turnPower);
+
+         */
 
 
 

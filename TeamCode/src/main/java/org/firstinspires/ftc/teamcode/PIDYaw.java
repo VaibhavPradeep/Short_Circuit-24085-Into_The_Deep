@@ -26,7 +26,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "NewPID external imu")
+@TeleOp(name = "pid yaw")
 public class PIDYaw extends OpMode {
 
     private PIDController controller;

@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @Config
-@TeleOp(name = "NewPID")
+@TeleOp(name = "New PID for yaw auto")
 public class PIDForYawAuto extends OpMode {
 
     DcMotor motor;

@@ -28,7 +28,6 @@ public class NewestSortingTest extends OpMode {
     HuskyLens huskyLens2;
     IMU turretImu;
     Deadline rateLimit;
-    DcMotor sorterEncoder;
     ElapsedTime timer = new ElapsedTime();
 
     @Override
@@ -41,19 +40,16 @@ public class NewestSortingTest extends OpMode {
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
         turretImu = hardwareMap.get(IMU.class, "turretImu");
-        sorterEncoder = hardwareMap.get(DcMotor.class, "sorterEncoder");
 
         // Set up parameters for turret orientation (adjust based on mounting)
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
 
         // Initialize
         turretImu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        sorterEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sorterEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
@@ -74,8 +70,8 @@ public class NewestSortingTest extends OpMode {
     @Override
     public void loop() {
         while (timer.milliseconds() <= 115) {
-            sorterEncoder.setPower(1);
+            sorterServo.setPower(1);
         }
-        telemetry.addData("encoder ticks", sorterEncoder.getCurrentPosition());
+        telemetry.addData("encoder ticks", intakeMotor.getCurrentPosition());
     }
 }
