@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,9 +8,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp(name = "newest sorting test")
@@ -21,20 +20,17 @@ public class NewestSortingTest extends OpMode {
     Servo pitchServo;
     DcMotor rotationMotor;
     DcMotor shootingMotor;
-
     DcMotor transferMotor;
     CRServo sorterServo;
     Servo leverServo;
-
     ColorSensor colorSensor;
     HuskyLens huskyLens;
     HuskyLens huskyLens2;
-    BNO055IMU turretImu;
+    IMU turretImu;
     Deadline rateLimit;
-
     DcMotor sorterEncoder;
-
     ElapsedTime timer = new ElapsedTime();
+
     @Override
     public void init() {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -44,37 +40,31 @@ public class NewestSortingTest extends OpMode {
         colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
-        //turretImu = hardwareMap.get(BNO055IMU.class, "turretImu");
+        turretImu = hardwareMap.get(IMU.class, "turretImu");
         sorterEncoder = hardwareMap.get(DcMotor.class, "sorterEncoder");
 
+        // Set up parameters for turret orientation (adjust based on mounting)
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+        );
 
-       // BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-       // parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
-        //parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        //turretImu.initialize(parameters);
+        // Initialize
+        turretImu.initialize(new IMU.Parameters(orientationOnRobot));
 
         sorterEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sorterEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
-
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         // Rate limiter for telemetry
         rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         rateLimit.expire();
-
         leverServo.setPosition(0);
-
         // Choose the algorithm
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         // huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
@@ -86,10 +76,6 @@ public class NewestSortingTest extends OpMode {
         while (timer.milliseconds() <= 115) {
             sorterEncoder.setPower(1);
         }
-
         telemetry.addData("encoder ticks", sorterEncoder.getCurrentPosition());
-
-
-
     }
 }
