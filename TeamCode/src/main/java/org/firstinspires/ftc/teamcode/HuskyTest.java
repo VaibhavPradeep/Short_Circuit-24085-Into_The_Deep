@@ -16,8 +16,8 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "newest sorting ")
-public class NewestSorting extends OpMode {
+@TeleOp(name = "husky test ")
+public class HuskyTest extends OpMode {
     final int READ_PERIOD = 1;
     DcMotor intakeMotor;
     Servo pitchServo;
@@ -95,53 +95,18 @@ public class NewestSorting extends OpMode {
         HuskyLens.Block[] blocks = huskyLens2.blocks();
         telemetry.addData("Block count", blocks.length);
 
-        int currentPos = intakeMotor.getCurrentPosition();
-        int newPos = currentPos + encoderAmount;
-
-        if (gamepad1.a) {
-            while (intakeMotor.getCurrentPosition() <= newPos) {
-                sorterServo.setPower(0.5);
-            }
-        }
-
-        if (detectGreen() || detectPurple()) {
-            telemetry.addLine(" Ready to transfer!");
-        }
-
-        if (gamepad1.b) {
-            for (int i = 0; i < blocks.length; i++) {
-                telemetry.addData("Block", blocks[i].toString());
-                if (blocks[i].id == 1) {
-                    detected = true;
-                    while (blocks[i].x != 0) {
-                        sorterServo.setPower(0.5);
-                    }
+        for (int i = 0; i < blocks.length; i++) {
+            telemetry.addData("Block", blocks[i].toString());
+            if (blocks[i].id == 1) {
+                telemetry.addData("husky pos x axis", blocks[i].x);
+                while (blocks[i].x != 0) {
+                    telemetry.addLine("at optimal position");
                 }
-                // Example of accessing block fields:
-                // blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height, blocks[i].id
             }
+            // Example of accessing block fields:
+            // blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height, blocks[i].id
         }
 
 
-        telemetry.addData("encoder ticks", intakeMotor.getCurrentPosition());
-
-
-
-    }
-
-    public boolean detectGreen() {
-        if (colorSensor.green() >= 150) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean detectPurple() {
-        if (colorSensor.red() >= 100 && colorSensor.blue() >= 100) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
