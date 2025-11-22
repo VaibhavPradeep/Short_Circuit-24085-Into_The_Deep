@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
@@ -13,6 +14,9 @@ public class Shooter9kVelocityTuner extends OpMode {
 
     // Shooter motor (with encoder)
     private DcMotorEx shooterMotor;
+
+    // Shooter servo
+    private Servo shooterServo;
 
     // === Dashboard Tunables ===
 
@@ -32,6 +36,9 @@ public class Shooter9kVelocityTuner extends OpMode {
     public static double kD = 0.0;
     public static double kF = 0.0;
 
+    // --- Servo Control ---
+    public static double servoPosition = 0.0; // 0.0 → 1.0
+
     // For measuring velocity
     private ElapsedTime velTimer = new ElapsedTime();
     private int lastPosition = 0;
@@ -39,10 +46,14 @@ public class Shooter9kVelocityTuner extends OpMode {
     @Override
     public void init() {
         shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
+        shooterServo = hardwareMap.get(Servo.class, "shooterServo");
 
         shooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        // Initialize servo position
+        shooterServo.setPosition(servoPosition);
 
         velTimer.reset();
         lastPosition = shooterMotor.getCurrentPosition();
@@ -51,13 +62,16 @@ public class Shooter9kVelocityTuner extends OpMode {
     @Override
     public void loop() {
 
+        // Update servo every loop
+        shooterServo.setPosition(servoPosition);
+
         if (!useVelocityControl) {
             // ============= POWER MODE =============
             shooterMotor.setPower(shooterPower);
 
             telemetry.addLine("=== Shooter Power Mode ===");
             telemetry.addData("Power", "%.2f", shooterPower);
-            telemetry.addLine("Switch useVelocityControl to true for velocity control.");
+            telemetry.addData("Servo Position", "%.2f", servoPosition);
             telemetry.update();
             return;
         }
@@ -97,7 +111,7 @@ public class Shooter9kVelocityTuner extends OpMode {
         telemetry.addData("kD", kD);
         telemetry.addData("kF", kF);
         telemetry.addLine();
-        telemetry.addData("Mode", "Velocity Control Active");
+        telemetry.addData("Servo Position", "%.2f", servoPosition);
         telemetry.update();
     }
 
