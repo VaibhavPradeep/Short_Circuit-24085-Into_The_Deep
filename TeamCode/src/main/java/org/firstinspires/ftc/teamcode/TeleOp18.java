@@ -16,8 +16,8 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "use this teleop")
-public class DriveAndIntakeTest extends OpMode {
+@TeleOp(name = "TeleOp 18 (use this)")
+public class TeleOp18 extends OpMode {
     // lever pos 0 as up and 0.123 and the bottom
     // pitch innit pos should be 0.5
     final int READ_PERIOD = 1;
@@ -26,8 +26,7 @@ public class DriveAndIntakeTest extends OpMode {
     Servo pitchServo;
     DcMotor rotationMotor;
     DcMotor shootingMotor;
-    DcMotor transferMotor;
-    CRServo sorterServo;
+    DcMotor sorterMotor;
     Servo leverServo;
     ColorSensor colorSensor;
     HuskyLens huskyLens;
@@ -39,8 +38,8 @@ public class DriveAndIntakeTest extends OpMode {
     DcMotor backRight;
     IMU turretImu;
 
-    boolean prevX = false;
-    boolean sorting = false;
+    boolean prevPressed = false;
+    public static int encoderAmount = 18;
 
     public static int timeAmount = 110;
     ElapsedTime timer = new ElapsedTime();
@@ -78,8 +77,7 @@ public class DriveAndIntakeTest extends OpMode {
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
-        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
-        sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
+        sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
         turretImu = hardwareMap.get(IMU.class, "turretImu");
 
@@ -107,7 +105,7 @@ public class DriveAndIntakeTest extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -151,27 +149,43 @@ public class DriveAndIntakeTest extends OpMode {
         } */
         if (gamepad2.x) {
             shootingMotor.setPower(1);
-            transferMotor.setPower(1);
         }
         if (gamepad2.y) {
             shootingMotor.setPower(0);
-            transferMotor.setPower(0);
         }
         /* leverServo.setPosition(leverPos);
         pitchServo.setPosition(pitchPos); */
         // 0.45
         if (gamepad2.dpad_up) {
-            leverServo.setPosition(0.23);
+            leverServo.setPosition(0.2);
         }
         if (gamepad2.dpad_down) {
             leverServo.setPosition(0);
         }
+
+        boolean aPressed = gamepad2.a;
+
+
+        if (aPressed && !prevPressed) {
+            int pos = sorterMotor.getCurrentPosition();
+            pos += encoderAmount;
+            sorterMotor.setTargetPosition(pos);
+            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            sorterMotor.setPower(0.75);
+            if (sorterMotor.getCurrentPosition() == pos) {
+                sorterMotor.setPower(0);
+            }
+        }
+        prevPressed = aPressed;
+
         /* if (gamepad1.dpad_left) {
             shootingMotor.setPower(1);
             transferMotor.setPower(1);
             leverServo.setPosition(0);
         } */
 
+
+        /*
         boolean xPressed = gamepad2.left_bumper;
         boolean xJustPressed = xPressed && !prevX;
 
@@ -199,5 +213,7 @@ public class DriveAndIntakeTest extends OpMode {
         telemetry.addData("timer", timer.milliseconds());
         telemetry.addData("xJustPressed", xJustPressed);
         telemetry.update();
+
+         */
     }
 }

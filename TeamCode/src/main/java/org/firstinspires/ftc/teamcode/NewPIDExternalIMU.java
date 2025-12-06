@@ -40,11 +40,10 @@ public class NewPIDExternalIMU extends OpMode {
     DcMotor rotationMotor;
     DcMotor shootingMotor;
 
-    DcMotor transferMotor;
-    CRServo sorterServo;
+    DcMotor sorterMotor;
     Servo leverServo;
 
-    ColorSensor colorSensor;
+    //ColorSensor colorSensor;
     HuskyLens huskyLens;
 
     HuskyLens huskyLens2;
@@ -89,12 +88,10 @@ public class NewPIDExternalIMU extends OpMode {
         pitchServo = hardwareMap.get(Servo.class,"pitchServo");
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
-        colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
 
-        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
-        sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
+        sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
 
         rotationMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

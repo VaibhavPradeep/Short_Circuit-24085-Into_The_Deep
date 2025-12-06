@@ -22,10 +22,8 @@ public class NewestSortingTest extends OpMode {
     Servo pitchServo;
     DcMotor rotationMotor;
     DcMotor shootingMotor;
-    DcMotor transferMotor;
-    CRServo sorterServo;
+    DcMotor sorterMotor;
     Servo leverServo;
-    ColorSensor colorSensor;
     HuskyLens huskyLens;
     HuskyLens huskyLens2;
     IMU turretImu;
@@ -43,7 +41,6 @@ public class NewestSortingTest extends OpMode {
         pitchServo = hardwareMap.get(Servo.class,"pitchServo");
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
-        colorSensor = hardwareMap.get(ColorSensor.class,"colorSensor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
         turretImu = hardwareMap.get(IMU.class, "turretImu");
@@ -57,13 +54,14 @@ public class NewestSortingTest extends OpMode {
         // Initialize
         turretImu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
-        sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
+        sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        sorterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Rate limiter for telemetry
         rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         rateLimit.expire();
@@ -115,6 +113,7 @@ public class NewestSortingTest extends OpMode {
 
          */
 
+        /*
         boolean xPressed = gamepad1.x;
         boolean xJustPressed = xPressed && !prevX;
 
@@ -143,6 +142,10 @@ public class NewestSortingTest extends OpMode {
         telemetry.addData("xJustPressed", xJustPressed);
         telemetry.update();
 
+         */
+
+
+        telemetry.addData("encoder ticks", sorterMotor.getCurrentPosition());
 
     }
 }

@@ -31,8 +31,7 @@ public class LeverServoTest extends OpMode {
     DcMotor rotationMotor;
     DcMotor shootingMotor;
 
-    DcMotor transferMotor;
-    CRServo sorterServo;
+    DcMotor sorterMotor;
     Servo leverServo;
 
     ColorSensor colorSensor;
@@ -102,8 +101,7 @@ public class LeverServoTest extends OpMode {
         // and named "imu".
         //turretImu.initialize(parameters);
 
-        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
-        sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
+        sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
 
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
