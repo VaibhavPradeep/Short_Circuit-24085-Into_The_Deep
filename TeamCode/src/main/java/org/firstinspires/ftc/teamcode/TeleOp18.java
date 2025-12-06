@@ -162,7 +162,7 @@ public class DriveAndIntakeTest extends OpMode {
         // 0.45
         if (gamepad2.dpad_up) {
             leverServo.setPosition(0.23);
-         }
+        }
         if (gamepad2.dpad_down) {
             leverServo.setPosition(0);
         }

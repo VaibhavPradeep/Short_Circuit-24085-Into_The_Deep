@@ -4,30 +4,22 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "NewPID external imu")
-public class NewPIDExternalIMU extends OpMode {
+public class SorterPID extends OpMode {
 
     private PIDController controller;
 
@@ -53,6 +45,7 @@ public class NewPIDExternalIMU extends OpMode {
     public static double i = 0;
     public static double d = 0;
     public static double targetAngle = 90;
+    public static double target = 20;
 
     public static double MIN_ANGLE = 20;
     public static double MAX_ANGLE = 330;
@@ -132,7 +125,7 @@ public class NewPIDExternalIMU extends OpMode {
         imu.initialize(parameters);
         imu.resetYaw();
          */
-        /*BHI260IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+        /*BHI260IMU.Parameters parameters  = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         ));
@@ -140,15 +133,11 @@ public class NewPIDExternalIMU extends OpMode {
         imu.resetYaw();
 
          */
-
     }
 
     @Override
     public void loop() {
-        /* encoder values
-        double power = PIDControl(target, motor.getCurrentPosition());
-        motor.setPower(power);
-        */
+
         /*
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double currentAngle = orientation.getYaw(AngleUnit.RADIANS);
@@ -169,45 +158,15 @@ public class NewPIDExternalIMU extends OpMode {
 
          */
         controller.setPID(p,i,d);
-        /*
-        angles   = turretImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        double currentYaw = angles.firstAngle;
 
-         */
-        YawPitchRollAngles orientation = turretImu.getRobotYawPitchRollAngles();
-        double yawDeg = orientation.getYaw(AngleUnit.DEGREES);
-
-        double currentAngleDeg = yawDeg;
-        if (currentAngleDeg < 0) {
-            currentAngleDeg += 360.0;
-        }
-
-        double unclampedTargetDeg = targetAngle;
-        double currentTargetDeg = unclampedTargetDeg;
-        if (currentTargetDeg < MIN_ANGLE) {
-            currentTargetDeg = MIN_ANGLE;
-        }
-        if (currentTargetDeg > MAX_ANGLE) {
-            currentTargetDeg = MAX_ANGLE;
-        }
-
-
-
-        double pidOutput = controller.calculate(currentAngleDeg,currentTargetDeg);
-
-        if (currentAngleDeg <= MIN_ANGLE && pidOutput < 0) {
-            pidOutput = 0;
-        }
-        if (currentAngleDeg >= MAX_ANGLE && pidOutput > 0) {
-            pidOutput = 0;
-        }
+        double pidOutput = controller.calculate(target, sorterMotor.getCurrentPosition());
 
         pidOutput = Math.max(-1.0, Math.min(1.0, pidOutput));
 
         rotationMotor.setPower(pidOutput);
 
-        telemetry.addData("Pos: ", currentAngleDeg);
-        telemetry.addData("target: ", currentTargetDeg);
+        telemetry.addData("Pos: ", sorterMotor.getCurrentPosition());
+        telemetry.addData("target: ", target);
         telemetry.update();
         //double power = PIDControl(targetAngleRadians, currentYaw);
 
@@ -220,38 +179,5 @@ public class NewPIDExternalIMU extends OpMode {
         telemetry.update();
 
          */
-
     }
-
-    /*
-    public double PIDControl(double reference, double state) {
-        // IF CONTINUOUS
-        // double error = angleWrap(reference - state);
-        double error = reference - state;
-        integralSum += error * timer.seconds();
-        double derivative = (error - lastError) / timer.seconds();
-        lastError = error;
-
-
-
-        timer.reset();
-
-        double output = (error * kp) + (derivative * kd) + (integralSum * ki);
-        return output;
-    }
-     */
-
-    // IF CONTINUOUS
-
-    /*
-    public double angleWrap(double radians) {
-        while (radians > Math.PI) {
-            radians -= 2 * Math.PI;
-        }
-        while (radians < Math.PI) {
-            radians += 2 * Math.PI;
-        }
-        return radians;
-    }
-     */
 }
