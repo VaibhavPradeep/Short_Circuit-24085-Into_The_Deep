@@ -45,6 +45,7 @@ public class SorterPID extends OpMode {
     public static double i = 0;
     public static double d = 0;
     public static double targetAngle = 90;
+    public static double target = 20;
 
     public static double MIN_ANGLE = 20;
     public static double MAX_ANGLE = 330;
@@ -124,7 +125,7 @@ public class SorterPID extends OpMode {
         imu.initialize(parameters);
         imu.resetYaw();
          */
-        /*BHI260IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+        /*BHI260IMU.Parameters parameters  = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         ));
@@ -137,10 +138,6 @@ public class SorterPID extends OpMode {
     @Override
     public void loop() {
 
-        /* encoder values
-        double power = PIDControl(target, motor.getCurrentPosition());
-        motor.setPower(power);
-        */
         /*
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         double currentAngle = orientation.getYaw(AngleUnit.RADIANS);
@@ -161,45 +158,15 @@ public class SorterPID extends OpMode {
 
          */
         controller.setPID(p,i,d);
-        /*
-        angles   = turretImu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        double currentYaw = angles.firstAngle;
 
-         */
-        YawPitchRollAngles orientation = turretImu.getRobotYawPitchRollAngles();
-        double yawDeg = orientation.getYaw(AngleUnit.DEGREES);
-
-        double currentAngleDeg = yawDeg;
-        if (currentAngleDeg < 0) {
-            currentAngleDeg += 360.0;
-        }
-
-        double unclampedTargetDeg = targetAngle;
-        double currentTargetDeg = unclampedTargetDeg;
-        if (currentTargetDeg < MIN_ANGLE) {
-            currentTargetDeg = MIN_ANGLE;
-        }
-        if (currentTargetDeg > MAX_ANGLE) {
-            currentTargetDeg = MAX_ANGLE;
-        }
-
-
-
-        double pidOutput = controller.calculate(currentAngleDeg,currentTargetDeg);
-
-        if (currentAngleDeg <= MIN_ANGLE && pidOutput < 0) {
-            pidOutput = 0;
-        }
-        if (currentAngleDeg >= MAX_ANGLE && pidOutput > 0) {
-            pidOutput = 0;
-        }
+        double pidOutput = controller.calculate(target, sorterMotor.getCurrentPosition());
 
         pidOutput = Math.max(-1.0, Math.min(1.0, pidOutput));
 
         rotationMotor.setPower(pidOutput);
 
-        telemetry.addData("Pos: ", currentAngleDeg);
-        telemetry.addData("target: ", currentTargetDeg);
+        telemetry.addData("Pos: ", sorterMotor.getCurrentPosition());
+        telemetry.addData("target: ", target);
         telemetry.update();
         //double power = PIDControl(targetAngleRadians, currentYaw);
 
