@@ -13,13 +13,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "sorter PID")
-public class SorterPID extends OpMode {
+@TeleOp(name = "shooter PID")
+public class ShooterPID extends OpMode {
     private PIDController controller;
 
     final int READ_PERIOD = 1;
@@ -39,11 +40,11 @@ public class SorterPID extends OpMode {
     Deadline rateLimit;
 
     public static double integralSum = 0;
-    public static double p = 0.003;
+    public static double p = -0.003;
     public static double i = 0;
-    public static double d = 0.1;
+    public static double d = -0.1;
     public static double targetAngle = 90;
-    public static double target = 20;
+    public static double target = 0;
     public static double MIN_ANGLE = 20;
     public static double MAX_ANGLE = 330;
 
@@ -112,6 +113,8 @@ public class SorterPID extends OpMode {
         integralSum = 0;
         lastError = 0;
 
+        shootingMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         /* parameters = new BHI260IMU.Parameters(
                 new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
@@ -143,14 +146,15 @@ public class SorterPID extends OpMode {
         double currentAngle = orientation.getYaw(AngleUnit.RADIANS);
         double power = PIDControl(targetAngleRadians, currentAngle); */
 
-        controller.setPID(p,i,d);
-        double pidOutput = controller.calculate(sorterMotor.getCurrentPosition(),target);
-        sorterMotor.setPower(pidOutput);
 
-        telemetry.addData("Pos: ", sorterMotor.getCurrentPosition());
+        controller.setPID(p,i,d);
+        double pidOutput = controller.calculate( shootingMotor.getPower(), target);
+        shootingMotor.setPower(pidOutput);
+
+        telemetry.addData("Pos: ", shootingMotor.getPower());
         telemetry.addData("target: ", target);
         telemetry.update();
-
+        // 4200 velocity max
         //double power = PIDControl(targetAngleRadians, currentYaw);
         //rotationMotor.setPower(Math.max(-1.0, Math.min(1.0, power)));
 
