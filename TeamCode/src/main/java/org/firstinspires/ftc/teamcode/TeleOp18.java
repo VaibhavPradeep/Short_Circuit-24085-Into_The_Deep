@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,17 +18,21 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 @TeleOp(name = "use this teleop")
-public class DriveAndIntakeTest extends OpMode {
+public class TeleOp18 extends OpMode {
     // lever pos 0 as up and 0.123 and the bottom
     // pitch innit pos should be 0.5
     final int READ_PERIOD = 1;
     // TODO: find lever pos
+
+    private PIDController controller;
+    public static double p = -0.003;
+    public static double i = 0;
+    public static double d = -0.1;
     DcMotor intakeMotor;
     Servo pitchServo;
     DcMotor rotationMotor;
     DcMotor shootingMotor;
-    DcMotor transferMotor;
-    CRServo sorterServo;
+    DcMotor sorterMotor;
     Servo leverServo;
     ColorSensor colorSensor;
     HuskyLens huskyLens;
@@ -46,6 +51,10 @@ public class DriveAndIntakeTest extends OpMode {
     ElapsedTime timer = new ElapsedTime();
     public static double leverPos = 0;
     public static double pitchPos = 0;
+
+    public static double encoderAmount;
+
+    boolean prevPressed = false;
 
     public void driveMecanum(double left_y, double left_x, double right_x){
         double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
@@ -72,14 +81,14 @@ public class DriveAndIntakeTest extends OpMode {
 
     @Override
     public void init() {
+        controller = new PIDController(p,i,d);
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         pitchServo = hardwareMap.get(Servo.class,"pitchServo");
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
         shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
-        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
-        sorterServo = hardwareMap.get(CRServo.class, "sorterServo");
+        sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
         turretImu = hardwareMap.get(IMU.class, "turretImu");
 
@@ -143,61 +152,53 @@ public class DriveAndIntakeTest extends OpMode {
             intakeMotor.setPower(-1);
         }
 
-        /* if (gamepad1.dpad_left) {
-            dPadMove("up");
-        }
-        if (gamepad1.dpad_right) {
-            dPadMove("down");
-        } */
         if (gamepad2.x) {
             shootingMotor.setPower(1);
-            transferMotor.setPower(1);
         }
         if (gamepad2.y) {
             shootingMotor.setPower(0);
-            transferMotor.setPower(0);
         }
-        /* leverServo.setPosition(leverPos);
-        pitchServo.setPosition(pitchPos); */
-        // 0.45
+
         if (gamepad2.dpad_up) {
-            leverServo.setPosition(0.23);
+            leverServo.setPosition(0.2);
         }
         if (gamepad2.dpad_down) {
             leverServo.setPosition(0);
         }
-        /* if (gamepad1.dpad_left) {
-            shootingMotor.setPower(1);
-            transferMotor.setPower(1);
-            leverServo.setPosition(0);
-        } */
 
-        boolean xPressed = gamepad2.left_bumper;
-        boolean xJustPressed = xPressed && !prevX;
+        boolean aPressed = gamepad1.a;
 
-        if (xJustPressed && !sorting) {
-            sorting = true;
-            timer.reset();
-        }
 
-// Run the 70 ms action
-        if (sorting) {
-            if (timer.milliseconds() <= timeAmount) {
-                sorterServo.setPower(1.0);
-            } else {
-                sorterServo.setPower(0.0);
-                sorting = false;
+        controller.setPID(p,i,d);
+
+        int pos = sorterMotor.getCurrentPosition();
+
+        if (aPressed && !prevPressed) {
+            pos += encoderAmount;
+            /*
+            sorterMotor.setTargetPosition(pos);
+            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            sorterMotor.setPower(0.75);
+            if (sorterMotor.getCurrentPosition() == pos) {
+                sorterMotor.setPower(0);
             }
-        } else {
-            sorterServo.setPower(0.0);
+
+             */
         }
 
-// Save button state for next loop
-        prevX = xPressed;
 
-        telemetry.addData("sorting", sorting);
-        telemetry.addData("timer", timer.milliseconds());
-        telemetry.addData("xJustPressed", xJustPressed);
-        telemetry.update();
+        double pidOutput = controller.calculate(pos, sorterMotor.getCurrentPosition());
+
+        prevPressed = aPressed;
+
+        sorterMotor.setPower(pidOutput);
+
+        
+        /*
+        controller.setPID(p,i,d);
+
+        double pidOutput = controller.calculate(target, sorterMotor.getCurrentPosition());
+        sorterMotor.setPower(pidOutput);
+         */
     }
 }

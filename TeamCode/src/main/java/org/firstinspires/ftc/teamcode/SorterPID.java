@@ -7,18 +7,19 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
 @Config
+@TeleOp(name = "sorter PID")
 public class SorterPID extends OpMode {
 
     private PIDController controller;
@@ -41,9 +42,9 @@ public class SorterPID extends OpMode {
     HuskyLens huskyLens2;
     Deadline rateLimit;
     public static double integralSum = 0;
-    public static double p = 0;
+    public static double p = -0.003;
     public static double i = 0;
-    public static double d = 0;
+    public static double d = -0.1;
     public static double targetAngle = 90;
     public static double target = 20;
 
@@ -89,6 +90,8 @@ public class SorterPID extends OpMode {
 
         rotationMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        sorterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Rate limiter for telemetry
         rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
@@ -160,10 +163,7 @@ public class SorterPID extends OpMode {
         controller.setPID(p,i,d);
 
         double pidOutput = controller.calculate(target, sorterMotor.getCurrentPosition());
-
-        pidOutput = Math.max(-1.0, Math.min(1.0, pidOutput));
-
-        rotationMotor.setPower(pidOutput);
+        sorterMotor.setPower(pidOutput);
 
         telemetry.addData("Pos: ", sorterMotor.getCurrentPosition());
         telemetry.addData("target: ", target);
