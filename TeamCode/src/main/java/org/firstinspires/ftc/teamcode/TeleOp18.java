@@ -121,7 +121,6 @@ public class TeleOp18 extends OpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        pitchServo.setDirection(Servo.Direction.REVERSE);
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -134,6 +133,8 @@ public class TeleOp18 extends OpMode {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+        pitchServo.setDirection(Servo.Direction.REVERSE);
+        pitchServo.setPosition(0);
 
         sorterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sorterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -145,6 +146,8 @@ public class TeleOp18 extends OpMode {
 
     @Override
     public void loop() {
+
+        pitchServo.setPosition(0.42);
         driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         if (gamepad1.a) {
             intakeMotor.setPower(1);
