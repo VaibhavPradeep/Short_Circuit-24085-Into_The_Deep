@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Config
 @TeleOp(name = "use this teleop")
 public class TeleOp18 extends OpMode {
-    // lever pos 0 as up and 0.123 and the bottom
+    // lever pos 0 as up and 0.123 and the bo
     // pitch innit pos should be 0.5
     final int READ_PERIOD = 1;
     // TODO: find lever pos
@@ -53,7 +53,7 @@ public class TeleOp18 extends OpMode {
     public static double leverPos = 0;
     public static double pitchPos = 0;
 
-    public static int encoderAmount = 88;
+    public static int encoderAmount = 89;
 
     boolean prevPressed = false;
 
@@ -117,11 +117,10 @@ public class TeleOp18 extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        pitchServo.setDirection(Servo.Direction.REVERSE);
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -134,6 +133,8 @@ public class TeleOp18 extends OpMode {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+        pitchServo.setDirection(Servo.Direction.REVERSE);
+        pitchServo.setPosition(0);
 
         sorterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sorterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -145,6 +146,8 @@ public class TeleOp18 extends OpMode {
 
     @Override
     public void loop() {
+
+        pitchServo.setPosition(0.42);
         driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         if (gamepad1.a) {
             intakeMotor.setPower(1);
@@ -156,10 +159,9 @@ public class TeleOp18 extends OpMode {
             intakeMotor.setPower(-1);
         }
 
-        if (gamepad2.x) {
+        if (gamepad2.right_trigger > 0.75) {
             shootingMotor.setPower(1);
-        }
-        if (gamepad2.y) {
+        } else {
             shootingMotor.setPower(0);
         }
 

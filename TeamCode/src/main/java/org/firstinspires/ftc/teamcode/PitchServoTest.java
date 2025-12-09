@@ -82,6 +82,8 @@ public class PitchServoTest extends OpMode {
         leverServo = hardwareMap.get(Servo.class,"leverServo");
         turretImu = hardwareMap.get(IMU.class, "turretImu");
 
+        pitchServo.setDirection(Servo.Direction.REVERSE);
+
 
         // Set up parameters for turret orientation (adjust based on mounting)
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
