@@ -54,8 +54,7 @@ public class NewestSorting extends OpMode {
         // Initialize
         turretImu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        sorterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sorterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
         leverServo = hardwareMap.get(Servo.class,"leverServo");
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

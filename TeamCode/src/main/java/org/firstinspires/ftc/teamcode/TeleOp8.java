@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-// @TeleOp(name = "Teleop 8")
+ @TeleOp(name = "TeleOp 8")
 public class TeleOp8 extends OpMode {
 
     final int READ_PERIOD = 1;
