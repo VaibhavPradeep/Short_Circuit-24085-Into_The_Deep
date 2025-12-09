@@ -53,7 +53,7 @@ public class TeleOp18 extends OpMode {
     public static double leverPos = 0;
     public static double pitchPos = 0;
 
-    public static int encoderAmount = 88;
+    public static int encoderAmount = 89;
 
     boolean prevPressed = false;
 
@@ -117,7 +117,7 @@ public class TeleOp18 extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -156,10 +156,9 @@ public class TeleOp18 extends OpMode {
             intakeMotor.setPower(-1);
         }
 
-        if (gamepad2.x) {
+        if (gamepad2.right_trigger > 0.75) {
             shootingMotor.setPower(1);
-        }
-        if (gamepad2.y) {
+        } else {
             shootingMotor.setPower(0);
         }
 
