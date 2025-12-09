@@ -24,10 +24,11 @@ public class TeleOp18 extends OpMode {
     final int READ_PERIOD = 1;
     // TODO: find lever pos
 
+    public int sorterTarget = 0;
     private PIDController controller;
-    public static double p = -0.003;
+    public static double p = 0.003;
     public static double i = 0;
-    public static double d = -0.1;
+    public static double d = 0.1;
     DcMotor intakeMotor;
     Servo pitchServo;
     DcMotor rotationMotor;
@@ -52,7 +53,7 @@ public class TeleOp18 extends OpMode {
     public static double leverPos = 0;
     public static double pitchPos = 0;
 
-    public static double encoderAmount;
+    public static int encoderAmount = 88;
 
     boolean prevPressed = false;
 
@@ -133,6 +134,9 @@ public class TeleOp18 extends OpMode {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+
+        sorterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        sorterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void start() {
@@ -166,39 +170,42 @@ public class TeleOp18 extends OpMode {
             leverServo.setPosition(0);
         }
 
-        boolean aPressed = gamepad1.a;
+
+        //boolean aPressed = gamepad2.a;
+        //controller.setPID(p,i,d);
+
+//        if (aPressed && !prevPressed) {
+//            sorterTarget += encoderAmount;
+//
+//            sorterMotor.setTargetPosition(pos);
+//            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            sorterMotor.setPower(0.75);
+//            if (sorterMotor.getCurrentPosition() == pos) {
+//                sorterMotor.setPower(0);
+//            }
+//        }
+//
+//        prevPressed = aPressed;
+
+        //double pidOutput = controller.calculate(sorterMotor.getCurrentPosition(), sorterTarget);
+
+        //sorterMotor.setPower(pidOutput);
 
 
-        controller.setPID(p,i,d);
 
-        int pos = sorterMotor.getCurrentPosition();
+        boolean aPressed = gamepad2.a;
+
 
         if (aPressed && !prevPressed) {
+            int pos = sorterMotor.getCurrentPosition();
             pos += encoderAmount;
-            /*
             sorterMotor.setTargetPosition(pos);
             sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             sorterMotor.setPower(0.75);
             if (sorterMotor.getCurrentPosition() == pos) {
                 sorterMotor.setPower(0);
             }
-
-             */
         }
-
-
-        double pidOutput = controller.calculate(pos, sorterMotor.getCurrentPosition());
-
         prevPressed = aPressed;
-
-        sorterMotor.setPower(pidOutput);
-
-        
-        /*
-        controller.setPID(p,i,d);
-
-        double pidOutput = controller.calculate(target, sorterMotor.getCurrentPosition());
-        sorterMotor.setPower(pidOutput);
-         */
     }
 }
