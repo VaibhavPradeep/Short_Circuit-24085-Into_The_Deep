@@ -78,7 +78,7 @@ public class Shooter9kVelocityTuner extends OpMode {
 
         // ============= VELOCITY MODE =============
 
-        // Convert wheel RPM → motor RPM → ticks/sec
+        // Convert wheel RPM → motor RPM → tics/sec
         double targetMotorRpm = targetWheelRpm / gearRatioWheelOverMotor;
         double targetMotorTicksPerSec = (targetMotorRpm * motorTicksPerRev) / 60.0;
 

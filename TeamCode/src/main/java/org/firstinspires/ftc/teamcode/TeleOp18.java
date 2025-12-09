@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Config
 @TeleOp(name = "use this teleop")
 public class TeleOp18 extends OpMode {
-    // lever pos 0 as up and 0.123 and the bottom
+    // lever pos 0 as up and 0.123 and the bo
     // pitch innit pos should be 0.5
     final int READ_PERIOD = 1;
     // TODO: find lever pos
