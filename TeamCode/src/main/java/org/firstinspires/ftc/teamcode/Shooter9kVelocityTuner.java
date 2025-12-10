@@ -27,12 +27,12 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-
+// jiojoi
 @Config
 @TeleOp(name = "Shooter9kVelocityTuner")
 public class Shooter9kVelocityTuner extends OpMode {
 
-    // Shooter motor (with encoder)
+    // Shooter motor (with encder)===
     private DcMotorEx shootingMotor;
 
     // Shooter servo

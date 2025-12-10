@@ -190,5 +190,6 @@ public class sorterMotor_FTCLib_PID_Iterative_NoSleep extends OpMode {
 
     private int degreesToTicks(double deg) {
         return (int)((deg / 360.0) * TICKS_PER_REV);
+        // roiegeorijoig
     }
 }
