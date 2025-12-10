@@ -47,15 +47,15 @@ public class Shooter9kVelocityTuner extends OpMode {
     public static double shooterPower = 0.0;
 
     // --- Velocity Mode ---
-    public static double targetWheelRpm = 9000.0;
+    public static double targetWheelRpm = 5700.0;
     public static int motorTicksPerRev = 28;
     public static double gearRatioWheelOverMotor = 1.5;
 
     // PID gains
-    public static double kP = 0.01;
-    public static double kI = 0.0;
-    public static double kD = 0.0;
-    public static double kF = 0.0;
+    public static double kPs = 0.01;
+    public static double kIs = 0.0;
+    public static double kDs = 0.0;
+    public static double kFs = 0.0;
 
     public static double rpmTolerance = 100.0;
 
@@ -116,7 +116,7 @@ public class Shooter9kVelocityTuner extends OpMode {
         sorterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sorterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        pid = new PIDController(kP, kI, kD);
+        pid = new PIDController(kPs, kIs, kDs);
         pid.setSetPoint(targetTicks);
 
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -174,7 +174,7 @@ public class Shooter9kVelocityTuner extends OpMode {
         shootingMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        shooterPid = new PIDController(kP, kI, kD);
+        shooterPid = new PIDController(kPs, kIs, kDs);
 
         pitchServo.setPosition(servoPosition);
 
@@ -215,11 +215,11 @@ public class Shooter9kVelocityTuner extends OpMode {
         // Error
         double errorWheelRpm = targetWheelRpm - actualWheelRpm;
 
-        shooterPid.setPID(kP, kI, kD);
+        shooterPid.setPID(kPs, kIs, kDs);
 
         double pidOutput = shooterPid.calculate(actualWheelRpm, targetWheelRpm);
 
-        double ff = kF * targetWheelRpm;
+        double ff = kFs * targetWheelRpm;
 
         double power = pidOutput + ff;
         power = Math.max(0.0, Math.min(1.0, power));
