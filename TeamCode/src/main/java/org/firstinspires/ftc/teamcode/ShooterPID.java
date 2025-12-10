@@ -9,6 +9,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -31,7 +32,7 @@ public class ShooterPID extends OpMode {
     DcMotor intakeMotor;
     Servo pitchServo;
     DcMotor rotationMotor;
-    DcMotor shootingMotor;
+    DcMotorEx shootingMotor;
     DcMotor sorterMotor;
     Servo leverServo;
     //ColorSensor colorSensor;
@@ -76,7 +77,7 @@ public class ShooterPID extends OpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         pitchServo = hardwareMap.get(Servo.class,"pitchServo");
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
-        shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
+        shootingMotor = hardwareMap.get(DcMotorEx.class, "shootingMotor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
         sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
@@ -148,10 +149,10 @@ public class ShooterPID extends OpMode {
 
 
         controller.setPID(p,i,d);
-        double pidOutput = controller.calculate( shootingMotor.getPower(), target);
+        double pidOutput = controller.calculate( shootingMotor.getVelocity(), target);
         shootingMotor.setPower(pidOutput);
 
-        telemetry.addData("Pos: ", shootingMotor.getPower());
+        telemetry.addData("Pos: ", shootingMotor.getVelocity());
         telemetry.addData("target: ", target);
         telemetry.update();
         // 4200 velocity max

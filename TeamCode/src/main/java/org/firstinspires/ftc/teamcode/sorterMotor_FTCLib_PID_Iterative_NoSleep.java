@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
 import java.util.concurrent.TimeUnit;
 
-@Config
-@TeleOp(name = "use this teleop")
-public class TeleOp18 extends OpMode {
+@TeleOp(name="sorterMotor_FTCLib_PID_Iterative_NoSleep", group="Main")
+public class sorterMotor_FTCLib_PID_Iterative_NoSleep extends OpMode {
+
     private DcMotor sorterMotor;
     private PIDController pid;
 
@@ -68,29 +68,6 @@ public class TeleOp18 extends OpMode {
     public static int encoderAmount = 89;
 
     boolean prevPressed = false;
-
-    public void driveMecanum(double left_y, double left_x, double right_x){
-        double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
-        frontLeft.setPower((left_y - left_x - right_x) / maxPower);
-        frontRight.setPower((left_y + left_x + right_x) / maxPower);
-        backLeft.setPower((left_y + left_x - right_x) / maxPower);
-        backRight.setPower((left_y - left_x + right_x) / maxPower);
-    }
-
-    /* public void dPadMove(String direction) {
-        int pos = rotationMotor.getCurrentPosition();
-        if(direction.equals("up")) {
-            pos += 75;
-        } else if(direction.equals("down") && pos > 75) {
-            pos -= 75;
-        }
-        rotationMotor.setTargetPosition(pos);
-        rotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rotationMotor.setPower(0.75);
-        if (rotationMotor.getCurrentPosition() == pos) {
-            rotationMotor.setPower(0);
-        }
-    } */
 
     @Override
     public void init() {
@@ -164,78 +141,8 @@ public class TeleOp18 extends OpMode {
         telemetry.addData("status", "initialized");
     }
 
-    public void start() {
-        timer.reset();
-    }
-
     @Override
     public void loop() {
-
-        pitchServo.setPosition(0.42);
-        driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        if (gamepad1.a) {
-            intakeMotor.setPower(1);
-        }
-        if (gamepad1.b) {
-            intakeMotor.setPower(0);
-        }
-        if (gamepad1.x) {
-            intakeMotor.setPower(-1);
-        }
-
-        if (gamepad2.right_trigger > 0.75) {
-            shootingMotor.setPower(1);
-        } else {
-            shootingMotor.setPower(0);
-        }
-
-        if (gamepad2.dpad_up) {
-            leverServo.setPosition(0.2);
-        }
-        if (gamepad2.dpad_down) {
-            leverServo.setPosition(0);
-        }
-
-
-        //boolean aPressed = gamepad2.a;
-        //controller.setPID(p,i,d);
-
-//        if (aPressed && !prevPressed) {
-//            sorterTarget += encoderAmount;
-//
-//            sorterMotor.setTargetPosition(pos);
-//            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            sorterMotor.setPower(0.75);
-//            if (sorterMotor.getCurrentPosition() == pos) {
-//                sorterMotor.setPower(0);
-//            }
-//        }
-//
-//        prevPressed = aPressed;
-
-        //double pidOutput = controller.calculate(sorterMotor.getCurrentPosition(), sorterTarget);
-
-        //sorterMotor.setPower(pidOutput);
-
-
-
-        /*
-        boolean aPressed = gamepad2.a;
-
-
-        if (aPressed && !prevPressed) {
-            int pos = sorterMotor.getCurrentPosition();
-            pos += encoderAmount;
-            sorterMotor.setTargetPosition(pos);
-            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            sorterMotor.setPower(0.75);
-            if (sorterMotor.getCurrentPosition() == pos) {
-                sorterMotor.setPower(0);
-            }
-        }
-        prevPressed = aPressed;
-         */
-
 
         long now = System.currentTimeMillis();
 
