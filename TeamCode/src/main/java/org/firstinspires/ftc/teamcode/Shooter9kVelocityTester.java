@@ -112,6 +112,7 @@ public class Shooter9kVelocityTester extends OpMode {
         telemetry.addData("At Speed?", atSpeed);
         telemetry.addData("Power", power);
         telemetry.update();
+        //8iugiugy
     }
 
     @Override
