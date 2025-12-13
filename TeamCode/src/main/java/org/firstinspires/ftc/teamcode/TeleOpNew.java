@@ -19,22 +19,20 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "older teleop")
-public class TeleOp18WithShooterPID extends OpMode {
+@TeleOp(name = "real new teleop")
+public class TeleOpNew extends OpMode {
 
     // 6500 rpm is max, at far range 0.35 pitch pos
     // 0.3, 4600
 
-    int targetVelocity = 0;
+    public static double targetPower = 0;
 
-    int LONG_SHOT = 1675;
-    int SHORT_SHOT = 1500;
+    public static double LONG_SHOT = 0.875;
 
-    private double maxV = 2800; // for 6000 rpm motor
-    private double Kfs = 32767 / maxV;
-    private double Kps = Kfs * 0.1;
-    private double Kis = Kps * 0.1;
-    private double Kds = 0;
+    public static double SHORT_SHOT = 0.795;
+
+    public static double LONG_SERVO_POS = 0.3;
+    public static double SHORT_SERVO_POS = 0.4;
 
     // end
 
@@ -83,7 +81,7 @@ public class TeleOp18WithShooterPID extends OpMode {
     public static int timeAmount = 110;
     ElapsedTime timer = new ElapsedTime();
     public static double leverPos = 0;
-    public static double pitchPos = 0;
+    public static double pitchPos = 0.42;
 
     public static int encoderAmount = 89;
 
@@ -147,7 +145,7 @@ public class TeleOp18WithShooterPID extends OpMode {
 
         // shooter pid
 
-        shootingMotor.setVelocityPIDFCoefficients(Kps, Kis, Kds, Kfs);
+
 
         pitchServo.setDirection(Servo.Direction.REVERSE);
         pitchServo.setPosition(0);
@@ -205,6 +203,7 @@ public class TeleOp18WithShooterPID extends OpMode {
     @Override
     public void loop() {
 
+        pitchServo.setPosition(0.42);
         driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         if (gamepad1.a) {
             intakeMotor.setPower(1);
@@ -303,7 +302,6 @@ public class TeleOp18WithShooterPID extends OpMode {
         telemetry.update();
 
 
-
         // 56.4
         //43.2
         // SHOOTER
@@ -311,20 +309,17 @@ public class TeleOp18WithShooterPID extends OpMode {
         boolean shooterEnabled2 = gamepad2.right_trigger > 0.75;
 
         if (!shooterEnabled2 && !shooterEnabled1) {
-            targetVelocity = 0;
-            shootingMotor.setVelocity(0);
+            targetPower = 0;
         } else if (shooterEnabled2 && !shooterEnabled1){
-            pitchServo.setPosition(0.42);
-            targetVelocity = LONG_SHOT;
+            targetPower = LONG_SHOT;
         } else if (!shooterEnabled2 && shooterEnabled1) {
-            pitchServo.setPosition(0.3);
-            targetVelocity= SHORT_SHOT;
+            targetPower = SHORT_SHOT;
         } else if (shooterEnabled2 && shooterEnabled1) {
-            targetVelocity = 0;
-            shootingMotor.setVelocity(0);
+            targetPower = 0;
         }
 
-        shootingMotor.setVelocity(targetVelocity);
+        pitchServo.setPosition(pitchPos);
+        shootingMotor.setPower(targetPower);
 
     }
 
