@@ -3,29 +3,21 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
-import java.util.concurrent.TimeUnit;
-
 @Config
-@TeleOp(name = "shooter PID")
-public class ShooterPID extends OpMode {
+@TeleOp(name = "shooter PID Dc Ex")
+public class ShooterPIDDcEx extends OpMode {
     private DcMotorEx shootingMotor;
     private Servo pitchServo;
+
+
+    public static double leverPos = 0;
 
     ElapsedTime timer = new ElapsedTime();
     public double lastError = 0;
@@ -37,7 +29,14 @@ public class ShooterPID extends OpMode {
 
     //private PIDController controller;
 
+    public static double pitchPos = 0;
     public static double target = 0;
+
+    private double maxV = 2800; // for 6000 rpm motor
+    private double Kf = 32767 / maxV;
+    private double Kp = Kf * 0.1;
+    private double Ki = Kp * 0.1;
+    private double Kd = 0;
 
     Servo leverServo;
 
@@ -46,9 +45,12 @@ public class ShooterPID extends OpMode {
         shootingMotor = hardwareMap.get(DcMotorEx.class, "shootingMotor");
         pitchServo = hardwareMap.get(Servo.class, "pitchServo");
         leverServo = hardwareMap.get(Servo.class, "leverServo");
+        leverServo.setPosition(0);
 
         //controller = new PIDController(kPs,kIs,kDs);
 
+
+        shootingMotor.setVelocityPIDFCoefficients(Kp, Ki, Kd, Kf);
 
         pitchServo.setDirection(Servo.Direction.REVERSE);
         pitchServo.setPosition(0);
@@ -60,7 +62,7 @@ public class ShooterPID extends OpMode {
 
     @Override
     public void start() {
-        pitchServo.setPosition(0.42);
+        pitchServo.setPosition(0.3);
     }
 
     @Override
@@ -69,14 +71,18 @@ public class ShooterPID extends OpMode {
         //double pidOutput = controller.calculate(shootingMotor.getVelocity(),target);
         //shootingMotor.setPower(pidOutput);
 
+        pitchServo.setPosition(pitchPos);
+        // 1675 LONG
+        leverServo.setPosition(leverPos);
 
-        double power = PIDControl(target, shootingMotor.getVelocity());
-        shootingMotor.setPower(power);
+        shootingMotor.setVelocity(target);
+        //double power = PIDControl(target, shootingMotor.getVelocity());
+        //shootingMotor.setPower(power);
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        telemetry.addData("Pos: ", shootingMotor.getVelocity());
-        telemetry.addData("target: ", target);
-        telemetry.update();
+        //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        //telemetry.addData("Pos: ", shootingMotor.getVelocity());
+        //telemetry.addData("target: ", target);
+        //telemetry.update();
     }
 
     public double PIDControl(double reference, double state) {

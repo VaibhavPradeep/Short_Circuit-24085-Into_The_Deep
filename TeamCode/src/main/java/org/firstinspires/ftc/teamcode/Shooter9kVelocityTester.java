@@ -44,6 +44,7 @@ public class Shooter9kVelocityTester extends OpMode {
 
     public static double servoPosition = 0.0;
     public static double leverPos = 0.0;
+    public static double pitchPos = 0.42;
 
     private PIDController shooterPid;
 
@@ -55,6 +56,9 @@ public class Shooter9kVelocityTester extends OpMode {
         pitchServo = hardwareMap.get(Servo.class, "pitchServo");
         leverServo = hardwareMap.get(Servo.class, "leverServo");
 
+        pitchServo.setDirection(Servo.Direction.REVERSE);
+        pitchServo.setPosition(0);
+
         shootingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shootingMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -65,8 +69,13 @@ public class Shooter9kVelocityTester extends OpMode {
     }
 
     @Override
+    public void start() {
+        pitchServo.setPosition(0.42);
+    }
+
+    @Override
     public void loop() {
-        pitchServo.setPosition(servoPosition);
+        pitchServo.setPosition(pitchPos);
         leverServo.setPosition(leverPos);
 
         // === ADDED: Right Trigger Safety Gate ===
@@ -98,10 +107,10 @@ public class Shooter9kVelocityTester extends OpMode {
 
         double pidOutput = shooterPid.calculate(actualWheelRpm, targetWheelRpm);
         double ff = kFs * targetWheelRpm;
-        double power = pidOutput + ff;
-        power = Math.max(0.0, Math.min(1.0, power));
+        double shootPower = pidOutput + ff;
+        shootPower = Math.max(0.0, Math.min(1.0, shootPower));
 
-        shootingMotor.setPower(power);
+        shootingMotor.setPower(shootPower);
 
         boolean atSpeed = Math.abs(errorWheelRpm) <= rpmTolerance;
 
@@ -110,7 +119,7 @@ public class Shooter9kVelocityTester extends OpMode {
         telemetry.addData("Actual wheel RPM", actualWheelRpm);
         telemetry.addData("Error", errorWheelRpm);
         telemetry.addData("At Speed?", atSpeed);
-        telemetry.addData("Power", power);
+        telemetry.addData("Power", shootPower);
         telemetry.update();
         //8iugiugy
     }

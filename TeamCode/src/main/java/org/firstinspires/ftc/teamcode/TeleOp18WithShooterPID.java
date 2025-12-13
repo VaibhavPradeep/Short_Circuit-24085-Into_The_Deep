@@ -3,22 +3,42 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "use this teleop")
-public class TeleOp18 extends OpMode {
+@TeleOp(name = "real teleop")
+public class TeleOp18WithShooterPID extends OpMode {
+
+    // 6500 rpm is max, at far range 0.35 pitch pos
+    // 0.3, 4600
+
+    int targetVelocity = 0;
+
+    int LONG_SHOT = 1675;
+    int SHORT_SHOT = 1500;
+
+    private double maxV = 2800; // for 6000 rpm motor
+    private double Kfs = 32767 / maxV;
+    private double Kps = Kfs * 0.1;
+    private double Kis = Kps * 0.1;
+    private double Kds = 0;
+
+    // end
+
+
     private DcMotor sorterMotor;
     private PIDController pid;
 
@@ -45,7 +65,7 @@ public class TeleOp18 extends OpMode {
     DcMotor intakeMotor;
     Servo pitchServo;
     DcMotor rotationMotor;
-    DcMotor shootingMotor;
+    DcMotorEx shootingMotor;
     Servo leverServo;
     ColorSensor colorSensor;
     HuskyLens huskyLens;
@@ -108,7 +128,7 @@ public class TeleOp18 extends OpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         pitchServo = hardwareMap.get(Servo.class,"pitchServo");
         rotationMotor = hardwareMap.get(DcMotor.class, "rotationMotor");
-        shootingMotor = hardwareMap.get(DcMotor.class, "shootingMotor");
+        shootingMotor = hardwareMap.get(DcMotorEx.class, "shootingMotor");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
         sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
@@ -124,6 +144,19 @@ public class TeleOp18 extends OpMode {
 
         // Initialize
         turretImu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        // shooter pid
+
+        shootingMotor.setVelocityPIDFCoefficients(Kps, Kis, Kds, Kfs);
+
+        pitchServo.setDirection(Servo.Direction.REVERSE);
+        pitchServo.setPosition(0);
+
+        shootingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shootingMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shootingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        // shooter pid end
 
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -166,12 +199,12 @@ public class TeleOp18 extends OpMode {
 
     public void start() {
         timer.reset();
+        pitchServo.setPosition(0.42);
     }
 
     @Override
     public void loop() {
 
-        pitchServo.setPosition(0.42);
         driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         if (gamepad1.a) {
             intakeMotor.setPower(1);
@@ -183,16 +216,10 @@ public class TeleOp18 extends OpMode {
             intakeMotor.setPower(-1);
         }
 
-        if (gamepad2.right_trigger > 0.75) {
-            shootingMotor.setPower(1);
-        } else {
-            shootingMotor.setPower(0);
-        }
-
         if (gamepad2.dpad_up) {
             leverServo.setPosition(0.2);
         }
-        if (gamepad2.dpad_down) {
+        else {
             leverServo.setPosition(0);
         }
 
@@ -274,6 +301,31 @@ public class TeleOp18 extends OpMode {
         telemetry.addData("Error", targetTicks - currentPos);
         telemetry.addData("Power", power);
         telemetry.update();
+
+
+
+        // 56.4
+        //43.2
+        // SHOOTER
+        boolean shooterEnabled1 = gamepad2.left_trigger > 0.75;
+        boolean shooterEnabled2 = gamepad2.right_trigger > 0.75;
+
+        if (!shooterEnabled2 && !shooterEnabled1) {
+            targetVelocity = 0;
+            shootingMotor.setVelocity(0);
+        } else if (shooterEnabled2 && !shooterEnabled1){
+            pitchServo.setPosition(0.42);
+            targetVelocity = LONG_SHOT;
+        } else if (!shooterEnabled2 && shooterEnabled1) {
+            pitchServo.setPosition(0.3);
+            targetVelocity= SHORT_SHOT;
+        } else if (shooterEnabled2 && shooterEnabled1) {
+            targetVelocity = 0;
+            shootingMotor.setVelocity(0);
+        }
+
+        shootingMotor.setVelocity(targetVelocity);
+
     }
 
     @Override
