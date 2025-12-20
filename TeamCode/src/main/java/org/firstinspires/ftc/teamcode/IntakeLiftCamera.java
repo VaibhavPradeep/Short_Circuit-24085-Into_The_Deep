@@ -33,6 +33,8 @@ public class IntakeLiftCamera {
 
     private static final double TICKS_PER_REV = 537.6;  // 312 RPM motor
 
+    double encoderAmount = TICKS_PER_REV / 6;
+
     // Positions around sorterMotor circle (in degrees)
     // CHANGE THESE BASED ON YOUR REAL sorterMotor GEOMETRY
     private double[] positionDegrees = { 0, 60, 120, 180, 240, 300 };
@@ -134,6 +136,14 @@ public class IntakeLiftCamera {
     }
 
     public void sorting(int rotations) {
+        int pos = sorterMotor.getCurrentPosition();
+        pos += encoderAmount;
+        sorterMotor.setTargetPosition(pos);
+        sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sorterMotor.setPower(0.75);
+        if (sorterMotor.getCurrentPosition() == pos) {
+            sorterMotor.setPower(0);
+        }
     }
 
     private int degreesToTicks(double deg) {

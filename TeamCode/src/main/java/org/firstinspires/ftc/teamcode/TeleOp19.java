@@ -19,15 +19,14 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "REAL NEW TELEOP")
-public class TeleOpNew extends OpMode {
+public class TeleOp19 extends OpMode {
 
     // 6500 rpm is max, at far range 0.35 pitch pos
     // 0.3, 4600
 
     public static double targetPower = 0;
 
-    public static double LONG_SHOT = 0.87;
+    public static double LONG_SHOT = 0.875;
 
     public static double SHORT_SHOT = 0.795;
 
@@ -93,14 +92,6 @@ public class TeleOpNew extends OpMode {
         frontRight.setPower((left_y + left_x + right_x) / maxPower);
         backLeft.setPower((left_y + left_x - right_x) / maxPower);
         backRight.setPower((left_y - left_x + right_x) / maxPower);
-    }
-
-    public void driveMecanumSlower(double left_y, double left_x, double right_x){
-        double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
-        frontLeft.setPower(((left_y - left_x - right_x) / maxPower) / 3);
-        frontRight.setPower(((left_y + left_x + right_x) / maxPower) / 3);
-        backLeft.setPower(((left_y + left_x - right_x) / maxPower) / 3);
-        backRight.setPower(((left_y - left_x + right_x) / maxPower) / 3);
     }
 
     /* public void dPadMove(String direction) {
@@ -212,13 +203,7 @@ public class TeleOpNew extends OpMode {
     public void loop() {
 
         pitchServo.setPosition(0.42);
-
-        if (gamepad1.left_trigger > 0.75) {
-            driveMecanumSlower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        } else {
-            driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        }
-
+        driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         if (gamepad1.a) {
             intakeMotor.setPower(1);
         }

@@ -5,24 +5,24 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "real backstage auto")
-public class RedBackstageAuto extends LinearOpMode {
+@Autonomous(name = "blue backstage auto")
+public class BlueBackstageAuto extends LinearOpMode {
 
     private final IntakeLiftCamera ILC = new IntakeLiftCamera();
     private final Drivetrain DT = new Drivetrain(this);
 
     // ---- Tune these for your robot ----
     private static final double DRIVE_SPEED = 0.3;
-    private static final double DRIVE_DISTANCE_IN = 0;
+    private static final double DRIVE_DISTANCE_IN = 6.5;
 
     // Use the same power as your ILC.longShoot()
-    private static final double SHOOTER_POWER = 0.9;
+    private static final double SHOOTER_POWER = 0.875;
 
     // "few seconds" before pushing lever to feed the ball
     private static final long SHOOTER_REV_TIME_MS = 4500;
 
     // How long to hold lever up to push one ball into shooter
-    private static final long LEVER_PUSH_MS = 250;
+    private static final long LEVER_PUSH_MS = 600;
 
     // Time for the ball to clear + shooter to recover
     private static final long BETWEEN_SHOTS_MS = 4500;
@@ -72,17 +72,18 @@ public class RedBackstageAuto extends LinearOpMode {
 
         // Rev shooter, then fire 3 balls (already inside robot)
         setShooterPower(SHOOTER_POWER);
-        waitMs(5500);
+        waitMs(SHOOTER_REV_TIME_MS);
+        waitBetweenBalls();
 
-        fireOneBall(0.92);
+        fireOneBall();
         advanceSorterOneThird();
-        waitMs(4500);
+        waitBetweenBalls();
 
-        fireOneBall(0.725);
+        fireOneBall();
         advanceSorterOneThird();
-        waitMs(4500);
+        waitMs(3000);
 
-        fireOneBall(0.96);
+        fireOneBall();
         waitMs(1000);
         // Stop everything
         ILC.leverDown();
@@ -95,11 +96,11 @@ public class RedBackstageAuto extends LinearOpMode {
         if (keepPitchThread != null) keepPitchThread.interrupt();
     }
 
-    private void fireOneBall(double power) {
+    private void fireOneBall() {
         if (!opModeIsActive() || isStopRequested()) return;
 
         // Make sure shooter is still spinning
-        setShooterPower(power);
+        setShooterPower(SHOOTER_POWER);
 
         // Push ball into shooter
         ILC.leverUp();
@@ -136,9 +137,8 @@ public class RedBackstageAuto extends LinearOpMode {
             idle();
         }
 
-        if (ILC.sorterMotor.getCurrentPosition() == target) {
-            ILC.sorterMotor.setPower(0);
-        }
+        ILC.sorterMotor.setPower(0);
+        ILC.sorterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     private void setShooterPower(double power) {
