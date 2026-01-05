@@ -4,38 +4,23 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
-import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "shooter PID")
-public class ShooterPID extends OpMode {
+@TeleOp(name = "max velocity")
+public class MaxVelocity extends OpMode {
     private DcMotorEx shootingMotor;
     private Servo pitchServo;
-
-    ElapsedTime timer = new ElapsedTime();
-    public double lastError = 0;
-    public static double integralSum = 0;
 
     public static double kPs = 0.0;
     public static double kIs = 0.0;
     public static double kDs = 0.0;
 
-    //private PIDController controller;
+    private PIDController controller;
 
     public static double target = 0;
 
@@ -47,7 +32,8 @@ public class ShooterPID extends OpMode {
         pitchServo = hardwareMap.get(Servo.class, "pitchServo");
         leverServo = hardwareMap.get(Servo.class, "leverServo");
 
-        //controller = new PIDController(kPs,kIs,kDs);
+        controller = new PIDController(kPs,kIs,kDs);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 
         pitchServo.setDirection(Servo.Direction.REVERSE);
@@ -65,30 +51,11 @@ public class ShooterPID extends OpMode {
 
     @Override
     public void loop() {
-        //controller.setPID(kPs,kIs,kDs);
-        //double pidOutput = controller.calculate(shootingMotor.getVelocity(),target);
-        //shootingMotor.setPower(pidOutput);
+        shootingMotor.setPower(1);
 
-
-        double power = PIDControl(target, shootingMotor.getVelocity());
-        shootingMotor.setPower(power);
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Pos: ", shootingMotor.getVelocity());
         telemetry.addData("target: ", target);
         telemetry.update();
-    }
-
-    public double PIDControl(double reference, double state) {
-        double error = reference - state;
-        integralSum += error * timer.seconds();
-        double derivative = (error - lastError) / timer.seconds();
-        lastError = error;
-
-        timer.reset();
-
-        double output = (error * kPs) + (derivative * kDs) + (integralSum * kIs);
-        return output;
     }
 
 }

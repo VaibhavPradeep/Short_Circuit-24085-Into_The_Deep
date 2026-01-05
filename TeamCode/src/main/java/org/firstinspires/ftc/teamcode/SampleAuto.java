@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @TeleOp(name = "Sample Auto")
 public class SampleAuto extends LinearOpMode {
 
-    Drivetrain dt = new Drivetrain();
+    OldDrivetrain dt = new OldDrivetrain();
 
 
     boolean isBlue = false;
