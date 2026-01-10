@@ -42,6 +42,10 @@ public class SorterPID extends OpMode {
     public static double p = 0.003;
     public static double i = 0;
     public static double d = 0.1;
+
+    // <-- ADDED: static feedforward (kS)
+    public static double kS = 0.08;
+
     public static double targetAngle = 90;
     public static double target = 20;
     public static double MIN_ANGLE = 20;
@@ -85,6 +89,7 @@ public class SorterPID extends OpMode {
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         sorterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        sorterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sorterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Added: For direct power control in PID
         sorterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // Added: To hold position
 
@@ -144,8 +149,14 @@ public class SorterPID extends OpMode {
         double power = PIDControl(targetAngleRadians, currentAngle); */
 
         controller.setPID(p,i,d);
-        double pidOutput = controller.calculate(sorterMotor.getCurrentPosition(),target);
-        sorterMotor.setPower(pidOutput);
+        double currentPos = sorterMotor.getCurrentPosition();
+        double pidOutput = controller.calculate(currentPos, target);
+
+        // <-- ADDED: static feedforward term (kS * sign(error))
+        double error = target - currentPos;
+        double staticFF = kS * Math.signum(error);
+
+        sorterMotor.setPower(pidOutput + staticFF);
 
         telemetry.addData("Pos: ", sorterMotor.getCurrentPosition());
         telemetry.addData("target: ", target);

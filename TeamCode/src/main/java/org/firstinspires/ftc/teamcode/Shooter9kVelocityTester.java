@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "Shooter9kVelocityTuner")
+@TeleOp(name = "Shooter9kVelocityTester")
 public class Shooter9kVelocityTester extends OpMode {
 
     private DcMotorEx shootingMotor;

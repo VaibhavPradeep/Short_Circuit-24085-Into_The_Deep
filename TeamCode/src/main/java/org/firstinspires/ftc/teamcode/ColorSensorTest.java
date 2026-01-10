@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.config.Config;
+
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,11 +15,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Config
-@TeleOp(name = "REAL NEW TELEOP")
-public class TeleOpNew extends OpMode {
+public class ColorSensorTest extends OpMode {
+
 
     // 6500 rpm is max, at far range 0.35 pitch pos
     // 0.3, 4600
@@ -91,37 +90,6 @@ public class TeleOpNew extends OpMode {
 
     boolean prevPressed = false;
 
-    public void driveMecanum(double left_y, double left_x, double right_x){
-        double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
-        frontLeft.setPower((left_y - left_x - right_x) / maxPower);
-        frontRight.setPower((left_y - left_x + right_x) / maxPower);
-        backLeft.setPower((left_y + left_x - right_x) / maxPower);
-        backRight.setPower((left_y + left_x + right_x) / maxPower);
-    }
-
-    public void driveMecanumSlower(double left_y, double left_x, double right_x){
-        double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
-        frontLeft.setPower(((left_y - left_x - right_x) / maxPower) / 3);
-        frontRight.setPower(((left_y - left_x + right_x) / maxPower) / 3);
-        backLeft.setPower(((left_y + left_x - right_x) / maxPower) / 3);
-        backRight.setPower(((left_y + left_x + right_x) / maxPower) / 3);
-    }
-
-    /* public void dPadMove(String direction) {
-        int pos = rotationMotor.getCurrentPosition();
-        if(direction.equals("up")) {
-            pos += 75;
-        } else if(direction.equals("down") && pos > 75) {
-            pos -= 75;
-        }
-        rotationMotor.setTargetPosition(pos);
-        rotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rotationMotor.setPower(0.75);
-        if (rotationMotor.getCurrentPosition() == pos) {
-            rotationMotor.setPower(0);
-        }
-    } */
-
     @Override
     public void init() {
         sorterMotor = hardwareMap.get(DcMotor.class, "sorterMotor");
@@ -182,7 +150,7 @@ public class TeleOpNew extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -207,148 +175,40 @@ public class TeleOpNew extends OpMode {
         telemetry.addData("status", "initialized");
     }
 
-    public void start() {
-        timer.reset();
-        pitchServo.setPosition(0.42);
-    }
-
     @Override
     public void loop() {
+        telemetry.addData("Red: ", colorSensor.red());
+        telemetry.addData("Green: ", colorSensor.green());
+        telemetry.addData("Red: ", colorSensor.blue());
 
-        pitchServo.setPosition(0.42);
+        List<double[]> colors = List.of();
 
-        if (gamepad1.left_trigger > 0.75) {
-            driveMecanumSlower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        } else {
-            driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        }
+        double r = colorSensor.red();
+        double g = colorSensor.green();
+        double b = colorSensor.blue();
 
-        if (gamepad1.a) {
-            intakeMotor.setPower(1.0);
-        }
-        if (gamepad1.b) {
-            intakeMotor.setPower(0);
-        }
-        if (gamepad1.x) {
-            intakeMotor.setPower(-1.0);
-        }
+        // Add to list
+        colors.add(new double[]{r, g, b});
 
-        if (gamepad2.dpad_up) {
-            leverServo.setPosition(0.2);
-        }
-        else {
-            leverServo.setPosition(0);
-        }
+        telemetry.addData("averages: ", averageDoubles(colors));
 
-
-        //boolean aPressed = gamepad2.a;
-        //controller.setPID(p,i,d);
-
-//        if (aPressed && !prevPressed) {
-//            sorterTarget += encoderAmount;
-//
-//            sorterMotor.setTargetPosition(pos);
-//            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            sorterMotor.setPower(0.75);
-//            if (sorterMotor.getCurrentPosition() == pos) {
-//                sorterMotor.setPower(0);
-//            }
-//        }
-//
-//        prevPressed = aPressed;
-
-        //double pidOutput = controller.calculate(sorterMotor.getCurrentPosition(), sorterTarget);
-
-        //sorterMotor.setPower(pidOutput);
-
-
-
-        /*
-        boolean aPressed = gamepad2.a;
-
-
-        if (aPressed && !prevPressed) {
-            int pos = sorterMotor.getCurrentPosition();
-            pos += encoderAmount;
-            sorterMotor.setTargetPosition(pos);
-            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            sorterMotor.setPower(0.75);
-            if (sorterMotor.getCurrentPosition() == pos) {
-                sorterMotor.setPower(0);
-            }
-        }
-        prevPressed = aPressed;
-         */
-
-
-        long now = System.currentTimeMillis();
-
-        // One-button advance (with debounce)
-        if (gamepad2.a && (now - lastAdvanceTime) > ADVANCE_DEBOUNCE_MS) {
-            currentIndex++;
-            if (currentIndex >= positionDegrees.length) {
-                currentIndex = 0;
-            }
-            targetTicks = degreesToTicks(positionDegrees[currentIndex]);
-            pid.setSetPoint(targetTicks);
-
-            lastAdvanceTime = now;
-        }
-
-        // Read current position
-        double currentPos = sorterMotor.getCurrentPosition();
-
-        // PID controller: compute power
-        double power = pid.calculate(currentPos);
-
-        // <-- ADDED: static feedforward term (kS * sign(error))
-        double error = targetTicks - currentPos;
-        double staticFF = kS * Math.signum(error);
-        power += staticFF;
-
-        // Deadband / tolerance (to avoid jitter near target)
-        if (Math.abs(targetTicks - currentPos) < 10) {
-            power = 0;
-        }
-
-        // Clamp to safe motor power
-        power = Math.max(-0.6, Math.min(0.6, power));
-
-        sorterMotor.setPower(power);
-
-        // Telemetry for tuning/debugging
-        telemetry.addData("Cur ticks", currentPos);
-        telemetry.addData("Tgt ticks", targetTicks);
-        telemetry.addData("Index", currentIndex);
-        telemetry.addData("Error", targetTicks - currentPos);
-        telemetry.addData("Power", power);
-        telemetry.update();
-
-
-        // 56.4
-        //43.2
-        // SHOOTER
-        boolean shooterEnabled1 = gamepad2.left_trigger > 0.75;
-        boolean shooterEnabled2 = gamepad2.right_trigger > 0.75;
-
-        if (!shooterEnabled2 && !shooterEnabled1) {
-            targetPower = 0;
-        } else if (shooterEnabled2 && !shooterEnabled1){
-            targetPower = LONG_SHOT;
-        } else if (!shooterEnabled2 && shooterEnabled1) {
-            targetPower = SHORT_SHOT;
-        } else if (shooterEnabled2 && shooterEnabled1) {
-            targetPower = 0;
-        }
-
-        pitchServo.setPosition(pitchPos);
-        shootingMotor.setPower(targetPower);
 
     }
 
-    @Override
-    public void stop() {
-        sorterMotor.setPower(0);
+    public static List<double[]> averageDoubles(List<double[]> list) {
+
+        double sumX = 0;
+        double sumY = 0;
+        double sumZ = 0;
+        for (double[] t: list) {
+            sumX += t[0];
+            sumY += t[0];
+            sumZ += t[0];
+        }
+
+        int n = list.size();
+        List<double[]> averages = List.of(new double[]{sumX / n, sumY / n, sumZ / n});
+        return averages;
     }
 
     private int degreesToTicks(double deg) {

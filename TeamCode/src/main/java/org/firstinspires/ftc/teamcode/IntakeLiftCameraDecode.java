@@ -11,14 +11,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 public class IntakeLiftCameraDecode {
-    /*
-    TODO: 1 motor for intke
-    TODO: 1 CR servo for sorter
-    TODO: 1 servo for transfer wheels
 
-    TODO: Turret: 3 Motors
-    TODO: - one for pitch, one for rotation, one for shooting (wheels)
-     */
     
     DcMotor intakeMotor;
     DcMotor pitchMotor;

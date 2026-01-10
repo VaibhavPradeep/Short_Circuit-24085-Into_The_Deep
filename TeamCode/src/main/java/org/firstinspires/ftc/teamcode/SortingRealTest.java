@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -18,9 +17,8 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-@Config
-@TeleOp(name = "REAL NEW TELEOP")
-public class TeleOpNew extends OpMode {
+@TeleOp(name = "SortingRealTest")
+public class SortingRealTest extends OpMode {
 
     // 6500 rpm is max, at far range 0.35 pitch pos
     // 0.3, 4600
@@ -52,13 +50,13 @@ public class TeleOpNew extends OpMode {
     private int targetTicks = 0;
 
     // PID gains — tune as needed
-    private double kP = 0.0029;
+    private double kP = 0.0027;
     // p=0.0065,kS = 0.025, d=0.0003
-    private double kI = 0.0;
-    private double kD = 0.00017;
+    private double kI = 0.0001;
+    private double kD = 0.00016;
 
     // <-- ADDED: static feedforward (kS)
-    public static double kS = 0.02;
+    public static double kS = 0.03;
 
     // For button debounce
     private long lastAdvanceTime = 0;
@@ -94,17 +92,17 @@ public class TeleOpNew extends OpMode {
     public void driveMecanum(double left_y, double left_x, double right_x){
         double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
         frontLeft.setPower((left_y - left_x - right_x) / maxPower);
-        frontRight.setPower((left_y - left_x + right_x) / maxPower);
+        frontRight.setPower((left_y + left_x + right_x) / maxPower);
         backLeft.setPower((left_y + left_x - right_x) / maxPower);
-        backRight.setPower((left_y + left_x + right_x) / maxPower);
+        backRight.setPower((left_y - left_x + right_x) / maxPower);
     }
 
     public void driveMecanumSlower(double left_y, double left_x, double right_x){
         double maxPower = Math.max(Math.abs(left_y) + Math.abs(left_x) + Math.abs(right_x), 1);
         frontLeft.setPower(((left_y - left_x - right_x) / maxPower) / 3);
-        frontRight.setPower(((left_y - left_x + right_x) / maxPower) / 3);
+        frontRight.setPower(((left_y + left_x + right_x) / maxPower) / 3);
         backLeft.setPower(((left_y + left_x - right_x) / maxPower) / 3);
-        backRight.setPower(((left_y + left_x + right_x) / maxPower) / 3);
+        backRight.setPower(((left_y - left_x + right_x) / maxPower) / 3);
     }
 
     /* public void dPadMove(String direction) {
@@ -182,7 +180,7 @@ public class TeleOpNew extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -214,71 +212,6 @@ public class TeleOpNew extends OpMode {
 
     @Override
     public void loop() {
-
-        pitchServo.setPosition(0.42);
-
-        if (gamepad1.left_trigger > 0.75) {
-            driveMecanumSlower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        } else {
-            driveMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        }
-
-        if (gamepad1.a) {
-            intakeMotor.setPower(1.0);
-        }
-        if (gamepad1.b) {
-            intakeMotor.setPower(0);
-        }
-        if (gamepad1.x) {
-            intakeMotor.setPower(-1.0);
-        }
-
-        if (gamepad2.dpad_up) {
-            leverServo.setPosition(0.2);
-        }
-        else {
-            leverServo.setPosition(0);
-        }
-
-
-        //boolean aPressed = gamepad2.a;
-        //controller.setPID(p,i,d);
-
-//        if (aPressed && !prevPressed) {
-//            sorterTarget += encoderAmount;
-//
-//            sorterMotor.setTargetPosition(pos);
-//            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            sorterMotor.setPower(0.75);
-//            if (sorterMotor.getCurrentPosition() == pos) {
-//                sorterMotor.setPower(0);
-//            }
-//        }
-//
-//        prevPressed = aPressed;
-
-        //double pidOutput = controller.calculate(sorterMotor.getCurrentPosition(), sorterTarget);
-
-        //sorterMotor.setPower(pidOutput);
-
-
-
-        /*
-        boolean aPressed = gamepad2.a;
-
-
-        if (aPressed && !prevPressed) {
-            int pos = sorterMotor.getCurrentPosition();
-            pos += encoderAmount;
-            sorterMotor.setTargetPosition(pos);
-            sorterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            sorterMotor.setPower(0.75);
-            if (sorterMotor.getCurrentPosition() == pos) {
-                sorterMotor.setPower(0);
-            }
-        }
-        prevPressed = aPressed;
-         */
 
 
         long now = System.currentTimeMillis();
@@ -323,27 +256,6 @@ public class TeleOpNew extends OpMode {
         telemetry.addData("Error", targetTicks - currentPos);
         telemetry.addData("Power", power);
         telemetry.update();
-
-
-        // 56.4
-        //43.2
-        // SHOOTER
-        boolean shooterEnabled1 = gamepad2.left_trigger > 0.75;
-        boolean shooterEnabled2 = gamepad2.right_trigger > 0.75;
-
-        if (!shooterEnabled2 && !shooterEnabled1) {
-            targetPower = 0;
-        } else if (shooterEnabled2 && !shooterEnabled1){
-            targetPower = LONG_SHOT;
-        } else if (!shooterEnabled2 && shooterEnabled1) {
-            targetPower = SHORT_SHOT;
-        } else if (shooterEnabled2 && shooterEnabled1) {
-            targetPower = 0;
-        }
-
-        pitchServo.setPosition(pitchPos);
-        shootingMotor.setPower(targetPower);
-
     }
 
     @Override
