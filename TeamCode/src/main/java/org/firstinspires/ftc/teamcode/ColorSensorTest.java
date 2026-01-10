@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
+@TeleOp(name = "ColorSensorTest")
 public class ColorSensorTest extends OpMode {
 
 
