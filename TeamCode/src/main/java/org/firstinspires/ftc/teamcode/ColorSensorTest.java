@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.annotation.SuppressLint;
+
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -158,7 +160,9 @@ public class ColorSensorTest extends OpMode {
         telemetry.addData("averages: ", averageDoubles(colors));
     }
 
-    public static List<double[]> averageDoubles(List<double[]> list) {
+    public static String averageDoubles(List<double[]> list) {
+
+        // return List<double[]>
         double sumX = 0;
         double sumY = 0;
         double sumZ = 0;
@@ -170,7 +174,13 @@ public class ColorSensorTest extends OpMode {
         }
 
         int n = list.size();
-        return List.of(new double[]{sumX / n, sumY / n, sumZ / n});
+        // return List.of(new double[]{sumX / n, sumY / n, sumZ / n});
+        return String.format(
+                "Red: %.2f Green: %.2f Blue: %.2f",
+                sumX / n,
+                sumY / n,
+                sumZ / n
+        );
     }
 
     private int degreesToTicks(double deg) {
