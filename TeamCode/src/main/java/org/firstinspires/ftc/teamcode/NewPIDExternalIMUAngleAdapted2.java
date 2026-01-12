@@ -11,14 +11,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "New PID external imu (ANGLE ADAPTED)")
-public class NewPIDExternalIMUAngleAdapted extends OpMode {
+@TeleOp(name = "New PID external imu (ANGLE ADAPTED) 2")
+public class NewPIDExternalIMUAngleAdapted2 extends OpMode {
 
     private PIDController controller;
 
@@ -38,13 +40,16 @@ public class NewPIDExternalIMUAngleAdapted extends OpMode {
     public static double i = 0;
     public static double d = 0.0004;
     public static double kFF = 0.042;
-    public static double targetAngle = 90;
+    public static double targetAngle = 0;
 
     IMU turretImu;
 
     private double lastYawDeg = 0.0;
     private double unwrappedYawDeg = 0.0;
     private double yawOffsetDeg = 0.0;
+
+    // ADDED: encoder clip limit (±1400)
+    private static final int TURRET_ENCODER_LIMIT = 1400;
 
     @Override
     public void init() {
@@ -100,6 +105,17 @@ public class NewPIDExternalIMUAngleAdapted extends OpMode {
         double motorPower = pidOutput + feedforward;
 
         motorPower = Math.max(-1.0, Math.min(1.0, motorPower));
+
+        // --- ADDED: clip movement if encoder is beyond limits ---
+        // If turret encoder is at or beyond +limit and motorPower would increase position further, zero it.
+        // If turret encoder is at or beyond -limit and motorPower would decrease position further, zero it.
+        int turretEnc = rotationMotor.getCurrentPosition();
+        if ((turretEnc >= TURRET_ENCODER_LIMIT && motorPower > 0.0) ||
+                (turretEnc <= -TURRET_ENCODER_LIMIT && motorPower < 0.0)) {
+            motorPower = 0.0;
+        }
+        // --------------------------------------------------------
+
         rotationMotor.setPower(motorPower);
 
 

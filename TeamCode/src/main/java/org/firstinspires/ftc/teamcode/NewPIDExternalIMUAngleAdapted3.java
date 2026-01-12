@@ -11,14 +11,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "New PID external imu (ANGLE ADAPTED)")
-public class NewPIDExternalIMUAngleAdapted extends OpMode {
+@TeleOp(name = "New PID external imu (ANGLE ADAPTED) 3")
+public class NewPIDExternalIMUAngleAdapted3 extends OpMode {
 
     private PIDController controller;
 
@@ -38,13 +40,16 @@ public class NewPIDExternalIMUAngleAdapted extends OpMode {
     public static double i = 0;
     public static double d = 0.0004;
     public static double kFF = 0.042;
-    public static double targetAngle = 90;
+    public static double targetAngle = 0;
 
     IMU turretImu;
 
     private double lastYawDeg = 0.0;
     private double unwrappedYawDeg = 0.0;
     private double yawOffsetDeg = 0.0;
+
+    // encoder clip limit (±1400)
+    private static final int TURRET_ENCODER_LIMIT = 1400;
 
     @Override
     public void init() {
@@ -60,19 +65,24 @@ public class NewPIDExternalIMUAngleAdapted extends OpMode {
         leverServo = hardwareMap.get(Servo.class,"leverServo");
         huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         huskyLens2 = hardwareMap.get(HuskyLens.class, "huskylens2");
+
         rotationMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         rateLimit.expire();
         leverServo.setPosition(0);
 
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
+
         turretImu.initialize(new IMU.Parameters(orientationOnRobot));
         turretImu.resetYaw();
+
         YawPitchRollAngles initAngles = turretImu.getRobotYawPitchRollAngles();
         lastYawDeg = initAngles.getYaw(AngleUnit.DEGREES);
         unwrappedYawDeg = lastYawDeg;
@@ -82,30 +92,62 @@ public class NewPIDExternalIMUAngleAdapted extends OpMode {
     @Override
     public void loop() {
         controller.setPID(p, i, d);
+
         YawPitchRollAngles orientation = turretImu.getRobotYawPitchRollAngles();
         double currentYawDeg = orientation.getYaw(AngleUnit.DEGREES);
+
         double delta = currentYawDeg - lastYawDeg;
         if (delta > 180.0) {
             delta -= 360.0;
         } else if (delta < -180.0) {
             delta += 360.0;
         }
+
         unwrappedYawDeg += delta;
         lastYawDeg = currentYawDeg;
+
         double currentAngleDeg = unwrappedYawDeg - yawOffsetDeg;
+
         double currentTargetDeg = (targetAngle > 180.0) ? targetAngle - 360.0 : targetAngle;
         double error = currentTargetDeg - currentAngleDeg;
-        double pidOutput = controller.calculate(currentAngleDeg, currentTargetDeg);
-        double feedforward = Math.copySign(kFF, error);
+
+        int turretEnc = rotationMotor.getCurrentPosition();
+
+        boolean didReversal = false;
+        double activeTargetDeg = currentTargetDeg;
+
+        // reversal logic when clamped and >= 90 deg off target
+        if (Math.abs(error) >= 90.0) {
+            if (turretEnc >= TURRET_ENCODER_LIMIT) {
+                activeTargetDeg = currentTargetDeg - 270.0;
+                didReversal = true;
+            } else if (turretEnc <= -TURRET_ENCODER_LIMIT) {
+                activeTargetDeg = currentTargetDeg + 270.0;
+                didReversal = true;
+            }
+        }
+
+        double pidOutput = controller.calculate(currentAngleDeg, activeTargetDeg);
+        double activeError = activeTargetDeg - currentAngleDeg;
+        double feedforward = Math.copySign(kFF, activeError);
         double motorPower = pidOutput + feedforward;
 
         motorPower = Math.max(-1.0, Math.min(1.0, motorPower));
-        rotationMotor.setPower(motorPower);
 
+        // hard safety clamp
+        if ((turretEnc >= TURRET_ENCODER_LIMIT && motorPower > 0.0) ||
+                (turretEnc <= -TURRET_ENCODER_LIMIT && motorPower < 0.0)) {
+            motorPower = 0.0;
+        }
+
+        rotationMotor.setPower(motorPower);
 
         telemetry.addData("Turret Angle (deg)", currentAngleDeg);
         telemetry.addData("Target (deg)", currentTargetDeg);
+        telemetry.addData("Active Target (deg)", activeTargetDeg);
         telemetry.addData("Error (deg)", error);
+        telemetry.addData("Encoder", turretEnc);
+        telemetry.addData("Reversal Active", didReversal);
         telemetry.update();
     }
 }

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
+/*
 public class AutosortTest extends OpMode{
 
 
@@ -117,19 +117,6 @@ public class AutosortTest extends OpMode{
     Motif3PPG motif3 = Motif3PPG.P1;
 
 
-
-    /*
-    FINISHED: DT: 4 motors
-    TODO: 1 motor for itnake
-    TODO: 1 CR servo for sorter
-    TODO: 1 servo for transfer wheels
-
-    TODO: Turret: 3 Motors
-    TODO: - one for pitch, one for rotation, one for shooting (wheels)
-
-
-     */
-
     @Override
     public void init() {
         
@@ -139,8 +126,6 @@ public class AutosortTest extends OpMode{
     @Override
     public void loop() {
 
-        /*
-        rateLimit();
 
         // Get blocks and husky lens data
         HuskyLens.Block[] blocks = huskyLens.blocks();
@@ -296,7 +281,7 @@ public class AutosortTest extends OpMode{
 
         }
 
-         */
+
     }
 
     private void waitMs(long ms) {
@@ -306,3 +291,6 @@ public class AutosortTest extends OpMode{
         }
     }
 }
+
+
+ */

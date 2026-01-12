@@ -19,18 +19,17 @@ public class TurretPIDEncoderSwitchback extends OpMode {
     // ---------------- PID ----------------
     private PIDController controller;
 
-    public static double p = 0.019;
-    public static double i = 0.0;
-    public static double d = 0.001;
-    public static double kFF = 0.1;
-
-    public static double targetAngle = 90; // degrees
+    public static double p = 0.01;
+    public static double i = 0;
+    public static double d = 0.0004;
+    public static double kFF = 0.042;
+    public static double targetAngle = 90;
 
     // ---------------- ENCODER LIMITS ----------------
     // 435 RPM GoBILDA (28 CPR) with 20T -> 150T gear ≈ 7.5:1
     public static int TICKS_PER_REV = 210;
-    public static int MAX_TICKS = 210;        // ±360°
-    public static int LIMIT_MARGIN = 25;       // switchback buffer
+    public static int MAX_TICKS = 1400;        // ±360°
+    public static int LIMIT_MARGIN = 800;       // switchback buffer
 
     // ---------------- HARDWARE ----------------
     private DcMotor rotationMotor;

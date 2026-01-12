@@ -167,9 +167,9 @@ public class NoSortingHuskyTest extends OpMode {
             timer.reset();
             if (timer.milliseconds() == transferElapseTime) {
 
-                leverOff();
-                leverOn();
-                leverOff();
+                leverDown();
+                leverUp();
+                leverDown();
             }
         }
 
@@ -180,9 +180,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif1 = Motif1GPP.P1;
                         }
@@ -193,9 +193,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif1 = Motif1GPP.P2;
                         }
@@ -206,9 +206,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif1 = Motif1GPP.G;
                         }
@@ -222,9 +222,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif2 = Motif2PGP.G;
                         }
@@ -235,9 +235,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif2 = Motif2PGP.P2;
                         }
@@ -248,9 +248,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif2 = Motif2PGP.P1;
                         }
@@ -264,9 +264,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif3 = Motif3PPG.P2;
                         }
@@ -277,9 +277,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif3 = Motif3PPG.G;
                         }
@@ -290,9 +290,9 @@ public class NoSortingHuskyTest extends OpMode {
                         timer.reset();
                         if (timer.milliseconds() == transferElapseTime) {
 
-                            leverOff();
-                            leverOn();
-                            leverOff();
+                            leverDown();
+                            leverUp();
+                            leverDown();
 
                             motif3 = Motif3PPG.P1;
                         }

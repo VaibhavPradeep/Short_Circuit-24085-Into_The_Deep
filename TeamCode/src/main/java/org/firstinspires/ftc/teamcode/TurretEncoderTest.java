@@ -11,14 +11,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name = "New PID external imu (ANGLE ADAPTED)")
-public class NewPIDExternalIMUAngleAdapted extends OpMode {
+@TeleOp(name = "TurretEncoderTest")
+public class TurretEncoderTest extends OpMode {
 
     private PIDController controller;
 
@@ -77,35 +79,13 @@ public class NewPIDExternalIMUAngleAdapted extends OpMode {
         lastYawDeg = initAngles.getYaw(AngleUnit.DEGREES);
         unwrappedYawDeg = lastYawDeg;
         yawOffsetDeg = lastYawDeg;
+
+        rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
     public void loop() {
-        controller.setPID(p, i, d);
-        YawPitchRollAngles orientation = turretImu.getRobotYawPitchRollAngles();
-        double currentYawDeg = orientation.getYaw(AngleUnit.DEGREES);
-        double delta = currentYawDeg - lastYawDeg;
-        if (delta > 180.0) {
-            delta -= 360.0;
-        } else if (delta < -180.0) {
-            delta += 360.0;
-        }
-        unwrappedYawDeg += delta;
-        lastYawDeg = currentYawDeg;
-        double currentAngleDeg = unwrappedYawDeg - yawOffsetDeg;
-        double currentTargetDeg = (targetAngle > 180.0) ? targetAngle - 360.0 : targetAngle;
-        double error = currentTargetDeg - currentAngleDeg;
-        double pidOutput = controller.calculate(currentAngleDeg, currentTargetDeg);
-        double feedforward = Math.copySign(kFF, error);
-        double motorPower = pidOutput + feedforward;
-
-        motorPower = Math.max(-1.0, Math.min(1.0, motorPower));
-        rotationMotor.setPower(motorPower);
-
-
-        telemetry.addData("Turret Angle (deg)", currentAngleDeg);
-        telemetry.addData("Target (deg)", currentTargetDeg);
-        telemetry.addData("Error (deg)", error);
+        telemetry.addData("Turret encoder", rotationMotor.getCurrentPosition());
         telemetry.update();
     }
 }
